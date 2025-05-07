@@ -20,7 +20,12 @@ export default function AuctionSystemPage() {
       case "createAuction":
         return <CreateAuction setCurrentScreen={setCurrentScreen} />;
       case "auctionDetails":
-        return <AuctionDetails setCurrentScreen={setCurrentScreen} />;
+        return (
+          <AuctionDetails
+            setCurrentScreen={setCurrentScreen}
+            auctionHouseAddress="0xa753377e8a2012712faa05bdc74e99ef5f7e9767"
+          />
+        );
       case "placeBid":
         return <PlaceBid setCurrentScreen={setCurrentScreen} />;
       case "endAuction":
