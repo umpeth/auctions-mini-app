@@ -1,7 +1,10 @@
+import { Address } from "@coinbase/onchainkit/identity";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { useAuctionItems } from "@/hooks/useAuctionItems";
+import { formatUnits } from "viem";
+import { formatDuration, intervalToDuration } from "date-fns";
 
 interface AuctionDetailsProps {
   setCurrentScreen: (screen: string) => void;
@@ -93,19 +96,15 @@ export function AuctionDetails({
               <div className="mt-4 space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600">NFT Contract:</span>
-                  <span className="text-sm font-mono">
-                    {auction.tokenContract?.slice(0, 10) + "..."}
-                  </span>
+                  <Address address={auction.tokenContract as `0x${string}`} />
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Token ID:</span>
-                  <span>{auction.tokenId}</span>
+                  <span className="font-mono">{auction.tokenId}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Owner:</span>
-                  <span className="text-sm font-mono">
-                    {auction.auctionOwner?.slice(0, 10) + "..."}
-                  </span>
+                  <Address address={auction.auctionOwner as `0x${string}`} />
                 </div>
               </div>
             </div>
@@ -121,8 +120,8 @@ export function AuctionDetails({
                   <div>
                     <div className="text-gray-600 text-sm">Current Bid</div>
                     <div className="text-2xl font-bold">
-                      {auction.highestBid
-                        ? `${Number(auction.highestBid).toFixed(4)} ETH`
+                      {auction.highestBid !== BigInt(0)
+                        ? `${formatUnits(auction.highestBid, 18)} ETH`
                         : "-"}
                     </div>
                   </div>
@@ -131,7 +130,9 @@ export function AuctionDetails({
                       Minimum Next Bid
                     </div>
                     <div className="text-xl font-bold text-green-600">
-                      {/* Placeholder, logic needed */}-
+                      {auction.minNextBid !== BigInt(0)
+                        ? `${formatUnits(auction.minNextBid, 18)} ETH`
+                        : "-"}
                     </div>
                     <div className="text-xs text-gray-500">
                       (+0.5% increment)
@@ -145,21 +146,34 @@ export function AuctionDetails({
                   </div>
                   <div>
                     <div className="text-gray-600 text-sm">Time Remaining</div>
-                    <div className="font-medium">{auction.endTime}</div>
+                    <div className="font-medium">
+                      {auction.endTime
+                        ? formatDuration(
+                            intervalToDuration({
+                              start: new Date().getTime(),
+                              end: Number(auction.endTime) * 1000,
+                            }),
+                          )
+                        : "Ended"}
+                    </div>
                   </div>
                   <div>
                     <div className="text-gray-600 text-sm">Current Winner</div>
-                    <div className="text-sm font-mono">
-                      {auction.currentBidder
-                        ? auction.currentBidder.slice(0, 10) + "..."
-                        : "-"}
+                    <div className="text-sm font-mono break-all hover:break-normal">
+                      {auction.currentBidder ? (
+                        <Address
+                          address={auction.currentBidder as `0x${string}`}
+                        />
+                      ) : (
+                        "-"
+                      )}
                     </div>
                   </div>
                   <div>
                     <div className="text-gray-600 text-sm">Reserve Price</div>
-                    <div>
-                      {auction.reservePrice
-                        ? `${Number(auction.reservePrice).toFixed(4)} ETH`
+                    <div className="text-sm font-mono break-all hover:break-normal">
+                      {auction.reservePrice !== BigInt(0)
+                        ? `${formatUnits(auction.reservePrice, 18)} ETH`
                         : "-"}
                     </div>
                   </div>
@@ -171,7 +185,7 @@ export function AuctionDetails({
                     <div className="text-gray-600 text-sm">Premium Type</div>
                     <div>
                       {auction.isPremiumAuction
-                        ? `${auction.premiumRate / 100}% of increment`
+                        ? `${Number(auction.premiumRate) / 100}% of increment`
                         : "-"}
                     </div>
                   </div>
@@ -188,7 +202,6 @@ export function AuctionDetails({
               </div>
             </div>
           </div>
-          {/* Bid History table would need to be dynamic if you have bid data */}
           <div className="mt-6 pt-6 border-t">
             <h4 className="font-bold mb-3">Bid History</h4>
             <div className="overflow-x-auto">
@@ -210,13 +223,33 @@ export function AuctionDetails({
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {/* You can map over auction.bids here if available */}
-                  <tr>
-                    <td className="px-4 py-2 text-sm">-</td>
-                    <td className="px-4 py-2 text-sm font-mono">-</td>
-                    <td className="px-4 py-2 text-sm">-</td>
-                    <td className="px-4 py-2 text-sm">-</td>
-                  </tr>
+                  {auction.bids && auction.bids.length > 0 ? (
+                    auction.bids.map((bid, index) => (
+                      <tr key={`${bid.bidder}-${index}`}>
+                        <td className="px-4 py-2 text-sm">{bid.time}</td>
+                        <td className="px-4 py-2 text-sm font-mono">
+                          <Address address={bid.bidder as `0x${string}`} />
+                        </td>
+                        <td className="px-4 py-2 text-sm">
+                          {formatUnits(bid.amount, 18)} ETH
+                        </td>
+                        <td className="px-4 py-2 text-sm">
+                          {bid.premiumPaid
+                            ? `${formatUnits(bid.premiumPaid.amount, 18)} ETH to ${bid.premiumPaid.recipient}`
+                            : "-"}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="px-4 py-2 text-sm text-center text-gray-500"
+                      >
+                        No bids yet
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

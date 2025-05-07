@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import { GraphQLClient } from "graphql-request";
 import { GetAuctionsByAuctionHouseAddressDocument } from "@/graphql/queryDocuments";
 import {
   GetAuctionsByAuctionHouseAddressQuery,
@@ -11,26 +10,35 @@ export interface AuctionItem {
   status: string;
   tokenId: string;
   tokenContract: string;
-  reservePrice: string;
-  highestBid: string;
+  reservePrice: bigint;
+  highestBid: bigint;
+  minNextBid: bigint;
   currentBidder: string | null;
   winner: string | null;
-  startTime: string;
-  endTime: string;
+  startTime: bigint;
+  endTime: bigint;
   auctionOwner: string;
   isPremiumAuction: boolean;
-  premiumRate: number;
+  premiumRate: bigint;
   metadata?: {
     name?: string | null;
     description?: string | null;
     image?: string | null;
   };
+  bids?: Array<{
+    time: bigint;
+    bidder: string;
+    amount: bigint;
+    premiumPaid?: {
+      amount: bigint;
+      recipient: string;
+    };
+  }>;
 }
 
-function formatTimestamp(ts: number): string {
-  if (!ts) return "N/A";
-  const date = new Date(ts * 1000);
-  return date.toISOString().replace("T", " ").substring(0, 19);
+// Calculate minimum next bid (0.5% increment) TODO:
+function calculateMinNextBid(currentBidWei: bigint): bigint {
+  return (currentBidWei * BigInt(10005)) / BigInt(10000);
 }
 
 export function useAuctionItems(auctionHouseAddress: string) {
@@ -70,8 +78,8 @@ export function useAuctionItems(auctionHouseAddress: string) {
           return;
         }
         const formatted = (auctionHouse.auctions || []).map((auction) => {
-          const endTimeStr = formatTimestamp(auction.endTime);
-          const startTimeStr = formatTimestamp(auction.startTime);
+          const endTimeStr = auction.endTime;
+          const startTimeStr = auction.startTime;
           let winner: string | null = null;
           if (auction.status === "COMPLETED") {
             winner = auction.currentBidder ?? null;
@@ -85,15 +93,16 @@ export function useAuctionItems(auctionHouseAddress: string) {
             status: auction.status,
             tokenId: auction.tokenId?.toString() ?? "",
             tokenContract: auction.tokenContract?.toString() ?? "",
-            reservePrice: auction.reservePrice?.toString() ?? "",
-            highestBid: auction.highestBidAmount?.toString() ?? "",
+            reservePrice: BigInt(auction.reservePrice),
+            highestBid: BigInt(auction.highestBidAmount),
+            minNextBid: calculateMinNextBid(BigInt(auction.highestBidAmount)),
             currentBidder: highestBidder,
             winner,
-            startTime: startTimeStr,
-            endTime: endTimeStr,
+            startTime: BigInt(startTimeStr),
+            endTime: BigInt(endTimeStr),
             auctionOwner: auction.auctionOwner?.toString() ?? "",
             isPremiumAuction: auction.isPremiumAuction,
-            premiumRate: auction.premiumBps,
+            premiumRate: BigInt(auction.premiumBps),
           };
           if (auction.tokenReference?.metadata) {
             formattedAuction.metadata = {
@@ -101,6 +110,14 @@ export function useAuctionItems(auctionHouseAddress: string) {
               description: auction.tokenReference.metadata.description,
               image: auction.tokenReference.metadata.image,
             };
+          }
+          if (auction.bids) {
+            formattedAuction.bids = auction.bids.map((bid) => ({
+              time: BigInt(bid.timestamp),
+              bidder: bid.bidder,
+              amount: BigInt(bid.amount),
+              premiumPaid: undefined,
+            }));
           }
           return formattedAuction;
         });
