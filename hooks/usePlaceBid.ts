@@ -24,7 +24,7 @@ export interface PlaceBidResult {
   placeBid: (args: PlaceBidArgs) => Promise<void>;
   hash: `0x${string}` | undefined | null;
   isError: boolean;
-  error: Error | null;
+  error: string | null;
   isLoading: boolean;
 }
 
@@ -34,7 +34,7 @@ export function usePlaceBid({
   onSuccess?: (bidHash: `0x${string}`) => void;
 } = {}): PlaceBidResult {
   const { address: bidderAddress } = useAccount();
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -69,7 +69,7 @@ export function usePlaceBid({
             : "Failed to create bid";
 
       const error = new Error(errorMessage);
-      setError(error);
+      setError(error.message);
       setIsLoading(false);
     }
   }, [isErrorCreatingBid, errorCreatingBid]);
@@ -128,7 +128,7 @@ export function usePlaceBid({
         console.error("Error placing bid:", err);
         const error =
           err instanceof Error ? err : new Error("Failed to place bid");
-        setError(error);
+        setError(error.message);
         setIsLoading(false);
       }
     },

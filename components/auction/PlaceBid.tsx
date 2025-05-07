@@ -177,9 +177,7 @@ export function PlaceBid({
                 </TransactionButton>
                 {error && <div className="text-red-600 mt-2">{error}</div>}
                 {isError && placeBidError && (
-                  <div className="text-red-600 mt-2">
-                    {placeBidError.message}
-                  </div>
+                  <div className="text-red-600 mt-2">{placeBidError}</div>
                 )}
               </div>
             </div>
