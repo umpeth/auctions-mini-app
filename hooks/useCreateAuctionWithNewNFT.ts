@@ -3,6 +3,7 @@ import { useWaitForTransactionReceipt } from "wagmi";
 import { useState, useEffect } from "react";
 import { Address, decodeEventLog } from "viem";
 import { auctionHouseAbi } from "@/wagmi/generated";
+import { affiliateEscrowFactoryAddress } from "@/lib/consts";
 
 export type NFTMetadata = {
   name: string;
@@ -14,12 +15,11 @@ export type NFTMetadata = {
 
 export function useCreateAuctionWithNewNFT({
   onSuccess,
-  onError,
 }: {
   onSuccess?: (auctionId: bigint, tokenId?: bigint) => void;
-  onError?: (error: Error) => void;
 } = {}) {
   const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     data: createAuctionHash,
@@ -37,11 +37,17 @@ export function useCreateAuctionWithNewNFT({
   });
 
   useEffect(() => {
+    if (isLoadingCreateAuctionReceipt || isCreatingAuction) {
+      setIsLoading(true);
+    }
+  }, [isLoadingCreateAuctionReceipt, isCreatingAuction]);
+
+  useEffect(() => {
     if (isErrorCreatingAuction) {
       setError(errorCreatingAuction as Error);
-      if (onError) onError(errorCreatingAuction as Error);
+      setIsLoading(false);
     }
-  }, [isErrorCreatingAuction, errorCreatingAuction, onError]);
+  }, [isErrorCreatingAuction, errorCreatingAuction]);
 
   useEffect(() => {
     if (createAuctionReceipt && createAuctionReceipt.logs) {
@@ -75,7 +81,6 @@ export function useCreateAuctionWithNewNFT({
     duration,
     affiliateFee,
     arbiterAddress,
-    escrowFactoryAddress,
     paymentToken = "0x0000000000000000000000000000000000000000",
     premium = false,
     premiumRate = 0,
@@ -89,7 +94,6 @@ export function useCreateAuctionWithNewNFT({
     duration: bigint;
     affiliateFee: number;
     arbiterAddress: Address;
-    escrowFactoryAddress: Address;
     paymentToken?: Address;
     premium?: boolean;
     premiumRate?: number;
@@ -109,7 +113,7 @@ export function useCreateAuctionWithNewNFT({
           duration,
           affiliateFee,
           arbiterAddress,
-          escrowFactoryAddress,
+          affiliateEscrowFactoryAddress,
           paymentToken,
           premium,
           premiumRate,
@@ -118,8 +122,10 @@ export function useCreateAuctionWithNewNFT({
         ],
       });
     } catch (err) {
+      console.error("Failed to create auction with new NFT", err);
       setError(err as Error);
-      if (onError) onError(err as Error);
+      setIsLoading(false);
+
       throw err;
     }
   };
@@ -127,9 +133,8 @@ export function useCreateAuctionWithNewNFT({
   return {
     createAuctionWithNewNFT,
     hash: createAuctionHash,
-    isPending: isCreatingAuction,
     isError: !!error,
     error: error,
-    isLoading: isLoadingCreateAuctionReceipt,
+    isLoading: isLoading,
   };
 }

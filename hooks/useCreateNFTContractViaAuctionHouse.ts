@@ -5,12 +5,11 @@ import { Address } from "viem";
 
 export function useCreateNFTContractViaAuctionHouse({
   onSuccess,
-  onError,
 }: {
   onSuccess?: (receipt: unknown) => void;
-  onError?: (error: Error) => void;
 } = {}) {
   const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     data: createNftContractHash,
@@ -28,11 +27,17 @@ export function useCreateNFTContractViaAuctionHouse({
   });
 
   useEffect(() => {
+    if (isLoadingCreateNftContractReceipt || isCreatingNftContract) {
+      setIsLoading(true);
+    }
+  }, [isLoadingCreateNftContractReceipt, isCreatingNftContract]);
+
+  useEffect(() => {
     if (isErrorCreatingNftContract) {
       setError(errorCreatingNftContract as Error);
-      if (onError) onError(errorCreatingNftContract as Error);
+      setIsLoading(false);
     }
-  }, [isErrorCreatingNftContract, errorCreatingNftContract, onError]);
+  }, [isErrorCreatingNftContract, errorCreatingNftContract]);
 
   useEffect(() => {
     if (createNftContractReceipt && onSuccess) {
@@ -51,6 +56,7 @@ export function useCreateNFTContractViaAuctionHouse({
     symbol: string;
     contractURI: string;
   }) => {
+    setIsLoading(true);
     try {
       await createNftContractWriteContract({
         address: auctionHouseAddress,
@@ -58,17 +64,15 @@ export function useCreateNFTContractViaAuctionHouse({
       });
     } catch (err) {
       setError(err as Error);
-      if (onError) onError(err as Error);
-      throw err;
+      setIsLoading(false);
     }
   };
 
   return {
     createNFTContract,
     hash: createNftContractHash,
-    isPending: isCreatingNftContract,
     isError: !!error,
     error: error,
-    isLoading: isLoadingCreateNftContractReceipt,
+    isLoading: isLoading,
   };
 }

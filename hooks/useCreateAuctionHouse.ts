@@ -110,7 +110,6 @@ export function useCreateAuctionHouse({
   return {
     createAuctionHouse,
     hash: createAuctionHouseHash,
-
     isError: !!error,
     error: error,
     isLoading: isLoading,
