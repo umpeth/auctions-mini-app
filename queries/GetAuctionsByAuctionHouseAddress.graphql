@@ -1,0 +1,32 @@
+query GetAuctionsByAuctionHouseAddress($auctionHouseAddress: ID!) {
+  auctionHouse(id: $auctionHouseAddress) {
+    name
+    auctions {
+      id
+      auctionId
+      tokenId
+      tokenContract
+      status
+      reservePrice
+      highestBidAmount
+      currentBidder
+      endTime
+      startTime
+      auctionOwner
+      isPremiumAuction
+      premiumBps
+      tokenReference {
+        metadata {
+          name
+          description
+          image
+        }
+      }
+      bids(orderBy: timestamp, orderDirection: desc, first: 1) {
+        bidder
+        amount
+        timestamp
+      }
+    }
+  }
+}

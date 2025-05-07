@@ -1,0 +1,11 @@
+sources:
+  - name: ump
+    handler:
+      graphql:
+        endpoint: ${GRAPH_ENDPOINT}
+documents:
+  - "./queries/*.graphql"
+plugins:
+  - pollingLive:
+      defaultInterval: 10000
+      pauseOnBackground: true
