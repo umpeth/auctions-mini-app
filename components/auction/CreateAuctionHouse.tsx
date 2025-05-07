@@ -90,7 +90,7 @@ export function CreateAuctionHouse() {
             <div className="font-bold mb-4">
               Step 2: Configure Auction House
             </div>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label>
@@ -170,7 +170,7 @@ export function CreateAuctionHouse() {
                 </TransactionButton>
                 {error && <div className="text-red-500 mt-2">{error}</div>}
               </div>
-            </form>
+            </div>
             {auctionHouseAddress && (
               <div className="text-green-600 mt-2 break-all">
                 Auction House Address: {auctionHouseAddress}
