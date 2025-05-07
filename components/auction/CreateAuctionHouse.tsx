@@ -26,10 +26,10 @@ export function CreateAuctionHouse() {
 
   const {
     createAuctionHouse,
-    isPending,
     isError,
     error: createAuctionHouseError,
     hash,
+    isLoading,
   } = useCreateAuctionHouse({
     onSuccess: (address) => {
       setAuctionHouseAddress(address);
@@ -162,8 +162,8 @@ export function CreateAuctionHouse() {
               <div className="pt-4">
                 <TransactionButton
                   onClick={handleSubmit}
-                  isLoading={isPending}
-                  disabled={isPending}
+                  isLoading={isLoading}
+                  disabled={isLoading}
                   hash={hash}
                 >
                   Create Auction House
