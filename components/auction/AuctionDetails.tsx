@@ -9,12 +9,18 @@ import { formatDuration, intervalToDuration } from "date-fns";
 interface AuctionDetailsProps {
   setCurrentScreen: (screen: string) => void;
   auctionHouseAddress: string;
+  onPlaceBid: (auctionData: {
+    auctionHouseAddress: `0x${string}`;
+    auctionId: bigint;
+    currentBid: string;
+    minNextBid: string;
+  }) => void;
 }
 
 export function AuctionDetails({
   setCurrentScreen,
-
   auctionHouseAddress,
+  onPlaceBid,
 }: AuctionDetailsProps) {
   const { auctions, loading, error } = useAuctionItems(auctionHouseAddress);
   const auction = auctions[0];
@@ -67,6 +73,22 @@ export function AuctionDetails({
       </div>
     );
   }
+
+  const handlePlaceBid = () => {
+    onPlaceBid({
+      auctionHouseAddress: auctionHouseAddress as `0x${string}`,
+      auctionId: BigInt(auction.id),
+      currentBid:
+        auction.highestBid !== BigInt(0)
+          ? formatUnits(auction.highestBid, 18)
+          : "0",
+      minNextBid:
+        auction.minNextBid !== BigInt(0)
+          ? formatUnits(auction.minNextBid, 18)
+          : "0",
+    });
+    setCurrentScreen("placeBid");
+  };
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -192,10 +214,7 @@ export function AuctionDetails({
                 </div>
                 <div className="mt-6 flex justify-between">
                   <Button variant="outline">View Bid History</Button>
-                  <Button
-                    variant="default"
-                    onClick={() => setCurrentScreen("placeBid")}
-                  >
+                  <Button variant="default" onClick={handlePlaceBid}>
                     Place Bid
                   </Button>
                 </div>

@@ -6,17 +6,23 @@ import { CreateAuction } from "@/components/auction/CreateAuction";
 import { AuctionDetails } from "@/components/auction/AuctionDetails";
 import { PlaceBid } from "@/components/auction/PlaceBid";
 import { EndAuction } from "@/components/auction/EndAuction";
-// import { AuctionDetails } from "@/components/auction/AuctionDetails";
-// import { PlaceBid } from "@/components/auction/PlaceBid";
-// import { EndAuction } from "@/components/auction/EndAuction";
+
+interface SelectedAuction {
+  auctionHouseAddress: `0x${string}`;
+  auctionId: bigint;
+  currentBid: string;
+  minNextBid: string;
+}
 
 export default function AuctionSystemPage() {
   const [currentScreen, setCurrentScreen] = useState("createAuctionHouse");
+  const [selectedAuction, setSelectedAuction] =
+    useState<SelectedAuction | null>(null);
 
   const renderScreen = () => {
     switch (currentScreen) {
       case "createAuctionHouse":
-        return <CreateAuctionHouse setCurrentScreen={setCurrentScreen} />;
+        return <CreateAuctionHouse />;
       case "createAuction":
         return <CreateAuction setCurrentScreen={setCurrentScreen} />;
       case "auctionDetails":
@@ -24,20 +30,27 @@ export default function AuctionSystemPage() {
           <AuctionDetails
             setCurrentScreen={setCurrentScreen}
             auctionHouseAddress="0xa753377e8a2012712faa05bdc74e99ef5f7e9767"
+            onPlaceBid={setSelectedAuction}
           />
         );
       case "placeBid":
-        return <PlaceBid setCurrentScreen={setCurrentScreen} />;
+        return selectedAuction ? (
+          <PlaceBid
+            setCurrentScreen={setCurrentScreen}
+            auctionHouseAddress={selectedAuction.auctionHouseAddress}
+            auctionId={selectedAuction.auctionId}
+            currentBid={selectedAuction.currentBid}
+            minNextBid={selectedAuction.minNextBid}
+          />
+        ) : (
+          <div className="text-center py-10 text-red-500">
+            No auction selected. Please select an auction first.
+          </div>
+        );
       case "endAuction":
         return <EndAuction setCurrentScreen={setCurrentScreen} />;
-      // case "auctionDetails":
-      //   return <AuctionDetails setCurrentScreen={setCurrentScreen} />;
-      // case "placeBid":
-      //   return <PlaceBid setCurrentScreen={setCurrentScreen} />;
-      // case "endAuction":
-      //   return <EndAuction setCurrentScreen={setCurrentScreen} />;
       default:
-        return <CreateAuctionHouse setCurrentScreen={setCurrentScreen} />;
+        return <CreateAuctionHouse />;
     }
   };
 
@@ -76,24 +89,6 @@ export default function AuctionSystemPage() {
           >
             End Auction
           </button>
-          {/* <button
-            onClick={() => setCurrentScreen("auctionDetails")}
-            className={`px-3 py-1 rounded ${currentScreen === "auctionDetails" ? "bg-blue-600" : "bg-gray-600"}`}
-          >
-            Auction Details
-          </button>
-          <button
-            onClick={() => setCurrentScreen("placeBid")}
-            className={`px-3 py-1 rounded ${currentScreen === "placeBid" ? "bg-blue-600" : "bg-gray-600"}`}
-          >
-            Place Bid
-          </button>
-          <button
-            onClick={() => setCurrentScreen("endAuction")}
-            className={`px-3 py-1 rounded ${currentScreen === "endAuction" ? "bg-blue-600" : "bg-gray-600"}`}
-          >
-            End Auction
-          </button> */}
         </div>
       </header>
       <main className="flex-grow p-4 bg-gray-100">{renderScreen()}</main>

@@ -1,15 +1,73 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import React from "react";
+import React, { useState } from "react";
+import { usePlaceBid } from "@/hooks/usePlaceBid";
+import { parseEther } from "viem";
+import TransactionButton from "@/components/Transaction";
 
 interface PlaceBidProps {
   setCurrentScreen: (screen: string) => void;
+  auctionHouseAddress: `0x${string}`;
+  auctionId: bigint;
+  currentBid: string;
+  minNextBid: string;
 }
 
-export function PlaceBid({ setCurrentScreen }: PlaceBidProps) {
+export function PlaceBid({
+  setCurrentScreen,
+  auctionHouseAddress,
+  auctionId,
+  currentBid,
+  minNextBid,
+}: PlaceBidProps) {
+  // Form state
+  const [bidAmount, setBidAmount] = useState(minNextBid);
+  const [message, setMessage] = useState("");
+  const [affiliateAddress, setAffiliateAddress] = useState("");
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [error, setError] = useState("");
+
+  // Hook
+  const {
+    placeBid,
+    hash,
+    isError,
+    error: placeBidError,
+    isLoading,
+  } = usePlaceBid({
+    onSuccess: (bidHash) => {
+      console.log("Bid placed successfully:", bidHash);
+      setCurrentScreen("auctions"); // Navigate back to auctions list
+    },
+  });
+
+  // Handle form submit
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setError("");
+
+    if (!isConfirmed) {
+      setError("Please confirm your bid");
+      return;
+    }
+
+    try {
+      const bidAmountWei = parseEther(bidAmount);
+      await placeBid({
+        auctionHouseAddress,
+        auctionId,
+        affiliateAddress: (affiliateAddress ||
+          "0x0000000000000000000000000000000000000000") as `0x${string}`,
+        bidAmountWei,
+      });
+    } catch (err) {
+      console.error("Error placing bid:", err);
+      setError(err instanceof Error ? err.message : "Failed to place bid");
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <Card>
@@ -34,12 +92,12 @@ export function PlaceBid({ setCurrentScreen }: PlaceBidProps) {
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <div>
                   <div className="text-gray-600 text-sm">Current Bid</div>
-                  <div className="text-xl font-bold">0.75 ETH</div>
+                  <div className="text-xl font-bold">{currentBid} ETH</div>
                 </div>
                 <div>
                   <div className="text-gray-600 text-sm">Minimum Next Bid</div>
                   <div className="text-lg font-bold text-green-600">
-                    0.75375 ETH
+                    {minNextBid} ETH
                   </div>
                 </div>
               </div>
@@ -50,19 +108,32 @@ export function PlaceBid({ setCurrentScreen }: PlaceBidProps) {
             <div className="space-y-6">
               <div>
                 <Label>Bid Amount (ETH)</Label>
-                <Input type="number" placeholder="0.75375" step="0.000001" />
+                <Input
+                  type="number"
+                  placeholder={minNextBid}
+                  step="0.000001"
+                  value={bidAmount}
+                  onChange={(e) => setBidAmount(e.target.value)}
+                />
                 <div className="flex justify-between mt-1">
                   <span className="text-xs text-gray-500">
-                    Min: 0.75375 ETH
+                    Min: {minNextBid} ETH
                   </span>
-                  <span className="text-xs text-blue-600 cursor-pointer">
+                  <span
+                    className="text-xs text-blue-600 cursor-pointer"
+                    onClick={() => setBidAmount(minNextBid)}
+                  >
                     Bid minimum amount
                   </span>
                 </div>
               </div>
               <div>
                 <Label>Encrypted Message (Optional)</Label>
-                <Textarea placeholder="Enter a private message to the seller..." />
+                <Textarea
+                  placeholder="Enter a private message to the seller..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
                 <div className="text-xs text-gray-500">
                   This message will be encrypted and only visible to the seller
                 </div>
@@ -71,21 +142,45 @@ export function PlaceBid({ setCurrentScreen }: PlaceBidProps) {
                 <div className="font-medium mb-2">
                   Optional: Include Affiliate Address
                 </div>
-                <Input type="text" placeholder="0x..." />
+                <Input
+                  type="text"
+                  placeholder="0x..."
+                  value={affiliateAddress}
+                  onChange={(e) => setAffiliateAddress(e.target.value)}
+                />
                 <div className="text-xs text-gray-500 mt-1">
                   If you were referred by an affiliate, enter their address
                 </div>
               </div>
               <div className="border-t pt-4 mt-4">
                 <div className="flex items-start mb-4">
-                  <Input type="checkbox" id="confirm" className="mt-1 mr-2" />
+                  <Input
+                    type="checkbox"
+                    id="confirm"
+                    className="mt-1 mr-2"
+                    checked={isConfirmed}
+                    onChange={(e) => setIsConfirmed(e.target.checked)}
+                  />
                   <Label htmlFor="confirm" className="text-sm">
                     I confirm that I want to place this bid. If I am outbid, I
                     will receive a premium payment of 0.5% of the increment
                     above my bid.
                   </Label>
                 </div>
-                <Button variant="success">Place Bid</Button>
+                <TransactionButton
+                  onClick={handleSubmit}
+                  isLoading={isLoading}
+                  disabled={isLoading || !isConfirmed}
+                  hash={hash}
+                >
+                  {isLoading ? "Placing Bid..." : "Place Bid"}
+                </TransactionButton>
+                {error && <div className="text-red-600 mt-2">{error}</div>}
+                {isError && placeBidError && (
+                  <div className="text-red-600 mt-2">
+                    {placeBidError.message}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -100,8 +195,10 @@ export function PlaceBid({ setCurrentScreen }: PlaceBidProps) {
                 minimum bid increment (0.5%).
               </p>
               <p className="mt-2">
-                Example: If you bid 0.75 ETH and someone outbids you with 0.76
-                ETH, you will receive 0.00125 ETH as a premium payment.
+                Example: If you bid {currentBid} ETH and someone outbids you
+                with {(Number(currentBid) * 1.01).toFixed(2)} ETH, you will
+                receive {(Number(currentBid) * 0.005).toFixed(5)} ETH as a
+                premium payment.
               </p>
             </div>
           </div>
