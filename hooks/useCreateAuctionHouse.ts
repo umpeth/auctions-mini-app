@@ -3,6 +3,7 @@ import { useWaitForTransactionReceipt } from "wagmi";
 import { useState, useEffect } from "react";
 import { Address, decodeEventLog } from "viem";
 import { auctionHouseFactoryAbi } from "@/wagmi/generated";
+import { auctionHouseFactoryAddress } from "@/lib/consts";
 
 // Hook for creating an auction house
 export function useCreateAuctionHouse({
@@ -12,6 +13,7 @@ export function useCreateAuctionHouse({
   onError?: (error: Error) => void;
 } = {}) {
   const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     data: createAuctionHouseHash,
@@ -29,8 +31,15 @@ export function useCreateAuctionHouse({
   });
 
   useEffect(() => {
+    if (isLoadingCreateAuctionHouseReceipt || isCreatingAuctionHouse) {
+      setIsLoading(true);
+    }
+  }, [isLoadingCreateAuctionHouseReceipt, isCreatingAuctionHouse]);
+
+  useEffect(() => {
     if (isErrorCreatingAuctionHouse) {
       setError(errorCreatingAuctionHouse);
+      setIsLoading(false);
     }
   }, [isErrorCreatingAuctionHouse, errorCreatingAuctionHouse]);
 
@@ -77,9 +86,10 @@ export function useCreateAuctionHouse({
     auctionItemFactoryAddress: Address;
     escrowFactoryAddress: Address;
   }) => {
+    setIsLoading(true);
     try {
       await createAuctionHouseWriteContract({
-        address: "0xe7C121cb8773d324b68d1fb3531Fc9043440D1e0" as Address,
+        address: auctionHouseFactoryAddress as Address,
         args: [
           name,
           image,
@@ -94,14 +104,15 @@ export function useCreateAuctionHouse({
     } catch (err) {
       console.error("Failed to create auction house", err);
       setError(err as Error);
+      setIsLoading(false);
     }
   };
   return {
     createAuctionHouse,
     hash: createAuctionHouseHash,
-    isPending: isCreatingAuctionHouse,
+
     isError: !!error,
     error: error,
-    isLoading: isLoadingCreateAuctionHouseReceipt,
+    isLoading: isLoading,
   };
 }
