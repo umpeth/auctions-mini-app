@@ -6,6 +6,7 @@ import { CreateAuction } from "@/components/auction/CreateAuction";
 import { AuctionDetails } from "@/components/auction/AuctionDetails";
 import { PlaceBid } from "@/components/auction/PlaceBid";
 import { EndAuction } from "@/components/auction/EndAuction";
+import { Button } from "@/components/ui/button";
 
 interface SelectedAuction {
   auctionHouseAddress: `0x${string}`;
@@ -59,36 +60,36 @@ export default function AuctionSystemPage() {
       <header className="bg-gray-800 text-white p-4 text-center">
         <h1 className="text-2xl font-bold">Auction System</h1>
         <div className="flex justify-center mt-2 space-x-4">
-          <button
+          <Button
             onClick={() => setCurrentScreen("createAuctionHouse")}
             className={`px-3 py-1 rounded ${currentScreen === "createAuctionHouse" ? "bg-blue-600" : "bg-gray-600"}`}
           >
             Create Auction House
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setCurrentScreen("createAuction")}
             className={`px-3 py-1 rounded ${currentScreen === "createAuction" ? "bg-blue-600" : "bg-gray-600"}`}
           >
             Create Auction
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setCurrentScreen("auctionDetails")}
             className={`px-3 py-1 rounded ${currentScreen === "auctionDetails" ? "bg-blue-600" : "bg-gray-600"}`}
           >
             Auction Details
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setCurrentScreen("placeBid")}
             className={`px-3 py-1 rounded ${currentScreen === "placeBid" ? "bg-blue-600" : "bg-gray-600"}`}
           >
             Place Bid
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setCurrentScreen("endAuction")}
             className={`px-3 py-1 rounded ${currentScreen === "endAuction" ? "bg-blue-600" : "bg-gray-600"}`}
           >
             End Auction
-          </button>
+          </Button>
         </div>
       </header>
       <main className="flex-grow p-4 bg-gray-100">{renderScreen()}</main>
