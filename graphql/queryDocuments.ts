@@ -6,6 +6,8 @@ import {
   GetAuctionsByAuctionHouseAddressQueryVariables,
   GetAuctionsByStatusQuery,
   GetAuctionsByStatusQueryVariables,
+  GetAuctionByAuctionIdQuery,
+  GetAuctionByAuctionIdQueryVariables,
 } from "./generated";
 
 export const GetAuctionsByAuctionHouseAddressDocument: TypedDocumentNode<
@@ -73,6 +75,41 @@ export const GetAuctionsByStatusDocument: TypedDocumentNode<
         }
       }
       bids(orderBy: timestamp, orderDirection: desc, first: 1) {
+        bidder
+        amount
+        timestamp
+      }
+    }
+  }
+`);
+
+export const GetAuctionByAuctionIdDocument: TypedDocumentNode<
+  GetAuctionByAuctionIdQuery,
+  GetAuctionByAuctionIdQueryVariables
+> = parse(gql`
+  query getAuctionByAuctionID($auctionID: ID!) {
+    auction(id: $auctionID) {
+      id
+      auctionId
+      tokenId
+      tokenContract
+      status
+      reservePrice
+      highestBidAmount
+      currentBidder
+      endTime
+      startTime
+      auctionOwner
+      isPremiumAuction
+      premiumBps
+      tokenReference {
+        metadata {
+          name
+          description
+          image
+        }
+      }
+      bids(orderBy: timestamp, orderDirection: desc) {
         bidder
         amount
         timestamp
