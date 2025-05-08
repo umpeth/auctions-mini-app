@@ -5,37 +5,7 @@ import {
   GetAuctionsByAuctionHouseAddressQueryVariables,
 } from "@/graphql/generated";
 import { calculateMinNextBid } from "@/lib/utils";
-
-export interface AuctionItem {
-  id: string;
-  status: string;
-  tokenId: string;
-  tokenContract: string;
-  reservePrice: bigint;
-  highestBid: bigint;
-  minNextBid: bigint;
-  currentBidder: string | null;
-  winner: string | null;
-  startTime: bigint;
-  endTime: bigint;
-  auctionOwner: string;
-  isPremiumAuction: boolean;
-  premiumRate: bigint;
-  metadata?: {
-    name?: string | null;
-    description?: string | null;
-    image?: string | null;
-  };
-  bids?: Array<{
-    time: bigint;
-    bidder: string;
-    amount: bigint;
-    premiumPaid?: {
-      amount: bigint;
-      recipient: string;
-    };
-  }>;
-}
+import { AuctionItem } from "@/types";
 
 export function useAuctionItems(auctionHouseAddress: string) {
   const [auctions, setAuctions] = useState<AuctionItem[]>([]);

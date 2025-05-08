@@ -9,9 +9,11 @@ import TransactionButton from "@/components/Transaction";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import BidSuccessModal from "@/components/BidSuccessModal";
 import { useFrameActions } from "@/hooks/UseFrameAction";
+import { AuctionItem } from "@/types";
 
 interface PlaceBidProps {
   // setCurrentScreen: (screen: string) => void;
+  auctionItem: AuctionItem;
   auctionHouseAddress: `0x${string}`;
   auctionId: bigint;
   currentBid: string;
@@ -20,6 +22,7 @@ interface PlaceBidProps {
 
 export function PlaceBid({
   // setCurrentScreen,
+  auctionItem,
   auctionHouseAddress,
   auctionId,
   currentBid,
@@ -234,9 +237,9 @@ export function PlaceBid({
       <BidSuccessModal
         isOpen={isBidSuccessModalOpen}
         onOpenChange={setIsBidSuccessModalOpen}
-        itemName="Rare Collectible #42" //TODO
-        itemId={auctionId.toString()}
-        imageUrl="https://via.placeholder.com/150" //TODO
+        itemName={auctionItem.metadata?.name || ""}
+        itemId={auctionItem.tokenId}
+        imageUrl={auctionItem.metadata?.image || ""}
         shareUrl={getShareUrl()}
         onWarpcastShare={handleWarpcastShare}
       />
