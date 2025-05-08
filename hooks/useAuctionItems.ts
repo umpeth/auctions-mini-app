@@ -36,9 +36,23 @@ export interface AuctionItem {
   }>;
 }
 
-// Calculate minimum next bid (0.5% increment) TODO:
-function calculateMinNextBid(currentBidWei: bigint): bigint {
-  return (currentBidWei * BigInt(10005)) / BigInt(10000);
+// Calculate minimum next bid based on current bid and reserve price
+function calculateMinNextBid(
+  currentBidWei: bigint,
+  reservePriceWei: bigint,
+  minBidIncrementBps: bigint = BigInt(50),
+): bigint {
+  // If no bids yet, use reserve price
+  if (currentBidWei === BigInt(0)) {
+    return reservePriceWei;
+  }
+
+  // Calculate increment (default 0.5% = 50 basis points)
+  const increment = (currentBidWei * minBidIncrementBps) / BigInt(10000);
+  const nextBid = currentBidWei + increment;
+
+  // Ensure next bid is at least the reserve price
+  return nextBid > reservePriceWei ? nextBid : reservePriceWei;
 }
 
 export function useAuctionItems(auctionHouseAddress: string) {
@@ -95,7 +109,10 @@ export function useAuctionItems(auctionHouseAddress: string) {
             tokenContract: auction.tokenContract?.toString() ?? "",
             reservePrice: BigInt(auction.reservePrice),
             highestBid: BigInt(auction.highestBidAmount),
-            minNextBid: calculateMinNextBid(BigInt(auction.highestBidAmount)),
+            minNextBid: calculateMinNextBid(
+              BigInt(auction.highestBidAmount),
+              BigInt(auction.reservePrice),
+            ),
             currentBidder: highestBidder,
             winner,
             startTime: BigInt(startTimeStr),
