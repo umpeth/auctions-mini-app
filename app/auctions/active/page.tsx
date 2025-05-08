@@ -14,7 +14,9 @@ export default async function ActiveAuctionsPage() {
       document: GetActiveAuctionsDocument,
       variables: {
         status: AuctionStatus.Active,
-        currentTimeEpoch: Number(Math.floor(Date.now() / 1000)),
+        currentTimeEpoch: Number(
+          Math.floor(Date.now() / 1000) - 24 * 60 * 60 * 10,
+        ),
       },
     }),
   });

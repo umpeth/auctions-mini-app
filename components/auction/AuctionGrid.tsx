@@ -1,4 +1,4 @@
-import Image from "next/image";
+"use client";
 import Link from "next/link";
 import { formatEther } from "viem";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { GetAuctionsByStatusQuery } from "@/graphql/generated";
 import { formatDistanceToNow } from "date-fns";
+import NFTImage from "@/components/NFTImage";
 
 interface AuctionGridProps {
   auctions: GetAuctionsByStatusQuery["auctions"];
@@ -33,13 +34,12 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
               <div className="space-y-2">
                 {auction.tokenReference?.metadata?.image && (
                   <div className="aspect-square w-full overflow-hidden rounded-lg">
-                    <Image
+                    <NFTImage
                       src={auction.tokenReference.metadata.image}
                       alt={
                         auction.tokenReference.metadata.name ||
                         `Token #${auction.tokenId}`
                       }
-                      className="object-cover w-full h-full"
                     />
                   </div>
                 )}

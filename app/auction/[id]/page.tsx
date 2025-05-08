@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-
 import { notFound } from "next/navigation";
 import { formatEther } from "viem";
 import { formatDistanceToNow, format } from "date-fns";
@@ -18,6 +16,7 @@ import React, { useState, useCallback } from "react";
 import { GetAuctionByAuctionIdQuery } from "@/graphql/generated";
 import { PlaceBid } from "@/components/auction/PlaceBid";
 import { calculateMinNextBid } from "@/lib/utils";
+import NFTImage from "@/components/NFTImage";
 
 // Ensure API_URL is properly set for both development and production
 const API_URL =
@@ -141,13 +140,12 @@ export default function AuctionPage({ params }: PageProps) {
         <div>
           {auction.tokenReference?.metadata?.image ? (
             <div className="aspect-square w-full overflow-hidden rounded-xl">
-              <Image
+              <NFTImage
                 src={auction.tokenReference.metadata.image}
                 alt={
                   auction.tokenReference.metadata.name ||
                   `Token #${auction.tokenId}`
                 }
-                className="object-cover w-full h-full"
               />
             </div>
           ) : (

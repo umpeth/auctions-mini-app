@@ -1,4 +1,4 @@
-import Image from "next/image";
+"use client";
 import { Address } from "@coinbase/onchainkit/identity";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import React from "react";
 import { useAuctionItems } from "@/hooks/useAuctionItems";
 import { formatUnits } from "viem";
 import { formatDuration, intervalToDuration } from "date-fns";
+import NFTImage from "@/components/NFTImage";
 
 interface AuctionDetailsProps {
   setCurrentScreen: (screen: string) => void;
@@ -104,10 +105,9 @@ export function AuctionDetails({
                 <div className="text-center text-gray-500">
                   <div className="text-6xl mb-2">
                     {auction.metadata?.image ? (
-                      <Image
+                      <NFTImage
                         src={auction.metadata.image}
                         alt={auction.metadata.name || "Item Image"}
-                        className="h-32 mx-auto object-contain"
                       />
                     ) : (
                       "🖼️"
