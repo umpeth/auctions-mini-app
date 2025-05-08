@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { usePlaceBid } from "@/hooks/usePlaceBid";
 import { parseEther } from "viem";
 import TransactionButton from "@/components/Transaction";
+import { AmountDisplay } from "@/components/AmountDisplay";
 
 interface PlaceBidProps {
   setCurrentScreen: (screen: string) => void;
@@ -92,12 +93,24 @@ export function PlaceBid({
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <div>
                   <div className="text-gray-600 text-sm">Current Bid</div>
-                  <div className="text-xl font-bold">{currentBid} ETH</div>
+                  <div className="text-xl font-bold">
+                    <AmountDisplay
+                      amount={currentBid}
+                      symbol="ETH"
+                      size="lg"
+                      decimals={18}
+                    />
+                  </div>
                 </div>
                 <div>
                   <div className="text-gray-600 text-sm">Minimum Next Bid</div>
                   <div className="text-lg font-bold text-green-600">
-                    {minNextBid} ETH
+                    <AmountDisplay
+                      amount={minNextBid}
+                      symbol="ETH"
+                      size="lg"
+                      decimals={18}
+                    />
                   </div>
                 </div>
               </div>

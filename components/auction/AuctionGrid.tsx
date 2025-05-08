@@ -10,6 +10,7 @@ import {
 import { GetAuctionsByStatusQuery } from "@/graphql/generated";
 import { formatDistanceToNow } from "date-fns";
 import NFTImage from "@/components/NFTImage";
+import { AmountDisplay } from "@/components/AmountDisplay";
 
 interface AuctionGridProps {
   auctions: GetAuctionsByStatusQuery["auctions"];
@@ -45,11 +46,23 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
                 )}
                 <p>
                   <span className="font-medium">Current Bid: </span>
-                  {formatEther(BigInt(auction.highestBidAmount || "0"))} ETH
+                  <AmountDisplay
+                    amount={formatEther(
+                      BigInt(auction.highestBidAmount || "0"),
+                    )}
+                    symbol="ETH"
+                    size="sm"
+                    decimals={18}
+                  />
                 </p>
                 <p>
                   <span className="font-medium">Reserve Price: </span>
-                  {formatEther(BigInt(auction.reservePrice))} ETH
+                  <AmountDisplay
+                    amount={formatEther(BigInt(auction.reservePrice))}
+                    symbol="ETH"
+                    size="sm"
+                    decimals={18}
+                  />
                 </p>
                 <p>
                   <span className="font-medium">Ends: </span>

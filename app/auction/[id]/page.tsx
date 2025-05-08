@@ -18,6 +18,8 @@ import { PlaceBid } from "@/components/auction/PlaceBid";
 import { calculateMinNextBid } from "@/lib/utils";
 import NFTImage from "@/components/NFTImage";
 import SimpleLayout from "@/components/SimpleLayout";
+import { Address } from "@coinbase/onchainkit/identity";
+import { AmountDisplay } from "@/components/AmountDisplay";
 
 // Ensure API_URL is properly set for both development and production
 const API_URL =
@@ -180,27 +182,35 @@ export default function AuctionPage({ params }: PageProps) {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
+                  <div className="break-words">
                     <p className="text-sm text-gray-500">Current Bid</p>
-                    <p className="text-2xl font-bold">{currentBidEth} ETH</p>
+                    <AmountDisplay
+                      amount={currentBidEth}
+                      symbol="ETH"
+                      size="lg"
+                      decimals={18}
+                    />
                   </div>
-                  <div>
+                  <div className="break-words">
                     <p className="text-sm text-gray-500">Reserve Price</p>
-                    <p className="text-2xl font-bold">
-                      {formatEther(BigInt(auction.reservePrice))} ETH
-                    </p>
+                    <AmountDisplay
+                      amount={formatEther(BigInt(auction.reservePrice))}
+                      symbol="ETH"
+                      size="lg"
+                      decimals={18}
+                    />
                   </div>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Auction Owner</p>
-                  <p className="font-mono">{auction.auctionOwner}</p>
+                  <Address address={auction.auctionOwner as `0x${string}`} />
                 </div>
 
                 {auction.currentBidder && (
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Highest Bidder</p>
-                    <p className="font-mono">{auction.currentBidder}</p>
+                    <Address address={auction.currentBidder as `0x${string}`} />
                   </div>
                 )}
 
@@ -258,7 +268,9 @@ export default function AuctionPage({ params }: PageProps) {
                           className="flex justify-between items-center"
                         >
                           <div>
-                            <p className="font-mono text-sm">{bid.bidder}</p>
+                            <p className="font-mono text-sm">
+                              <Address address={bid.bidder as `0x${string}`} />
+                            </p>
                             <p className="text-sm text-gray-500">
                               {format(
                                 new Date(parseInt(bid.timestamp) * 1000),
@@ -266,9 +278,12 @@ export default function AuctionPage({ params }: PageProps) {
                               )}
                             </p>
                           </div>
-                          <p className="font-bold">
-                            {formatEther(BigInt(bid.amount))} ETH
-                          </p>
+                          <AmountDisplay
+                            amount={formatEther(BigInt(bid.amount))}
+                            symbol="ETH"
+                            size="lg"
+                            decimals={18}
+                          />
                         </div>
                       ),
                     )}
