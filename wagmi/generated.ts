@@ -6,6 +6,402 @@ import {
 } from "wagmi/codegen";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// AffiliateEscrow
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const affiliateEscrowAbi = [
+  { type: "error", inputs: [], name: "InvalidAddress" },
+  { type: "error", inputs: [], name: "InvalidParameters" },
+  { type: "error", inputs: [], name: "InvalidState" },
+  {
+    type: "error",
+    inputs: [{ name: "token", internalType: "address", type: "address" }],
+    name: "SafeERC20FailedOperation",
+  },
+  { type: "error", inputs: [], name: "Unauthorized" },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "oldArbiter",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "newArbiter",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "approver",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+    ],
+    name: "ArbiterChangeApproved",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "oldArbiter",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "proposedArbiter",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+    ],
+    name: "ArbiterChangeProposed",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "disputeRemover",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+    ],
+    name: "DisputeRemoved",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "resolver",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+      { name: "settled", internalType: "bool", type: "bool", indexed: false },
+    ],
+    name: "DisputeResolved",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "disputeInitiator",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+    ],
+    name: "Disputed",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "escapeAddress",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+    ],
+    name: "EscapeAddressSet",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      { name: "to", internalType: "address", type: "address", indexed: true },
+      {
+        name: "token",
+        internalType: "address",
+        type: "address",
+        indexed: false,
+      },
+      {
+        name: "amount",
+        internalType: "uint256",
+        type: "uint256",
+        indexed: false,
+      },
+    ],
+    name: "Escaped",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "payer",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "settleDeadline",
+        internalType: "uint256",
+        type: "uint256",
+        indexed: false,
+      },
+    ],
+    name: "PayerSet",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      { name: "to", internalType: "address", type: "address", indexed: true },
+      {
+        name: "token",
+        internalType: "address",
+        type: "address",
+        indexed: false,
+      },
+      {
+        name: "amount",
+        internalType: "uint256",
+        type: "uint256",
+        indexed: false,
+      },
+    ],
+    name: "Refunded",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      { name: "to", internalType: "address", type: "address", indexed: true },
+      {
+        name: "affiliate",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+      {
+        name: "token",
+        internalType: "address",
+        type: "address",
+        indexed: false,
+      },
+      {
+        name: "amount",
+        internalType: "uint256",
+        type: "uint256",
+        indexed: false,
+      },
+      {
+        name: "affiliateAmount",
+        internalType: "uint256",
+        type: "uint256",
+        indexed: false,
+      },
+    ],
+    name: "Settled",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "affiliate",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "affiliateShare",
+    outputs: [{ name: "", internalType: "uint16", type: "uint16" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "_proposedArbiter", internalType: "address", type: "address" },
+    ],
+    name: "approveArbiter",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "arbiter",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "_proposedArbiter", internalType: "address", type: "address" },
+    ],
+    name: "changeArbiter",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "dispute",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "token", internalType: "address", type: "address" },
+      { name: "amount", internalType: "uint256", type: "uint256" },
+      { name: "_escapeAddress", internalType: "address", type: "address" },
+    ],
+    name: "escape",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "escapeAddress",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "_payee", internalType: "address", type: "address" },
+      { name: "_storefront", internalType: "address", type: "address" },
+      { name: "_arbiter", internalType: "address", type: "address" },
+    ],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "isDisputed",
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "isSettled",
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "payee",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "payer",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "proposedArbiter",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "token", internalType: "address", type: "address" },
+      { name: "amount", internalType: "uint256", type: "uint256" },
+    ],
+    name: "refund",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "removeDispute",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "shouldSettle", internalType: "bool", type: "bool" },
+      { name: "token", internalType: "address", type: "address" },
+      { name: "amount", internalType: "uint256", type: "uint256" },
+    ],
+    name: "resolveDispute",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "_affiliate", internalType: "address", type: "address" },
+      { name: "_affiliateShare", internalType: "uint16", type: "uint16" },
+    ],
+    name: "setAffiliate",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "_escapeAddress", internalType: "address", type: "address" },
+    ],
+    name: "setEscapeAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "_payer", internalType: "address", type: "address" },
+      { name: "settleDeadline", internalType: "uint256", type: "uint256" },
+    ],
+    name: "setPayer",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [
+      { name: "token", internalType: "address", type: "address" },
+      { name: "amount", internalType: "uint256", type: "uint256" },
+    ],
+    name: "settle",
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "settleTime",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    inputs: [],
+    name: "storefront",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
+    stateMutability: "view",
+  },
+  { type: "receive", stateMutability: "payable" },
+] as const;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // AffiliateEscrowFactory
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1288,6 +1684,435 @@ export const auctionItemErc721FactoryAbi = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // React
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__
+ */
+export const useReadAffiliateEscrow = /*#__PURE__*/ createUseReadContract({
+  abi: affiliateEscrowAbi,
+});
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"affiliate"`
+ */
+export const useReadAffiliateEscrowAffiliate =
+  /*#__PURE__*/ createUseReadContract({
+    abi: affiliateEscrowAbi,
+    functionName: "affiliate",
+  });
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"affiliateShare"`
+ */
+export const useReadAffiliateEscrowAffiliateShare =
+  /*#__PURE__*/ createUseReadContract({
+    abi: affiliateEscrowAbi,
+    functionName: "affiliateShare",
+  });
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"arbiter"`
+ */
+export const useReadAffiliateEscrowArbiter =
+  /*#__PURE__*/ createUseReadContract({
+    abi: affiliateEscrowAbi,
+    functionName: "arbiter",
+  });
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"escapeAddress"`
+ */
+export const useReadAffiliateEscrowEscapeAddress =
+  /*#__PURE__*/ createUseReadContract({
+    abi: affiliateEscrowAbi,
+    functionName: "escapeAddress",
+  });
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"isDisputed"`
+ */
+export const useReadAffiliateEscrowIsDisputed =
+  /*#__PURE__*/ createUseReadContract({
+    abi: affiliateEscrowAbi,
+    functionName: "isDisputed",
+  });
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"isSettled"`
+ */
+export const useReadAffiliateEscrowIsSettled =
+  /*#__PURE__*/ createUseReadContract({
+    abi: affiliateEscrowAbi,
+    functionName: "isSettled",
+  });
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"payee"`
+ */
+export const useReadAffiliateEscrowPayee = /*#__PURE__*/ createUseReadContract({
+  abi: affiliateEscrowAbi,
+  functionName: "payee",
+});
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"payer"`
+ */
+export const useReadAffiliateEscrowPayer = /*#__PURE__*/ createUseReadContract({
+  abi: affiliateEscrowAbi,
+  functionName: "payer",
+});
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"proposedArbiter"`
+ */
+export const useReadAffiliateEscrowProposedArbiter =
+  /*#__PURE__*/ createUseReadContract({
+    abi: affiliateEscrowAbi,
+    functionName: "proposedArbiter",
+  });
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"settleTime"`
+ */
+export const useReadAffiliateEscrowSettleTime =
+  /*#__PURE__*/ createUseReadContract({
+    abi: affiliateEscrowAbi,
+    functionName: "settleTime",
+  });
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"storefront"`
+ */
+export const useReadAffiliateEscrowStorefront =
+  /*#__PURE__*/ createUseReadContract({
+    abi: affiliateEscrowAbi,
+    functionName: "storefront",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__
+ */
+export const useWriteAffiliateEscrow = /*#__PURE__*/ createUseWriteContract({
+  abi: affiliateEscrowAbi,
+});
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"approveArbiter"`
+ */
+export const useWriteAffiliateEscrowApproveArbiter =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "approveArbiter",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"changeArbiter"`
+ */
+export const useWriteAffiliateEscrowChangeArbiter =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "changeArbiter",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"dispute"`
+ */
+export const useWriteAffiliateEscrowDispute =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "dispute",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"escape"`
+ */
+export const useWriteAffiliateEscrowEscape =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "escape",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"initialize"`
+ */
+export const useWriteAffiliateEscrowInitialize =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "initialize",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"refund"`
+ */
+export const useWriteAffiliateEscrowRefund =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "refund",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"removeDispute"`
+ */
+export const useWriteAffiliateEscrowRemoveDispute =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "removeDispute",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"resolveDispute"`
+ */
+export const useWriteAffiliateEscrowResolveDispute =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "resolveDispute",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"setAffiliate"`
+ */
+export const useWriteAffiliateEscrowSetAffiliate =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "setAffiliate",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"setEscapeAddress"`
+ */
+export const useWriteAffiliateEscrowSetEscapeAddress =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "setEscapeAddress",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"setPayer"`
+ */
+export const useWriteAffiliateEscrowSetPayer =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "setPayer",
+  });
+
+/**
+ * Wraps __{@link useWriteContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"settle"`
+ */
+export const useWriteAffiliateEscrowSettle =
+  /*#__PURE__*/ createUseWriteContract({
+    abi: affiliateEscrowAbi,
+    functionName: "settle",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__
+ */
+export const useSimulateAffiliateEscrow =
+  /*#__PURE__*/ createUseSimulateContract({ abi: affiliateEscrowAbi });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"approveArbiter"`
+ */
+export const useSimulateAffiliateEscrowApproveArbiter =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "approveArbiter",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"changeArbiter"`
+ */
+export const useSimulateAffiliateEscrowChangeArbiter =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "changeArbiter",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"dispute"`
+ */
+export const useSimulateAffiliateEscrowDispute =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "dispute",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"escape"`
+ */
+export const useSimulateAffiliateEscrowEscape =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "escape",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"initialize"`
+ */
+export const useSimulateAffiliateEscrowInitialize =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "initialize",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"refund"`
+ */
+export const useSimulateAffiliateEscrowRefund =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "refund",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"removeDispute"`
+ */
+export const useSimulateAffiliateEscrowRemoveDispute =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "removeDispute",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"resolveDispute"`
+ */
+export const useSimulateAffiliateEscrowResolveDispute =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "resolveDispute",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"setAffiliate"`
+ */
+export const useSimulateAffiliateEscrowSetAffiliate =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "setAffiliate",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"setEscapeAddress"`
+ */
+export const useSimulateAffiliateEscrowSetEscapeAddress =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "setEscapeAddress",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"setPayer"`
+ */
+export const useSimulateAffiliateEscrowSetPayer =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "setPayer",
+  });
+
+/**
+ * Wraps __{@link useSimulateContract}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `functionName` set to `"settle"`
+ */
+export const useSimulateAffiliateEscrowSettle =
+  /*#__PURE__*/ createUseSimulateContract({
+    abi: affiliateEscrowAbi,
+    functionName: "settle",
+  });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__
+ */
+export const useWatchAffiliateEscrowEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({ abi: affiliateEscrowAbi });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `eventName` set to `"ArbiterChangeApproved"`
+ */
+export const useWatchAffiliateEscrowArbiterChangeApprovedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: affiliateEscrowAbi,
+    eventName: "ArbiterChangeApproved",
+  });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `eventName` set to `"ArbiterChangeProposed"`
+ */
+export const useWatchAffiliateEscrowArbiterChangeProposedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: affiliateEscrowAbi,
+    eventName: "ArbiterChangeProposed",
+  });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `eventName` set to `"DisputeRemoved"`
+ */
+export const useWatchAffiliateEscrowDisputeRemovedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: affiliateEscrowAbi,
+    eventName: "DisputeRemoved",
+  });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `eventName` set to `"DisputeResolved"`
+ */
+export const useWatchAffiliateEscrowDisputeResolvedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: affiliateEscrowAbi,
+    eventName: "DisputeResolved",
+  });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `eventName` set to `"Disputed"`
+ */
+export const useWatchAffiliateEscrowDisputedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: affiliateEscrowAbi,
+    eventName: "Disputed",
+  });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `eventName` set to `"EscapeAddressSet"`
+ */
+export const useWatchAffiliateEscrowEscapeAddressSetEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: affiliateEscrowAbi,
+    eventName: "EscapeAddressSet",
+  });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `eventName` set to `"Escaped"`
+ */
+export const useWatchAffiliateEscrowEscapedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: affiliateEscrowAbi,
+    eventName: "Escaped",
+  });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `eventName` set to `"PayerSet"`
+ */
+export const useWatchAffiliateEscrowPayerSetEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: affiliateEscrowAbi,
+    eventName: "PayerSet",
+  });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `eventName` set to `"Refunded"`
+ */
+export const useWatchAffiliateEscrowRefundedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: affiliateEscrowAbi,
+    eventName: "Refunded",
+  });
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link affiliateEscrowAbi}__ and `eventName` set to `"Settled"`
+ */
+export const useWatchAffiliateEscrowSettledEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: affiliateEscrowAbi,
+    eventName: "Settled",
+  });
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link affiliateEscrowFactoryAbi}__

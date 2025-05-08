@@ -5,6 +5,8 @@ import { AuctionItemERC721ABI } from "./abi/AuctionItemERC721";
 import { AuctionHouseFactoryABI } from "./abi/AuctionHouseFactory";
 import { AuctionItemERC721FactoryABI } from "./abi/AuctionItemERC721Factory";
 import { AffiliateEscrowFactoryABI } from "./abi/AffiliateEscrowFactory";
+import { AffiliateEscrowABI } from "./abi/AffiliateEscrow";
+
 export default defineConfig({
   out: "wagmi/generated.ts",
   contracts: [
@@ -27,6 +29,10 @@ export default defineConfig({
     {
       name: "AffiliateEscrowFactory",
       abi: AffiliateEscrowFactoryABI,
+    },
+    {
+      name: "AffiliateEscrow",
+      abi: AffiliateEscrowABI,
     },
   ],
   plugins: [react()],
