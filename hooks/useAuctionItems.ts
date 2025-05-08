@@ -4,6 +4,7 @@ import {
   GetAuctionsByAuctionHouseAddressQuery,
   GetAuctionsByAuctionHouseAddressQueryVariables,
 } from "@/graphql/generated";
+import { calculateMinNextBid } from "@/lib/utils";
 
 export interface AuctionItem {
   id: string;
@@ -34,25 +35,6 @@ export interface AuctionItem {
       recipient: string;
     };
   }>;
-}
-
-// Calculate minimum next bid based on current bid and reserve price
-function calculateMinNextBid(
-  currentBidWei: bigint,
-  reservePriceWei: bigint,
-  minBidIncrementBps: bigint = BigInt(50),
-): bigint {
-  // If no bids yet, use reserve price
-  if (currentBidWei === BigInt(0)) {
-    return reservePriceWei;
-  }
-
-  // Calculate increment (default 0.5% = 50 basis points)
-  const increment = (currentBidWei * minBidIncrementBps) / BigInt(10000);
-  const nextBid = currentBidWei + increment;
-
-  // Ensure next bid is at least the reserve price
-  return nextBid > reservePriceWei ? nextBid : reservePriceWei;
 }
 
 export function useAuctionItems(auctionHouseAddress: string) {
@@ -112,6 +94,7 @@ export function useAuctionItems(auctionHouseAddress: string) {
             minNextBid: calculateMinNextBid(
               BigInt(auction.highestBidAmount),
               BigInt(auction.reservePrice),
+              BigInt(auction.minBidIncrementBps),
             ),
             currentBidder: highestBidder,
             winner,
