@@ -1,0 +1,17 @@
+query GetActiveAuctions {
+  auctions(where: { status: ACTIVE }, orderBy: endTime, orderDirection: asc) {
+    id
+    tokenId
+    seller
+    highestBid
+    highestBidder
+    endTime
+    startTime
+    status
+    tokenURI
+    auctionHouse {
+      id
+      name
+    }
+  }
+}
