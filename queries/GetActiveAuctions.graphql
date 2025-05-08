@@ -1,5 +1,5 @@
-query getAuctionByAuctionID($auctionID: ID!) {
-  auction(id: $auctionID) {
+query getActiveAuctions($status: AuctionStatus, $currentTimeEpoch: BigInt) {
+  auctions(where: { status: $status, endTime_gt: $currentTimeEpoch }) {
     id
     auctionId
     tokenId

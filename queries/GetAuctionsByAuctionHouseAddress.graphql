@@ -22,7 +22,7 @@ query GetAuctionsByAuctionHouseAddress($auctionHouseAddress: ID!) {
           image
         }
       }
-      bids(orderBy: timestamp, orderDirection: desc, first: 1) {
+      bids(orderBy: timestamp, orderDirection: desc) {
         bidder
         amount
         timestamp
