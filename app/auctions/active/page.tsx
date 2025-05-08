@@ -1,5 +1,5 @@
 import { AuctionGrid } from "@/components/auction/AuctionGrid";
-import { GetAuctionsByStatusDocument } from "@/graphql/queryDocuments";
+import { GetActiveAuctionsDocument } from "@/graphql/queryDocuments";
 import { AuctionStatus } from "@/graphql/generated";
 
 const API_URL = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
@@ -11,9 +11,10 @@ export default async function ActiveAuctionsPage() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      document: GetAuctionsByStatusDocument,
+      document: GetActiveAuctionsDocument,
       variables: {
         status: AuctionStatus.Active,
+        currentTimeEpoch: Number(Math.floor(Date.now() / 1000)),
       },
     }),
   });

@@ -29,6 +29,7 @@ export default async function AuctionPage({ params }: PageProps) {
       document: GetAuctionByAuctionIdDocument,
       variables: {
         auctionID: params.id,
+        currentTimeEpoch: new Date().getTime() / 1000,
       },
     }),
   });
@@ -137,25 +138,34 @@ export default async function AuctionPage({ params }: PageProps) {
                 <p className="text-gray-500 text-center py-4">No bids yet</p>
               ) : (
                 <div className="space-y-4">
-                  {auction.bids.map((bid, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center"
-                    >
-                      <div>
-                        <p className="font-mono text-sm">{bid.bidder}</p>
-                        <p className="text-sm text-gray-500">
-                          {format(
-                            new Date(parseInt(bid.timestamp) * 1000),
-                            "PPp",
-                          )}
+                  {auction.bids.map(
+                    (
+                      bid: {
+                        bidder: string;
+                        timestamp: string;
+                        amount: string;
+                      },
+                      index: number,
+                    ) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center"
+                      >
+                        <div>
+                          <p className="font-mono text-sm">{bid.bidder}</p>
+                          <p className="text-sm text-gray-500">
+                            {format(
+                              new Date(parseInt(bid.timestamp) * 1000),
+                              "PPp",
+                            )}
+                          </p>
+                        </div>
+                        <p className="font-bold">
+                          {formatEther(BigInt(bid.amount))} ETH
                         </p>
                       </div>
-                      <p className="font-bold">
-                        {formatEther(BigInt(bid.amount))} ETH
-                      </p>
-                    </div>
-                  ))}
+                    ),
+                  )}
                 </div>
               )}
             </CardContent>
