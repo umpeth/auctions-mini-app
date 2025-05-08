@@ -4,6 +4,8 @@ import { gql } from "graphql-request";
 import {
   GetAuctionsByAuctionHouseAddressQuery,
   GetAuctionsByAuctionHouseAddressQueryVariables,
+  GetAuctionsByStatusQuery,
+  GetAuctionsByStatusQueryVariables,
 } from "./generated";
 
 export const GetAuctionsByAuctionHouseAddressDocument: TypedDocumentNode<
@@ -39,6 +41,41 @@ export const GetAuctionsByAuctionHouseAddressDocument: TypedDocumentNode<
           amount
           timestamp
         }
+      }
+    }
+  }
+`);
+
+export const GetAuctionsByStatusDocument: TypedDocumentNode<
+  GetAuctionsByStatusQuery,
+  GetAuctionsByStatusQueryVariables
+> = parse(gql`
+  query getAuctionsByStatus($status: AuctionStatus) {
+    auctions(where: { status: $status }) {
+      id
+      auctionId
+      tokenId
+      tokenContract
+      status
+      reservePrice
+      highestBidAmount
+      currentBidder
+      endTime
+      startTime
+      auctionOwner
+      isPremiumAuction
+      premiumBps
+      tokenReference {
+        metadata {
+          name
+          description
+          image
+        }
+      }
+      bids(orderBy: timestamp, orderDirection: desc, first: 1) {
+        bidder
+        amount
+        timestamp
       }
     }
   }
