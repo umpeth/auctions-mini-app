@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 // import { Textarea } from "@/components/ui/textarea";
 import React, { useState } from "react";
 import { usePlaceBid } from "@/hooks/usePlaceBid";
@@ -200,12 +201,13 @@ export function PlaceBid({
               </div> */}
               <div className="border-t pt-4 mt-4">
                 <div className="flex items-start mb-4">
-                  <Input
-                    type="checkbox"
+                  <Checkbox
                     id="confirm"
                     className="mt-1 mr-2"
                     checked={isConfirmed}
-                    onChange={(e) => setIsConfirmed(e.target.checked)}
+                    onCheckedChange={(checked) =>
+                      setIsConfirmed(checked === true)
+                    }
                   />
                   <Label htmlFor="confirm" className="text-sm">
                     I confirm that I want to place this bid. If I am outbid, I
