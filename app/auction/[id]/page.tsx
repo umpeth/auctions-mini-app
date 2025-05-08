@@ -17,6 +17,7 @@ import { GetAuctionByAuctionIdQuery } from "@/graphql/generated";
 import { PlaceBid } from "@/components/auction/PlaceBid";
 import { calculateMinNextBid } from "@/lib/utils";
 import NFTImage from "@/components/NFTImage";
+import SimpleLayout from "@/components/SimpleLayout";
 
 // Ensure API_URL is properly set for both development and production
 const API_URL =
@@ -134,148 +135,150 @@ export default function AuctionPage({ params }: PageProps) {
   const currentBidEth = formatEther(BigInt(auction.highestBidAmount || "0"));
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Left Column - Image */}
-        <div>
-          {auction.tokenReference?.metadata?.image ? (
-            <div className="aspect-square w-full overflow-hidden rounded-xl">
-              <NFTImage
-                src={auction.tokenReference.metadata.image}
-                alt={
-                  auction.tokenReference.metadata.name ||
-                  `Token #${auction.tokenId}`
-                }
-              />
-            </div>
-          ) : (
-            <div className="aspect-square w-full bg-gray-100 rounded-xl flex items-center justify-center">
-              <p className="text-gray-500">No image available</p>
-            </div>
-          )}
-        </div>
-
-        {/* Right Column - Auction Details */}
-        <div className="space-y-6">
+    <SimpleLayout title="Auction Details">
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Left Column - Image */}
           <div>
-            <h1 className="text-4xl font-bold mb-2">
-              {auction.tokenReference?.metadata?.name ||
-                `Token #${auction.tokenId}`}
-            </h1>
-            <p className="text-gray-600">
-              {auction.tokenReference?.metadata?.description}
-            </p>
+            {auction.tokenReference?.metadata?.image ? (
+              <div className="aspect-square w-full overflow-hidden rounded-xl">
+                <NFTImage
+                  src={auction.tokenReference.metadata.image}
+                  alt={
+                    auction.tokenReference.metadata.name ||
+                    `Token #${auction.tokenId}`
+                  }
+                />
+              </div>
+            ) : (
+              <div className="aspect-square w-full bg-gray-100 rounded-xl flex items-center justify-center">
+                <p className="text-gray-500">No image available</p>
+              </div>
+            )}
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Auction Details</CardTitle>
-              <CardDescription>
-                {isEnded
-                  ? "Auction has ended"
-                  : "Time remaining: " + formatDistanceToNow(timeUntilEnd)}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+          {/* Right Column - Auction Details */}
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-4xl font-bold mb-2">
+                {auction.tokenReference?.metadata?.name ||
+                  `Token #${auction.tokenId}`}
+              </h1>
+              <p className="text-gray-600">
+                {auction.tokenReference?.metadata?.description}
+              </p>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Auction Details</CardTitle>
+                <CardDescription>
+                  {isEnded
+                    ? "Auction has ended"
+                    : "Time remaining: " + formatDistanceToNow(timeUntilEnd)}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-500">Current Bid</p>
+                    <p className="text-2xl font-bold">{currentBidEth} ETH</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Reserve Price</p>
+                    <p className="text-2xl font-bold">
+                      {formatEther(BigInt(auction.reservePrice))} ETH
+                    </p>
+                  </div>
+                </div>
+
                 <div>
-                  <p className="text-sm text-gray-500">Current Bid</p>
-                  <p className="text-2xl font-bold">{currentBidEth} ETH</p>
+                  <p className="text-sm text-gray-500 mb-1">Auction Owner</p>
+                  <p className="font-mono">{auction.auctionOwner}</p>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-500">Reserve Price</p>
-                  <p className="text-2xl font-bold">
-                    {formatEther(BigInt(auction.reservePrice))} ETH
-                  </p>
-                </div>
-              </div>
 
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Auction Owner</p>
-                <p className="font-mono">{auction.auctionOwner}</p>
-              </div>
+                {auction.currentBidder && (
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Highest Bidder</p>
+                    <p className="font-mono">{auction.currentBidder}</p>
+                  </div>
+                )}
 
-              {auction.currentBidder && (
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Highest Bidder</p>
-                  <p className="font-mono">{auction.currentBidder}</p>
-                </div>
-              )}
-
-              {!isEnded && (
-                <div className="pt-4">
-                  {showBidForm ? (
-                    <PlaceBid
-                      setCurrentScreen={() => {
-                        setShowBidForm(false);
-                        fetchAuctionWithRetry();
-                      }}
-                      auctionHouseAddress={
-                        auction.auctionHouse
-                          ?.auctionHouseAddress as `0x${string}`
-                      }
-                      auctionId={BigInt(auction.auctionId)}
-                      currentBid={currentBidEth}
-                      minNextBid={minNextBidEth}
-                    />
-                  ) : (
-                    <Button
-                      className="w-full"
-                      size="lg"
-                      onClick={() => setShowBidForm(true)}
-                    >
-                      Place Bid
-                    </Button>
-                  )}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Bid History */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Bid History</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {auction.bids.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">No bids yet</p>
-              ) : (
-                <div className="space-y-4">
-                  {auction.bids.map(
-                    (
-                      bid: {
-                        bidder: string;
-                        timestamp: string;
-                        amount: string;
-                      },
-                      index: number,
-                    ) => (
-                      <div
-                        key={index}
-                        className="flex justify-between items-center"
+                {!isEnded && (
+                  <div className="pt-4">
+                    {showBidForm ? (
+                      <PlaceBid
+                        setCurrentScreen={() => {
+                          setShowBidForm(false);
+                          fetchAuctionWithRetry();
+                        }}
+                        auctionHouseAddress={
+                          auction.auctionHouse
+                            ?.auctionHouseAddress as `0x${string}`
+                        }
+                        auctionId={BigInt(auction.auctionId)}
+                        currentBid={currentBidEth}
+                        minNextBid={minNextBidEth}
+                      />
+                    ) : (
+                      <Button
+                        className="w-full"
+                        size="lg"
+                        onClick={() => setShowBidForm(true)}
                       >
-                        <div>
-                          <p className="font-mono text-sm">{bid.bidder}</p>
-                          <p className="text-sm text-gray-500">
-                            {format(
-                              new Date(parseInt(bid.timestamp) * 1000),
-                              "PPp",
-                            )}
+                        Place Bid
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Bid History */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Bid History</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {auction.bids.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">No bids yet</p>
+                ) : (
+                  <div className="space-y-4">
+                    {auction.bids.map(
+                      (
+                        bid: {
+                          bidder: string;
+                          timestamp: string;
+                          amount: string;
+                        },
+                        index: number,
+                      ) => (
+                        <div
+                          key={index}
+                          className="flex justify-between items-center"
+                        >
+                          <div>
+                            <p className="font-mono text-sm">{bid.bidder}</p>
+                            <p className="text-sm text-gray-500">
+                              {format(
+                                new Date(parseInt(bid.timestamp) * 1000),
+                                "PPp",
+                              )}
+                            </p>
+                          </div>
+                          <p className="font-bold">
+                            {formatEther(BigInt(bid.amount))} ETH
                           </p>
                         </div>
-                        <p className="font-bold">
-                          {formatEther(BigInt(bid.amount))} ETH
-                        </p>
-                      </div>
-                    ),
-                  )}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                      ),
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </SimpleLayout>
   );
 }
