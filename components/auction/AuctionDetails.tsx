@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { useAuctionItems } from "@/hooks/useAuctionItems";
-import { formatUnits } from "viem";
+import { formatEther, formatUnits } from "viem";
 import { formatDuration, intervalToDuration } from "date-fns";
 import NFTImage from "@/components/NFTImage";
+import { AmountDisplay } from "@/components/AmountDisplay";
 
 interface AuctionDetailsProps {
   setCurrentScreen: (screen: string) => void;
@@ -153,9 +154,16 @@ export function AuctionDetails({
                       Minimum Next Bid
                     </div>
                     <div className="text-xl font-bold text-green-600">
-                      {auction.minNextBid !== BigInt(0)
-                        ? `${formatUnits(auction.minNextBid, 18)} ETH`
-                        : "-"}
+                      {auction.minNextBid !== BigInt(0) ? (
+                        <AmountDisplay
+                          amount={formatEther(auction.minNextBid)}
+                          symbol="ETH"
+                          size="lg"
+                          decimals={18}
+                        />
+                      ) : (
+                        "-"
+                      )}
                     </div>
                     <div className="text-xs text-gray-500">
                       (+0.5% increment)
