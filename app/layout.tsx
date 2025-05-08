@@ -3,7 +3,7 @@ import "@coinbase/onchainkit/styles.css";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "sonner";
 
 export const viewport: Viewport = {
   width: "device-width",

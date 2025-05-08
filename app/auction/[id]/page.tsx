@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import React, { useState, useCallback } from "react";
 import { GetAuctionByAuctionIdQuery } from "@/graphql/generated";
 import { PlaceBid } from "@/components/auction/PlaceBid";
@@ -42,7 +42,6 @@ export default function AuctionPage({ params }: PageProps) {
   const [auction, setAuction] =
     useState<GetAuctionByAuctionIdQuery["auction"]>(null);
   const [showBidForm, setShowBidForm] = useState(false);
-  const { toast } = useToast();
 
   const minNextBidEth = formatEther(
     calculateMinNextBid(
@@ -93,15 +92,12 @@ export default function AuctionPage({ params }: PageProps) {
         setError(
           "Failed to load auction data. Please try refreshing the page.",
         );
-        toast({
-          title: "Error loading auction",
-          description:
-            "Failed to load auction data. Please try refreshing the page.",
-          variant: "destructive",
-        });
+        toast.error(
+          "Failed to load auction data. Please try refreshing the page.",
+        );
       }
     },
-    [params.id, toast],
+    [params.id],
   );
 
   React.useEffect(() => {
