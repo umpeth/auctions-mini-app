@@ -23,7 +23,7 @@ export function AuctionDetails({
   onPlaceBid,
 }: AuctionDetailsProps) {
   const { auctions, loading, error } = useAuctionItems(auctionHouseAddress);
-  const auction = auctions[0];
+  const auction = auctions[1]; // TODO: make this selectable
 
   if (loading) {
     return (

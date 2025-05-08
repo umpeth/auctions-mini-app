@@ -29,7 +29,7 @@ export default function AuctionSystemPage() {
         return (
           <AuctionDetails
             setCurrentScreen={setCurrentScreen}
-            auctionHouseAddress="0xa753377e8a2012712faa05bdc74e99ef5f7e9767"
+            auctionHouseAddress="0xf95c7d922b28d1023deceedaa387ea50bdefbd0a"
             onPlaceBid={setSelectedAuction}
           />
         );
