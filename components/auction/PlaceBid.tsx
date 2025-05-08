@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 // import { Textarea } from "@/components/ui/textarea";
@@ -10,9 +9,17 @@ import { AmountDisplay } from "@/components/AmountDisplay";
 import BidSuccessModal from "@/components/BidSuccessModal";
 import { useFrameActions } from "@/hooks/UseFrameAction";
 import { AuctionItem } from "@/types";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import NFTImage from "@/components/NFTImage";
 
 interface PlaceBidProps {
-  // setCurrentScreen: (screen: string) => void;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
   auctionItem: AuctionItem;
   auctionHouseAddress: `0x${string}`;
   auctionId: bigint;
@@ -21,14 +28,14 @@ interface PlaceBidProps {
 }
 
 export function PlaceBid({
-  // setCurrentScreen,
+  isOpen,
+  onOpenChange,
   auctionItem,
   auctionHouseAddress,
   auctionId,
   currentBid,
   minNextBid,
 }: PlaceBidProps) {
-  // Form state
   const [bidAmount, setBidAmount] = useState(minNextBid);
   // const [message, setMessage] = useState("");
   // const [affiliateAddress, setAffiliateAddress] = useState("");
@@ -49,6 +56,7 @@ export function PlaceBid({
     onSuccess: (bidHash) => {
       console.log("Bid placed successfully:", bidHash);
       setIsBidSuccessModalOpen(true);
+      onOpenChange(false); // Close the bid modal when successful
     },
   });
 
@@ -89,25 +97,31 @@ export function PlaceBid({
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle>Place Bid</CardTitle>
-        </CardHeader>
-        <CardContent>
+    <>
+      <Dialog open={isOpen} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-4xl max-h-[95vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Place Bid</DialogTitle>
+          </DialogHeader>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div className="md:col-span-1">
-              <div className="bg-gray-100 p-2 rounded-lg h-48 flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <div className="text-5xl mb-2">🖼️</div>
-                  <div>Item Image</div>
-                </div>
+              <div className="overflow-hidden rounded-lg h-48">
+                <NFTImage
+                  src={auctionItem.metadata?.image || ""}
+                  alt={
+                    auctionItem.metadata?.name ||
+                    `Token #${auctionItem.tokenId}`
+                  }
+                />
               </div>
             </div>
             <div className="md:col-span-2">
-              <h3 className="text-lg font-bold">Rare Collectible #42</h3>
+              <h3 className="text-lg font-bold">
+                {auctionItem.metadata?.name || `Token #${auctionItem.tokenId}`}
+              </h3>
               <div className="text-gray-700 mt-1 text-sm">
-                Description of the item being auctioned...
+                {auctionItem.metadata?.description ||
+                  "No description available"}
               </div>
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <div>
@@ -232,8 +246,8 @@ export function PlaceBid({
               </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </DialogContent>
+      </Dialog>
       <BidSuccessModal
         isOpen={isBidSuccessModalOpen}
         onOpenChange={setIsBidSuccessModalOpen}
@@ -243,6 +257,6 @@ export function PlaceBid({
         shareUrl={getShareUrl()}
         onWarpcastShare={handleWarpcastShare}
       />
-    </div>
+    </>
   );
 }

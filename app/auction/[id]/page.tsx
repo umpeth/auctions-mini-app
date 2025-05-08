@@ -20,6 +20,7 @@ import NFTImage from "@/components/NFTImage";
 import SimpleLayout from "@/components/SimpleLayout";
 import { Address } from "@coinbase/onchainkit/identity";
 import { AmountDisplay } from "@/components/AmountDisplay";
+import { AuctionItem } from "@/types";
 
 // Ensure API_URL is properly set for both development and production
 const API_URL =
@@ -214,10 +215,9 @@ export default function AuctionPage({ params }: PageProps) {
                   <div className="pt-4">
                     {showBidForm ? (
                       <PlaceBid
-                        // setCurrentScreen={() => {
-                        //     setShowBidForm(false);
-                        //     fetchAuctionWithRetry();
-                        //   }}
+                        isOpen={showBidForm}
+                        onOpenChange={setShowBidForm}
+                        auctionItem={auction as unknown as AuctionItem}
                         auctionHouseAddress={
                           auction.auctionHouse
                             ?.auctionHouseAddress as `0x${string}`
