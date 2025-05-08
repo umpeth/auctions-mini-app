@@ -8,6 +8,7 @@ query getActiveAuctions($status: AuctionStatus, $currentTimeEpoch: BigInt) {
     reservePrice
     highestBidAmount
     currentBidder
+    minBidIncrementBps
     endTime
     startTime
     auctionOwner

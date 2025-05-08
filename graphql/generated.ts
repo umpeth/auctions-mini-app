@@ -6716,6 +6716,7 @@ export type GetActiveAuctionsQuery = {
     reservePrice: any;
     highestBidAmount: any;
     currentBidder?: any | null;
+    minBidIncrementBps: number;
     endTime: any;
     startTime: any;
     auctionOwner: any;
@@ -6758,6 +6759,7 @@ export type GetAuctionsByAuctionHouseAddressQuery = {
       reservePrice: any;
       highestBidAmount: any;
       currentBidder?: any | null;
+      minBidIncrementBps: number;
       endTime: any;
       startTime: any;
       auctionOwner: any;
@@ -6798,6 +6800,7 @@ export type GetAuctionsByStatusQuery = {
     reservePrice: any;
     highestBidAmount: any;
     currentBidder?: any | null;
+    minBidIncrementBps: number;
     endTime: any;
     startTime: any;
     auctionOwner: any;
@@ -6837,11 +6840,13 @@ export type GetAuctionByAuctionIdQuery = {
     reservePrice: any;
     highestBidAmount: any;
     currentBidder?: any | null;
+    minBidIncrementBps: number;
     endTime: any;
     startTime: any;
     auctionOwner: any;
     isPremiumAuction: boolean;
     premiumBps: number;
+    auctionHouse: { __typename?: "AuctionHouse"; auctionHouseAddress: any };
     tokenReference?: {
       __typename?: "AuctionItemERC721Token";
       metadata?: {

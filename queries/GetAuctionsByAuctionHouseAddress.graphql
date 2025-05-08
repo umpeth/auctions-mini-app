@@ -10,6 +10,7 @@ query GetAuctionsByAuctionHouseAddress($auctionHouseAddress: ID!) {
       reservePrice
       highestBidAmount
       currentBidder
+      minBidIncrementBps
       endTime
       startTime
       auctionOwner

@@ -28,6 +28,7 @@ export const GetAuctionsByAuctionHouseAddressDocument: TypedDocumentNode<
         reservePrice
         highestBidAmount
         currentBidder
+        minBidIncrementBps
         endTime
         startTime
         auctionOwner
@@ -62,6 +63,7 @@ export const GetAuctionsByStatusDocument: TypedDocumentNode<
       tokenContract
       status
       reservePrice
+      minBidIncrementBps
       highestBidAmount
       currentBidder
       endTime
@@ -99,11 +101,15 @@ export const GetAuctionByAuctionIdDocument: TypedDocumentNode<
       reservePrice
       highestBidAmount
       currentBidder
+      minBidIncrementBps
       endTime
       startTime
       auctionOwner
       isPremiumAuction
       premiumBps
+      auctionHouse {
+        auctionHouseAddress
+      }
       tokenReference {
         metadata {
           name
@@ -134,6 +140,7 @@ export const GetActiveAuctionsDocument: TypedDocumentNode<
       reservePrice
       highestBidAmount
       currentBidder
+      minBidIncrementBps
       endTime
       startTime
       auctionOwner

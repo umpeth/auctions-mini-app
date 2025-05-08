@@ -8,11 +8,15 @@ query getAuctionByAuctionID($auctionID: ID!) {
     reservePrice
     highestBidAmount
     currentBidder
+    minBidIncrementBps
     endTime
     startTime
     auctionOwner
     isPremiumAuction
     premiumBps
+    auctionHouse {
+      auctionHouseAddress
+    }
     tokenReference {
       metadata {
         name
