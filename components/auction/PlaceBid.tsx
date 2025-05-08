@@ -154,10 +154,12 @@ export function PlaceBid({
             <div className="font-bold mb-4">Your Bid</div>
             <div className="space-y-6">
               <div>
-                <Label>Bid Amount (ETH)</Label>
+                <Label htmlFor="bidAmount">Bid Amount (ETH)</Label>
                 <Input
+                  id="bidAmount"
                   type="number"
                   placeholder={minNextBid}
+                  min={0}
                   step="0.000001"
                   value={bidAmount}
                   onChange={(e) => setBidAmount(e.target.value)}
