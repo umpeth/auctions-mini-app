@@ -1,15 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+// import { Textarea } from "@/components/ui/textarea";
 import React, { useState } from "react";
 import { usePlaceBid } from "@/hooks/usePlaceBid";
 import { parseEther } from "viem";
 import TransactionButton from "@/components/Transaction";
 import { AmountDisplay } from "@/components/AmountDisplay";
+import BidSuccessModal from "@/components/BidSuccessModal";
+import { useFrameActions } from "@/hooks/UseFrameAction";
 
 interface PlaceBidProps {
-  setCurrentScreen: (screen: string) => void;
+  // setCurrentScreen: (screen: string) => void;
   auctionHouseAddress: `0x${string}`;
   auctionId: bigint;
   currentBid: string;
@@ -17,7 +19,7 @@ interface PlaceBidProps {
 }
 
 export function PlaceBid({
-  setCurrentScreen,
+  // setCurrentScreen,
   auctionHouseAddress,
   auctionId,
   currentBid,
@@ -25,12 +27,15 @@ export function PlaceBid({
 }: PlaceBidProps) {
   // Form state
   const [bidAmount, setBidAmount] = useState(minNextBid);
-  const [message, setMessage] = useState("");
-  const [affiliateAddress, setAffiliateAddress] = useState("");
+  // const [message, setMessage] = useState("");
+  // const [affiliateAddress, setAffiliateAddress] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [error, setError] = useState("");
+  const [isBidSuccessModalOpen, setIsBidSuccessModalOpen] = useState(false);
+  const { handleWarpcastShare } = useFrameActions();
 
-  // Hook
+  const affiliateAddress = "0x0000000000000000000000000000000000000000";
+
   const {
     placeBid,
     hash,
@@ -40,7 +45,7 @@ export function PlaceBid({
   } = usePlaceBid({
     onSuccess: (bidHash) => {
       console.log("Bid placed successfully:", bidHash);
-      setCurrentScreen("auctions"); // Navigate back to auctions list
+      setIsBidSuccessModalOpen(true);
     },
   });
 
@@ -67,6 +72,17 @@ export function PlaceBid({
       console.error("Error placing bid:", err);
       setError(err instanceof Error ? err.message : "Failed to place bid");
     }
+  };
+
+  const getShareUrl = () => {
+    const baseUrl = window.location.origin + "/auction/" + auctionId;
+
+    // // Add affiliate parameter if user is connected
+    // if (address) {
+    //   return `${baseUrl}&ref=${address}`;
+    // }
+
+    return baseUrl;
   };
 
   return (
@@ -140,7 +156,7 @@ export function PlaceBid({
                   </span>
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <Label>Encrypted Message (Optional)</Label>
                 <Textarea
                   placeholder="Enter a private message to the seller..."
@@ -150,8 +166,8 @@ export function PlaceBid({
                 <div className="text-xs text-gray-500">
                   This message will be encrypted and only visible to the seller
                 </div>
-              </div>
-              <div>
+              </div> */}
+              {/* <div>
                 <div className="font-medium mb-2">
                   Optional: Include Affiliate Address
                 </div>
@@ -164,7 +180,7 @@ export function PlaceBid({
                 <div className="text-xs text-gray-500 mt-1">
                   If you were referred by an affiliate, enter their address
                 </div>
-              </div>
+              </div> */}
               <div className="border-t pt-4 mt-4">
                 <div className="flex items-start mb-4">
                   <Input
@@ -215,6 +231,15 @@ export function PlaceBid({
           </div>
         </CardContent>
       </Card>
+      <BidSuccessModal
+        isOpen={isBidSuccessModalOpen}
+        onOpenChange={setIsBidSuccessModalOpen}
+        itemName="Rare Collectible #42" //TODO
+        itemId={auctionId.toString()}
+        imageUrl="https://via.placeholder.com/150" //TODO
+        shareUrl={getShareUrl()}
+        onWarpcastShare={handleWarpcastShare}
+      />
     </div>
   );
 }

@@ -214,10 +214,10 @@ export default function AuctionPage({ params }: PageProps) {
                   <div className="pt-4">
                     {showBidForm ? (
                       <PlaceBid
-                        setCurrentScreen={() => {
-                          setShowBidForm(false);
-                          fetchAuctionWithRetry();
-                        }}
+                        // setCurrentScreen={() => {
+                        //     setShowBidForm(false);
+                        //     fetchAuctionWithRetry();
+                        //   }}
                         auctionHouseAddress={
                           auction.auctionHouse
                             ?.auctionHouseAddress as `0x${string}`

@@ -38,7 +38,7 @@ export default function AuctionSystemPage() {
       case "placeBid":
         return selectedAuction ? (
           <PlaceBid
-            setCurrentScreen={setCurrentScreen}
+            // setCurrentScreen={setCurrentScreen}
             auctionHouseAddress={selectedAuction.auctionHouseAddress}
             auctionId={selectedAuction.auctionId}
             currentBid={selectedAuction.currentBid}
