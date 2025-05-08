@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { formatEther } from "viem";
 import {
@@ -32,7 +33,7 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
               <div className="space-y-2">
                 {auction.tokenReference?.metadata?.image && (
                   <div className="aspect-square w-full overflow-hidden rounded-lg">
-                    <img
+                    <Image
                       src={auction.tokenReference.metadata.image}
                       alt={
                         auction.tokenReference.metadata.name ||

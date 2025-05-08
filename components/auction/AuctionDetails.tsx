@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Address } from "@coinbase/onchainkit/identity";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -103,7 +104,7 @@ export function AuctionDetails({
                 <div className="text-center text-gray-500">
                   <div className="text-6xl mb-2">
                     {auction.metadata?.image ? (
-                      <img
+                      <Image
                         src={auction.metadata.image}
                         alt={auction.metadata.name || "Item Image"}
                         className="h-32 mx-auto object-contain"

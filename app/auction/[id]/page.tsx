@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import { notFound } from "next/navigation";
 import { formatEther } from "viem";
@@ -140,7 +141,7 @@ export default function AuctionPage({ params }: PageProps) {
         <div>
           {auction.tokenReference?.metadata?.image ? (
             <div className="aspect-square w-full overflow-hidden rounded-xl">
-              <img
+              <Image
                 src={auction.tokenReference.metadata.image}
                 alt={
                   auction.tokenReference.metadata.name ||
