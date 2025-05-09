@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Skeleton } from "./ui/skeleton";
+import { useViewProfile } from "@coinbase/onchainkit/minikit";
 
 interface FarcasterUser {
   object: "user";
@@ -16,13 +17,21 @@ interface FarcasterUser {
 }
 
 interface FarcasterIdentityProps {
-  custodyAddress: string;
+  address: string;
 }
 
-export function FarcasterIdentity({ custodyAddress }: FarcasterIdentityProps) {
+export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
   const [user, setUser] = useState<FarcasterUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const viewProfile = useViewProfile();
+
+  const handleProfileClick = () => {
+    if (user && !user.mystery_account) {
+      viewProfile(user.fid);
+    }
+  };
 
   useEffect(() => {
     const mysteryAccount = {
@@ -41,7 +50,7 @@ export function FarcasterIdentity({ custodyAddress }: FarcasterIdentityProps) {
       try {
         setLoading(true);
         const response = await fetch(
-          `/api/farcaster/user?custody_address=${custodyAddress}`,
+          `/api/farcaster/user?custody_address=${address}`,
         );
 
         if (!response.ok) {
@@ -63,10 +72,10 @@ export function FarcasterIdentity({ custodyAddress }: FarcasterIdentityProps) {
       }
     };
 
-    if (custodyAddress) {
+    if (address) {
       fetchFarcasterUser();
     }
-  }, [custodyAddress]);
+  }, [address]);
 
   if (loading) {
     return (
@@ -105,7 +114,8 @@ export function FarcasterIdentity({ custodyAddress }: FarcasterIdentityProps) {
         isMysteryAccount
           ? "bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30"
           : ""
-      }`}
+      } ${!isMysteryAccount ? "cursor-pointer hover:bg-accent/50 transition-colors" : ""}`}
+      onClick={handleProfileClick}
     >
       <CardHeader>
         <CardTitle className="flex items-center gap-4">

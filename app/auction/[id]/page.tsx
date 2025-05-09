@@ -217,14 +217,16 @@ export default function AuctionPage({ params }: PageProps) {
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Auction Owner</p>
                   <FarcasterIdentity
-                    custodyAddress={auction.auctionOwner as `0x${string}`}
+                    address={auction.auctionOwner as `0x${string}`}
                   />
                 </div>
 
                 {auction.currentBidder && (
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Highest Bidder</p>
-                    <Address address={auction.currentBidder as `0x${string}`} />
+                    <FarcasterIdentity
+                      address={auction.currentBidder as `0x${string}`}
+                    />
                   </div>
                 )}
 
