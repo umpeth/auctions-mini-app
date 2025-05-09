@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { usePlaceBid } from "@/hooks/usePlaceBid";
 import { parseEther } from "viem";
@@ -35,6 +35,7 @@ export function PlaceBid({
   minNextBid,
 }: PlaceBidProps) {
   const [bidAmount, setBidAmount] = useState(minNextBid);
+  const [showCustomBid, setShowCustomBid] = useState(false);
   const [error, setError] = useState("");
   const [isBidSuccessModalOpen, setIsBidSuccessModalOpen] = useState(false);
   const { handleWarpcastShare } = useFrameActions();
@@ -51,11 +52,10 @@ export function PlaceBid({
     onSuccess: (bidHash) => {
       console.log("Bid placed successfully:", bidHash);
       setIsBidSuccessModalOpen(true);
-      onOpenChange(false); // Close the bid modal when successful
+      onOpenChange(false);
     },
   });
 
-  // Handle form submit
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError("");
@@ -77,55 +77,35 @@ export function PlaceBid({
 
   const getShareUrl = () => {
     const baseUrl = window.location.origin + "/auction/" + auctionId;
-
-    // // Add affiliate parameter if user is connected
-    // if (address) {
-    //   return `${baseUrl}&ref=${address}`;
-    // }
-
     return baseUrl;
   };
 
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-4xl max-h-[95vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Place Bid</DialogTitle>
           </DialogHeader>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="md:col-span-2">
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-gray-600 text-sm">Current Bid</div>
-                  <div className="text-xl font-bold">
-                    <AmountDisplay
-                      amount={currentBid}
-                      symbol="ETH"
-                      size="lg"
-                      decimals={18}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <div className="text-gray-600 text-sm">Minimum Next Bid</div>
-                  <div className="text-lg font-bold text-green-600">
-                    <AmountDisplay
-                      amount={minNextBid}
-                      symbol="ETH"
-                      size="lg"
-                      decimals={18}
-                    />
-                  </div>
-                </div>
+
+          <div className="grid grid-cols-2 gap-4 py-4">
+            <div>
+              <div className="text-sm text-gray-500">Current Bid</div>
+              <div className="font-medium">
+                <AmountDisplay amount={currentBid} symbol="ETH" decimals={18} />
+              </div>
+            </div>
+            <div>
+              <div className="text-sm text-gray-500">Minimum Next Bid</div>
+              <div className="font-medium text-green-600">
+                <AmountDisplay amount={minNextBid} symbol="ETH" decimals={18} />
               </div>
             </div>
           </div>
-          <div className="border-t pt-6">
-            <div className="font-bold mb-4">Your Bid</div>
-            <div className="space-y-6">
-              <div>
-                <Label htmlFor="bidAmount">Bid Amount (ETH)</Label>
+
+          <div className="space-y-4 pt-4">
+            {showCustomBid && (
+              <div className="space-y-2">
                 <Input
                   id="bidAmount"
                   type="number"
@@ -135,35 +115,38 @@ export function PlaceBid({
                   value={bidAmount}
                   onChange={(e) => setBidAmount(e.target.value)}
                 />
-                <div className="flex justify-between mt-1">
-                  <span className="text-xs text-gray-500">
-                    Min: {minNextBid} ETH
-                  </span>
-                  <span
-                    className="text-xs text-blue-600 cursor-pointer"
-                    onClick={() => setBidAmount(minNextBid)}
+              </div>
+            )}
+
+            <div className="space-y-2">
+              {!showCustomBid && (
+                <div className="flex justify-end">
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowCustomBid(true)}
+                    className="h-auto p-0 text-sm text-blue-600 hover:text-blue-800"
                   >
-                    Bid minimum amount
-                  </span>
+                    Place Custom Bid
+                  </Button>
                 </div>
-              </div>
-              <div className="border-t pt-4 mt-4">
-                <TransactionButton
-                  onClick={handleSubmit}
-                  isLoading={isLoading}
-                  disabled={isLoading}
-                  hash={hash}
-                >
-                  {isLoading
-                    ? "Placing Bid..."
-                    : `Place Bid for ${bidAmount} ETH`}
-                </TransactionButton>
-                {error && <div className="text-red-600 mt-2">{error}</div>}
-                {isError && placeBidError && (
-                  <div className="text-red-600 mt-2">{placeBidError}</div>
-                )}
-              </div>
+              )}
+
+              <TransactionButton
+                onClick={handleSubmit}
+                isLoading={isLoading}
+                disabled={isLoading}
+                hash={hash}
+              >
+                {isLoading
+                  ? "Placing Bid..."
+                  : `Place Bid for ${bidAmount} ETH`}
+              </TransactionButton>
             </div>
+
+            {error && <div className="text-red-600 text-sm">{error}</div>}
+            {isError && placeBidError && (
+              <div className="text-red-600 text-sm">{placeBidError}</div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
