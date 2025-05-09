@@ -1,7 +1,5 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-// import { Textarea } from "@/components/ui/textarea";
 import React, { useState } from "react";
 import { usePlaceBid } from "@/hooks/usePlaceBid";
 import { parseEther } from "viem";
@@ -16,7 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import NFTImage from "@/components/NFTImage";
 
 interface PlaceBidProps {
   isOpen: boolean;
@@ -38,9 +35,6 @@ export function PlaceBid({
   minNextBid,
 }: PlaceBidProps) {
   const [bidAmount, setBidAmount] = useState(minNextBid);
-  // const [message, setMessage] = useState("");
-  // const [affiliateAddress, setAffiliateAddress] = useState("");
-  const [isConfirmed, setIsConfirmed] = useState(false);
   const [error, setError] = useState("");
   const [isBidSuccessModalOpen, setIsBidSuccessModalOpen] = useState(false);
   const { handleWarpcastShare } = useFrameActions();
@@ -65,11 +59,6 @@ export function PlaceBid({
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError("");
-
-    if (!isConfirmed) {
-      setError("Please confirm your bid");
-      return;
-    }
 
     try {
       const bidAmountWei = parseEther(bidAmount);
@@ -105,25 +94,7 @@ export function PlaceBid({
             <DialogTitle>Place Bid</DialogTitle>
           </DialogHeader>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="md:col-span-1">
-              <div className="overflow-hidden rounded-lg h-48">
-                <NFTImage
-                  src={auctionItem.metadata?.image || ""}
-                  alt={
-                    auctionItem.metadata?.name ||
-                    `Token #${auctionItem.tokenId}`
-                  }
-                />
-              </div>
-            </div>
             <div className="md:col-span-2">
-              <h3 className="text-lg font-bold">
-                {auctionItem.metadata?.name || `Token #${auctionItem.tokenId}`}
-              </h3>
-              <div className="text-gray-700 mt-1 text-sm">
-                {auctionItem.metadata?.description ||
-                  "No description available"}
-              </div>
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <div>
                   <div className="text-gray-600 text-sm">Current Bid</div>
@@ -159,7 +130,7 @@ export function PlaceBid({
                   id="bidAmount"
                   type="number"
                   placeholder={minNextBid}
-                  min={0}
+                  min={minNextBid}
                   step="0.000001"
                   value={bidAmount}
                   onChange={(e) => setBidAmount(e.target.value)}
@@ -176,78 +147,22 @@ export function PlaceBid({
                   </span>
                 </div>
               </div>
-              {/* <div>
-                <Label>Encrypted Message (Optional)</Label>
-                <Textarea
-                  placeholder="Enter a private message to the seller..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                />
-                <div className="text-xs text-gray-500">
-                  This message will be encrypted and only visible to the seller
-                </div>
-              </div> */}
-              {/* <div>
-                <div className="font-medium mb-2">
-                  Optional: Include Affiliate Address
-                </div>
-                <Input
-                  type="text"
-                  placeholder="0x..."
-                  value={affiliateAddress}
-                  onChange={(e) => setAffiliateAddress(e.target.value)}
-                />
-                <div className="text-xs text-gray-500 mt-1">
-                  If you were referred by an affiliate, enter their address
-                </div>
-              </div> */}
               <div className="border-t pt-4 mt-4">
-                <div className="flex items-start mb-4">
-                  <Checkbox
-                    id="confirm"
-                    className="mt-1 mr-2"
-                    checked={isConfirmed}
-                    onCheckedChange={(checked) =>
-                      setIsConfirmed(checked === true)
-                    }
-                  />
-                  <Label htmlFor="confirm" className="text-sm">
-                    I confirm that I want to place this bid. If I am outbid, I
-                    will receive a premium payment of 0.5% of the increment
-                    above my bid.
-                  </Label>
-                </div>
                 <TransactionButton
                   onClick={handleSubmit}
                   isLoading={isLoading}
-                  disabled={isLoading || !isConfirmed}
+                  disabled={isLoading}
                   hash={hash}
                 >
-                  {isLoading ? "Placing Bid..." : "Place Bid"}
+                  {isLoading
+                    ? "Placing Bid..."
+                    : `Place Bid for ${bidAmount} ETH`}
                 </TransactionButton>
                 {error && <div className="text-red-600 mt-2">{error}</div>}
                 {isError && placeBidError && (
                   <div className="text-red-600 mt-2">{placeBidError}</div>
                 )}
               </div>
-            </div>
-          </div>
-          <div className="mt-6 bg-blue-50 p-4 rounded border border-blue-200">
-            <div className="font-bold text-blue-800 mb-2">
-              About Premium Auctions
-            </div>
-            <div className="text-sm text-blue-700">
-              <p>
-                This is a premium auction. If your bid is outbid by another
-                user, you will receive a premium payment equal to 100% of the
-                minimum bid increment (0.5%).
-              </p>
-              <p className="mt-2">
-                Example: If you bid {currentBid} ETH and someone outbids you
-                with {(Number(currentBid) * 1.01).toFixed(2)} ETH, you will
-                receive {(Number(currentBid) * 0.005).toFixed(5)} ETH as a
-                premium payment.
-              </p>
             </div>
           </div>
         </DialogContent>
