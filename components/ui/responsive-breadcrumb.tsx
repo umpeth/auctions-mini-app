@@ -43,7 +43,7 @@ export function ResponsiveBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   return (
-    <Breadcrumb>
+    <Breadcrumb className="mb-4">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href={items[0].href}>{items[0].label}</BreadcrumbLink>

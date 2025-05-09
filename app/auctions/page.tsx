@@ -8,16 +8,13 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
-const breadcrumbItems = [
-  { title: "Home", href: "/" },
-  { title: "Auctions", href: "/auctions" },
-];
+const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Auctions" }];
 
 export default function AuctionsPage() {
   return (
     <SimpleLayout title="Auctions">
       <div className="container mx-auto px-4 py-8">
-        <ResponsiveBreadcrumb items={breadcrumbItems} className="mb-8" />
+        <ResponsiveBreadcrumb items={breadcrumbItems} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Link href="/auctions/active" className="block">
