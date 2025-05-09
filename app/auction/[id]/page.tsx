@@ -23,6 +23,8 @@ import { AmountDisplay } from "@/components/AmountDisplay";
 import { AuctionItem } from "@/types";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 import { PremiumAuctionIcon } from "@/components/auction/PremiumAuctionIcon";
+import { useAccount } from "wagmi";
+import { ConnectWallet } from "@coinbase/onchainkit/wallet";
 
 interface PageProps {
   params: {
@@ -37,7 +39,7 @@ export default function AuctionPage({ params }: PageProps) {
   const [error, setError] = useState<string | null>(null);
   const [auction, setAuction] =
     useState<GetAuctionByAuctionIdQuery["auction"]>(null);
-  const [showBidForm, setShowBidForm] = useState(false);
+  const { isConnected } = useAccount();
 
   const minNextBidEth = formatEther(
     calculateMinNextBid(
@@ -225,10 +227,8 @@ export default function AuctionPage({ params }: PageProps) {
 
                 {!isEnded && (
                   <div className="pt-4">
-                    {showBidForm ? (
+                    {isConnected ? (
                       <PlaceBid
-                        isOpen={showBidForm}
-                        onOpenChange={setShowBidForm}
                         auctionItem={auction as unknown as AuctionItem}
                         auctionHouseAddress={
                           auction.auctionHouse
@@ -239,13 +239,11 @@ export default function AuctionPage({ params }: PageProps) {
                         minNextBid={minNextBidEth}
                       />
                     ) : (
-                      <Button
-                        className="w-full"
-                        size="lg"
-                        onClick={() => setShowBidForm(true)}
-                      >
-                        Place Bid
-                      </Button>
+                      <ConnectWallet>
+                        <Button className="w-full" size="lg">
+                          Connect Wallet to Place Bid
+                        </Button>
+                      </ConnectWallet>
                     )}
                   </div>
                 )}

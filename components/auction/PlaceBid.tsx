@@ -8,16 +8,8 @@ import { AmountDisplay } from "@/components/AmountDisplay";
 import BidSuccessModal from "@/components/BidSuccessModal";
 import { useFrameActions } from "@/hooks/UseFrameAction";
 import { AuctionItem } from "@/types";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 interface PlaceBidProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
   auctionItem: AuctionItem;
   auctionHouseAddress: `0x${string}`;
   auctionId: bigint;
@@ -26,8 +18,6 @@ interface PlaceBidProps {
 }
 
 export function PlaceBid({
-  isOpen,
-  onOpenChange,
   auctionItem,
   auctionHouseAddress,
   auctionId,
@@ -52,7 +42,6 @@ export function PlaceBid({
     onSuccess: (bidHash) => {
       console.log("Bid placed successfully:", bidHash);
       setIsBidSuccessModalOpen(true);
-      onOpenChange(false);
     },
   });
 
@@ -82,74 +71,64 @@ export function PlaceBid({
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Place Bid</DialogTitle>
-          </DialogHeader>
-
-          <div className="grid grid-cols-2 gap-4 py-4">
-            <div>
-              <div className="text-sm text-gray-500">Current Bid</div>
-              <div className="font-medium">
-                <AmountDisplay amount={currentBid} symbol="ETH" decimals={18} />
-              </div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-500">Minimum Next Bid</div>
-              <div className="font-medium text-green-600">
-                <AmountDisplay amount={minNextBid} symbol="ETH" decimals={18} />
-              </div>
-            </div>
+      <div className="grid grid-cols-2 gap-4 py-4">
+        <div>
+          <div className="text-sm text-gray-500">Current Bid</div>
+          <div className="font-medium">
+            <AmountDisplay amount={currentBid} symbol="ETH" decimals={18} />
           </div>
+        </div>
+        <div>
+          <div className="text-sm text-gray-500">Minimum Next Bid</div>
+          <div className="font-medium text-green-600">
+            <AmountDisplay amount={minNextBid} symbol="ETH" decimals={18} />
+          </div>
+        </div>
+      </div>
 
-          <div className="space-y-4 pt-4">
-            {showCustomBid && (
-              <div className="space-y-2">
-                <Input
-                  id="bidAmount"
-                  type="number"
-                  placeholder={minNextBid}
-                  min={minNextBid}
-                  step="0.000001"
-                  value={bidAmount}
-                  onChange={(e) => setBidAmount(e.target.value)}
-                />
-              </div>
-            )}
+      <div className="space-y-4 pt-4">
+        {showCustomBid && (
+          <div className="space-y-2">
+            <Input
+              id="bidAmount"
+              type="number"
+              placeholder={minNextBid}
+              min={minNextBid}
+              step="0.000001"
+              value={bidAmount}
+              onChange={(e) => setBidAmount(e.target.value)}
+            />
+          </div>
+        )}
 
-            <div className="space-y-2">
-              {!showCustomBid && (
-                <div className="flex justify-end">
-                  <Button
-                    variant="ghost"
-                    onClick={() => setShowCustomBid(true)}
-                    className="h-auto p-0 text-sm text-blue-600 hover:text-blue-800"
-                  >
-                    Place Custom Bid
-                  </Button>
-                </div>
-              )}
-
-              <TransactionButton
-                onClick={handleSubmit}
-                isLoading={isLoading}
-                disabled={isLoading}
-                hash={hash}
+        <div className="space-y-2">
+          {!showCustomBid && (
+            <div className="flex justify-end">
+              <Button
+                variant="ghost"
+                onClick={() => setShowCustomBid(true)}
+                className="h-auto p-0 text-sm text-blue-600 hover:text-blue-800"
               >
-                {isLoading
-                  ? "Placing Bid..."
-                  : `Place Bid for ${bidAmount} ETH`}
-              </TransactionButton>
+                Place Custom Bid
+              </Button>
             </div>
+          )}
 
-            {error && <div className="text-red-600 text-sm">{error}</div>}
-            {isError && placeBidError && (
-              <div className="text-red-600 text-sm">{placeBidError}</div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+          <TransactionButton
+            onClick={handleSubmit}
+            isLoading={isLoading}
+            disabled={isLoading}
+            hash={hash}
+          >
+            {isLoading ? "Placing Bid..." : `Place Bid for ${bidAmount} ETH`}
+          </TransactionButton>
+        </div>
+
+        {error && <div className="text-red-600 text-sm">{error}</div>}
+        {isError && placeBidError && (
+          <div className="text-red-600 text-sm">{placeBidError}</div>
+        )}
+      </div>
       <BidSuccessModal
         isOpen={isBidSuccessModalOpen}
         onOpenChange={setIsBidSuccessModalOpen}
