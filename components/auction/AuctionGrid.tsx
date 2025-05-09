@@ -11,6 +11,7 @@ import { GetAuctionsByStatusQuery } from "@/graphql/generated";
 import { formatDistanceToNow } from "date-fns";
 import NFTImage from "@/components/NFTImage";
 import { AmountDisplay } from "@/components/AmountDisplay";
+import { PremiumAuctionIcon } from "@/components/auction/PremiumAuctionIcon";
 
 interface AuctionGridProps {
   auctions: GetAuctionsByStatusQuery["auctions"];
@@ -23,10 +24,18 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
         <Link href={`/auction/${auction.id}`} key={auction.id}>
           <Card className="h-full hover:shadow-lg transition-shadow">
             <CardHeader>
-              <h3 className="text-lg font-semibold">
-                {auction.tokenReference?.metadata?.name ||
-                  `Token #${auction.tokenId}`}
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-semibold">
+                  {auction.tokenReference?.metadata?.name ||
+                    `Token #${auction.tokenId}`}
+                </h3>
+                {auction.isPremiumAuction && (
+                  <PremiumAuctionIcon
+                    minBidIncrementBps={auction.minBidIncrementBps}
+                    premiumBps={auction.premiumBps}
+                  />
+                )}
+              </div>
               <p className="text-sm text-gray-500 line-clamp-2">
                 {auction.tokenReference?.metadata?.description}
               </p>
