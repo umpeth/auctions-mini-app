@@ -5,8 +5,6 @@ import SimpleLayout from "@/components/SimpleLayout";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 import { useEffect, useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_URL || "http://localhost:3000";
-
 const breadcrumbItems = [
   { label: "Home", href: "/" },
   { label: "Auctions", href: "/auctions" },
@@ -21,7 +19,7 @@ export default function ActiveAuctionsClient() {
   useEffect(() => {
     const fetchAuctions = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/graphql`, {
+        const response = await fetch("/api/graphql", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

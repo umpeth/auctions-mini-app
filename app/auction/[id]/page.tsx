@@ -23,13 +23,6 @@ import { AmountDisplay } from "@/components/AmountDisplay";
 import { AuctionItem } from "@/types";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 
-// Ensure API_URL is properly set for both development and production
-const API_URL =
-  process.env.NEXT_PUBLIC_URL ||
-  (typeof window !== "undefined"
-    ? window.location.origin
-    : "http://localhost:3000");
-
 interface PageProps {
   params: {
     id: string;
@@ -58,7 +51,7 @@ export default function AuctionPage({ params }: PageProps) {
       try {
         setError(null);
 
-        const response = await fetch(`${API_URL}/api/graphql`, {
+        const response = await fetch("/api/graphql", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
