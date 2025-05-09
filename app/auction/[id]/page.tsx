@@ -25,6 +25,7 @@ import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 import { PremiumAuctionIcon } from "@/components/auction/PremiumAuctionIcon";
 import { useAccount } from "wagmi";
 import { ConnectWallet } from "@coinbase/onchainkit/wallet";
+import { FarcasterIdentity } from "@/components/FarcastIdentity";
 
 interface PageProps {
   params: {
@@ -215,7 +216,9 @@ export default function AuctionPage({ params }: PageProps) {
 
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Auction Owner</p>
-                  <Address address={auction.auctionOwner as `0x${string}`} />
+                  <FarcasterIdentity
+                    custodyAddress={auction.auctionOwner as `0x${string}`}
+                  />
                 </div>
 
                 {auction.currentBidder && (
