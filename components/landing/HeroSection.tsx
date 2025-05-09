@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -15,10 +16,12 @@ export function HeroSection() {
             and secure escrow-based settlement.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Button size="lg">
-              <ArrowRightIcon />
-              Start Bidding
-            </Button>
+            <Link href="/auctions/active">
+              <Button size="lg">
+                <ArrowRightIcon />
+                Check Out Auctions
+              </Button>
+            </Link>
             <Button variant="outline" size="lg">
               Create Auction
             </Button>
