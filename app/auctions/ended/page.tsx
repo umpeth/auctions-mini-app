@@ -1,5 +1,5 @@
 import { AuctionGrid } from "@/components/auction/AuctionGrid";
-import { GetActiveAuctionsDocument } from "@/graphql/queryDocuments";
+import { GetEndedAuctionsDocument } from "@/graphql/queryDocuments";
 import SimpleLayout from "@/components/SimpleLayout";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 
@@ -11,14 +11,14 @@ const breadcrumbItems = [
   { label: "Active Auctions" },
 ];
 
-export default async function ActiveAuctionsPage() {
+export default async function EndedAuctionsPage() {
   const response = await fetch(`${API_URL}/api/graphql`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      document: GetActiveAuctionsDocument,
+      document: GetEndedAuctionsDocument,
       variables: {
         currentTimeEpoch: Math.floor(Date.now() / 1000),
       },
@@ -32,11 +32,11 @@ export default async function ActiveAuctionsPage() {
   const data = await response.json();
 
   return (
-    <SimpleLayout title="Active Auctions">
+    <SimpleLayout title="Ended Auctions">
       <div className="space-y-4 p-4">
         <ResponsiveBreadcrumb items={breadcrumbItems} />
         {data.auctions.length === 0 ? (
-          <p className="text-gray-500 text-center">No active auctions found</p>
+          <p className="text-gray-500 text-center">No auctions found</p>
         ) : (
           <AuctionGrid auctions={data.auctions} />
         )}

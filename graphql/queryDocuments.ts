@@ -10,6 +10,8 @@ import {
   GetAuctionByAuctionIdQueryVariables,
   GetActiveAuctionsQueryVariables,
   GetActiveAuctionsQuery,
+  GetEndedAuctionsQuery,
+  GetEndedAuctionsQueryVariables,
 } from "./generated";
 
 export const GetAuctionsByAuctionHouseAddressDocument: TypedDocumentNode<
@@ -130,8 +132,8 @@ export const GetActiveAuctionsDocument: TypedDocumentNode<
   GetActiveAuctionsQuery,
   GetActiveAuctionsQueryVariables
 > = parse(gql`
-  query getActiveAuctions($status: AuctionStatus, $currentTimeEpoch: BigInt) {
-    auctions(where: { status: $status, endTime_gt: $currentTimeEpoch }) {
+  query getActiveAuctions($currentTimeEpoch: BigInt) {
+    auctions(where: { status: ACTIVE, endTime_gt: $currentTimeEpoch }) {
       id
       auctionId
       tokenId
@@ -141,6 +143,43 @@ export const GetActiveAuctionsDocument: TypedDocumentNode<
       highestBidAmount
       currentBidder
       minBidIncrementBps
+      endTime
+      startTime
+      auctionOwner
+      isPremiumAuction
+      premiumBps
+      tokenReference {
+        metadata {
+          name
+          description
+          image
+        }
+      }
+      bids(orderBy: timestamp, orderDirection: desc) {
+        bidder
+        amount
+        timestamp
+      }
+    }
+  }
+`);
+
+export const GetEndedAuctionsDocument: TypedDocumentNode<
+  GetEndedAuctionsQuery,
+  GetEndedAuctionsQueryVariables
+> = parse(gql`
+  query getEndedAuctions($currentTimeEpoch: BigInt!) {
+    auctions(
+      where: { or: [{ status: COMPLETED }, { endTime_lt: $currentTimeEpoch }] }
+    ) {
+      id
+      auctionId
+      tokenId
+      tokenContract
+      status
+      reservePrice
+      highestBidAmount
+      currentBidder
       endTime
       startTime
       auctionOwner

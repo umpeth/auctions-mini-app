@@ -1,5 +1,7 @@
-query getActiveAuctions($currentTimeEpoch: BigInt) {
-  auctions(where: { status: ACTIVE, endTime_gt: $currentTimeEpoch }) {
+query getEndedAuctions($currentTimeEpoch: BigInt!) {
+  auctions(
+    where: { or: [{ status: COMPLETED }, { endTime_lt: $currentTimeEpoch }] }
+  ) {
     id
     auctionId
     tokenId
