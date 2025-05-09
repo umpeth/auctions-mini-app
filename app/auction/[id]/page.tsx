@@ -21,6 +21,7 @@ import SimpleLayout from "@/components/SimpleLayout";
 import { Address } from "@coinbase/onchainkit/identity";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { AuctionItem } from "@/types";
+import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 
 // Ensure API_URL is properly set for both development and production
 const API_URL =
@@ -133,9 +134,20 @@ export default function AuctionPage({ params }: PageProps) {
   const isEnded = timeUntilEnd < new Date();
   const currentBidEth = formatEther(BigInt(auction.highestBidAmount || "0"));
 
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Auctions", href: "/auctions" },
+    { label: "Active", href: "/auctions/active" },
+    {
+      label:
+        auction.tokenReference?.metadata?.name || `Token #${auction.tokenId}`,
+    },
+  ];
+
   return (
     <SimpleLayout title="Auction Details">
       <div className="container mx-auto px-4 py-8">
+        <ResponsiveBreadcrumb items={breadcrumbItems} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Left Column - Image */}
           <div>

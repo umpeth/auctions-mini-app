@@ -24,6 +24,7 @@ import { Icon } from "../components/DemoComponents";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { FeaturesGrid } from "@/components/landing/FeaturesGrid";
 import { HowItWorks } from "@/components/landing/HowItWorks";
+import SimpleLayout from "@/components/SimpleLayout";
 
 export default function App() {
   const { setFrameReady, isFrameReady, context } = useMiniKit();
@@ -71,7 +72,8 @@ export default function App() {
   }, [context, frameAdded, handleAddFrame]);
 
   return (
-    <div className="flex flex-col min-h-screen font-sans text-[var(--app-foreground)] mini-app-theme from-[var(--app-background)] to-[var(--app-gray)]">
+    <SimpleLayout>
+      {/* <div className="flex flex-col min-h-screen font-sans text-[var(--app-foreground)] mini-app-theme from-[var(--app-background)] to-[var(--app-gray)]"> */}
       <div className="w-full">
         <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex justify-between items-center h-11">
@@ -114,6 +116,7 @@ export default function App() {
           </Button>
         </footer>
       </div>
-    </div>
+      {/* </div> */}
+    </SimpleLayout>
   );
 }

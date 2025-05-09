@@ -1,0 +1,48 @@
+import Link from "next/link";
+import SimpleLayout from "@/components/SimpleLayout";
+import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+
+const breadcrumbItems = [
+  { title: "Home", href: "/" },
+  { title: "Auctions", href: "/auctions" },
+];
+
+export default function AuctionsPage() {
+  return (
+    <SimpleLayout title="Auctions">
+      <div className="container mx-auto px-4 py-8">
+        <ResponsiveBreadcrumb items={breadcrumbItems} className="mb-8" />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Link href="/auctions/active" className="block">
+            <Card className="h-full hover:bg-gray-50 transition-colors">
+              <CardHeader>
+                <CardTitle>Active Auctions</CardTitle>
+                <CardDescription>
+                  View and bid on currently active auctions
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          <Link href="/auctions/ended" className="block">
+            <Card className="h-full hover:bg-gray-50 transition-colors">
+              <CardHeader>
+                <CardTitle>Ended Auctions</CardTitle>
+                <CardDescription>
+                  View the history and results of completed auctions
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+        </div>
+      </div>
+    </SimpleLayout>
+  );
+}
