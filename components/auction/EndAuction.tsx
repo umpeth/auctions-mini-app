@@ -2,11 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import React from "react";
 
-interface EndAuctionProps {
-  setCurrentScreen: (screen: string) => void;
-}
-
-export function EndAuction({ setCurrentScreen }: EndAuctionProps) {
+export function EndAuction() {
   return (
     <div className="max-w-4xl mx-auto">
       <Card>
@@ -71,7 +67,7 @@ export function EndAuction({ setCurrentScreen }: EndAuctionProps) {
                 <div className="bg-gray-50 p-4 rounded border">
                   <div className="font-bold mb-2">Actions</div>
                   <div className="flex space-x-3">
-                    <Button variant="success" disabled>
+                    <Button disabled className="bg-green-300">
                       Funds already in escrow
                     </Button>
                     <Button variant="outline">View Escrow Details</Button>

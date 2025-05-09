@@ -7,11 +7,7 @@ import React, { useEffect, useState } from "react";
 import { useCreateAuctionWithNewNFT } from "@/hooks/useCreateAuctionWithNewNFT";
 import TransactionButton from "@/components/Transaction";
 
-interface CreateAuctionProps {
-  setCurrentScreen: (screen: string) => void;
-}
-
-export function CreateAuction({ setCurrentScreen }: CreateAuctionProps) {
+export function CreateAuction() {
   // Form state
   const [auctionHouse, setAuctionHouse] = useState("0xa753377e...");
   const [name, setName] = useState("");
