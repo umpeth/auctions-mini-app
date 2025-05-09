@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 const config: Config = {
   darkMode: ["class"],
@@ -53,6 +54,7 @@ const config: Config = {
       },
       animation: {
         "fade-out": "1s fadeOut 3s ease-out forwards",
+        "hue-rotate": "hue-rotate 3s ease-in-out infinite",
       },
       keyframes: {
         fadeOut: {
@@ -63,6 +65,20 @@ const config: Config = {
             opacity: "0",
           },
         },
+        "hue-rotate": {
+          "0%": {
+            color: "#6366f1", // indigo-500
+          },
+          "33%": {
+            color: "#a855f7", // purple-500
+          },
+          "66%": {
+            color: "#ec4899", // pink-500
+          },
+          "100%": {
+            color: "#6366f1", // back to indigo-500
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -71,6 +87,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 };
 export default config;

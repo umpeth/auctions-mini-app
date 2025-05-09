@@ -22,6 +22,7 @@ import { Address } from "@coinbase/onchainkit/identity";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { AuctionItem } from "@/types";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
+import { PremiumAuctionIcon } from "@/components/auction/PremiumAuctionIcon";
 
 interface PageProps {
   params: {
@@ -164,9 +165,15 @@ export default function AuctionPage({ params }: PageProps) {
           {/* Right Column - Auction Details */}
           <div className="space-y-6">
             <div>
-              <h1 className="text-4xl font-bold mb-2">
+              <h1 className="text-4xl font-bold mb-2 flex items-center gap-2">
                 {auction.tokenReference?.metadata?.name ||
                   `Token #${auction.tokenId}`}
+                {auction.isPremiumAuction && (
+                  <PremiumAuctionIcon
+                    minBidIncrementBps={auction.minBidIncrementBps}
+                    premiumBps={auction.premiumBps}
+                  />
+                )}
               </h1>
               <p className="text-gray-600">
                 {auction.tokenReference?.metadata?.description}
