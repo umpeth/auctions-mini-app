@@ -115,14 +115,14 @@ export function ResponsiveBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
               <>
                 <BreadcrumbLink
                   asChild
-                  className="max-w-20 truncate md:max-w-none"
+                  className="max-w-40 truncate md:max-w-none"
                 >
                   <Link href={item.href}>{item.label}</Link>
                 </BreadcrumbLink>
                 <BreadcrumbSeparator />
               </>
             ) : (
-              <BreadcrumbPage className="max-w-20 truncate md:max-w-none">
+              <BreadcrumbPage className="max-w-40 truncate md:max-w-none">
                 {item.label}
               </BreadcrumbPage>
             )}
