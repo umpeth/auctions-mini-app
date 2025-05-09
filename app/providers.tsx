@@ -4,6 +4,7 @@ import { type ReactNode } from "react";
 import { base } from "wagmi/chains";
 import { MiniKitProvider } from "@coinbase/onchainkit/minikit";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { appUrl } from "@/lib/consts";
 
 export function Providers(props: { children: ReactNode }) {
   return (
@@ -15,7 +16,7 @@ export function Providers(props: { children: ReactNode }) {
           mode: "auto",
           theme: "mini-app-theme",
           name: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
-          logo: process.env.NEXT_PUBLIC_ICON_URL,
+          logo: `${appUrl}/icon.png`,
         },
       }}
     >
