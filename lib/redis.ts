@@ -1,15 +1,31 @@
 import { Redis } from "@upstash/redis";
 
-if (!process.env.REDIS_URL || !process.env.REDIS_TOKEN) {
+// Get environment variables with explicit error messages
+const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL;
+const REDIS_TOKEN =
+  process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_TOKEN;
+
+if (!REDIS_URL || !REDIS_TOKEN) {
   console.warn(
-    "REDIS_URL or REDIS_TOKEN environment variable is not defined, please add to enable background notifications and webhooks.",
+    "Redis configuration missing. Please set either:\n" +
+      "- UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN\n" +
+      "- or REDIS_URL and REDIS_TOKEN\n" +
+      "Rate limiting and caching features will be disabled.",
   );
 }
 
-export const redis =
-  process.env.REDIS_URL && process.env.REDIS_TOKEN
-    ? new Redis({
-        url: process.env.REDIS_URL,
-        token: process.env.REDIS_TOKEN,
-      })
-    : null;
+let redisClient: Redis | null = null;
+
+try {
+  if (REDIS_URL && REDIS_TOKEN) {
+    redisClient = new Redis({
+      url: REDIS_URL,
+      token: REDIS_TOKEN,
+    });
+  }
+} catch (error) {
+  console.error("Failed to initialize Redis client:", error);
+  redisClient = null;
+}
+
+export const redis = redisClient;

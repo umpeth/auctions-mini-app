@@ -49,24 +49,37 @@ export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
     const fetchFarcasterUser = async () => {
       try {
         setLoading(true);
+        setError(null);
+
         const response = await fetch(
           `/api/farcaster/user?custody_address=${address}`,
         );
 
+        const data = await response.json();
+
         if (!response.ok) {
-          throw new Error("Failed to fetch Farcaster user");
+          throw new Error(data.error || "Failed to fetch Farcaster user");
         }
 
-        const data = await response.json();
-        if (data.users.length > 0) {
-          setUser(data.users[0]);
+        // Handle rate limiting
+        if (response.status === 429) {
+          const retryAfter = response.headers.get("Retry-After");
+          throw new Error(
+            `Rate limit exceeded. Please try again in ${retryAfter} seconds`,
+          );
+        }
+        if (data[address].length > 0) {
+          setUser(data[address][0]);
         } else {
+          console.log("setting mystery account");
           setUser(mysteryAccount as FarcasterUser);
         }
       } catch (err) {
+        console.error("Error fetching Farcaster user:", err);
         setError(
           err instanceof Error ? err.message : "Failed to fetch user data",
         );
+        setUser(mysteryAccount as FarcasterUser);
       } finally {
         setLoading(false);
       }
@@ -94,16 +107,18 @@ export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
     );
   }
 
-  if (error || !user) {
+  if (error && !user) {
     return (
       <Card className="w-full max-w-md bg-destructive/10">
         <CardContent className="pt-6">
-          <p className="text-destructive">
-            Error: {error || "No Farcaster profile found"}
-          </p>
+          <p className="text-destructive">Error: {error}</p>
         </CardContent>
       </Card>
     );
+  }
+
+  if (!user) {
+    return null;
   }
 
   const isMysteryAccount = user.mystery_account;
