@@ -12,6 +12,8 @@ import {
   GetActiveAuctionsQuery,
   GetEndedAuctionsQuery,
   GetEndedAuctionsQueryVariables,
+  GetAuctionHousesByOwnerQuery,
+  GetAuctionHousesByOwnerQueryVariables,
 } from "./generated";
 
 export const GetAuctionsByAuctionHouseAddressDocument: TypedDocumentNode<
@@ -196,6 +198,44 @@ export const GetEndedAuctionsDocument: TypedDocumentNode<
         bidder
         amount
         timestamp
+      }
+    }
+  }
+`);
+
+export const GetAuctionHousesByOwnerDocument: TypedDocumentNode<
+  GetAuctionHousesByOwnerQuery,
+  GetAuctionHousesByOwnerQueryVariables
+> = parse(gql`
+  query GetAuctionHousesByOwner($ownerAddress: Bytes!) {
+    auctionHouses(where: { owner: $ownerAddress }) {
+      name
+      auctions {
+        id
+        auctionId
+        tokenId
+        tokenContract
+        status
+        reservePrice
+        highestBidAmount
+        currentBidder
+        endTime
+        startTime
+        auctionOwner
+        isPremiumAuction
+        premiumBps
+        tokenReference {
+          metadata {
+            name
+            description
+            image
+          }
+        }
+        bids(orderBy: timestamp, orderDirection: desc) {
+          bidder
+          amount
+          timestamp
+        }
       }
     }
   }

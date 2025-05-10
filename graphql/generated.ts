@@ -6738,6 +6738,49 @@ export type GetActiveAuctionsQuery = {
   }>;
 };
 
+export type GetAuctionHousesByOwnerQueryVariables = Exact<{
+  ownerAddress: Scalars["Bytes"]["input"];
+}>;
+
+export type GetAuctionHousesByOwnerQuery = {
+  __typename?: "Query";
+  auctionHouses: Array<{
+    __typename?: "AuctionHouse";
+    name: string;
+    auctions: Array<{
+      __typename?: "Auction";
+      id: string;
+      auctionId: any;
+      tokenId: any;
+      tokenContract: any;
+      status: AuctionStatus;
+      reservePrice: any;
+      highestBidAmount: any;
+      currentBidder?: any | null;
+      endTime: any;
+      startTime: any;
+      auctionOwner: any;
+      isPremiumAuction: boolean;
+      premiumBps: number;
+      tokenReference?: {
+        __typename?: "AuctionItemERC721Token";
+        metadata?: {
+          __typename?: "AuctionItemERC721Metadata";
+          name?: string | null;
+          description?: string | null;
+          image?: string | null;
+        } | null;
+      } | null;
+      bids: Array<{
+        __typename?: "Bid";
+        bidder: any;
+        amount: any;
+        timestamp: any;
+      }>;
+    }>;
+  }>;
+};
+
 export type GetAuctionsByAuctionHouseAddressQueryVariables = Exact<{
   auctionHouseAddress: Scalars["ID"]["input"];
 }>;
