@@ -368,16 +368,15 @@ export function CreateAuction() {
               </div>
               <div className="mt-4 space-y-3">
                 <div className="flex items-center">
-                  <Input
-                    type="checkbox"
+                  <Checkbox
                     id="premium"
                     className="mr-2"
                     checked={premium}
-                    onChange={(e) => setPremium(e.target.checked)}
+                    onCheckedChange={(checked) => setPremium(checked === true)}
                   />
                   <Label htmlFor="premium">Enable Premium Auction</Label>
                 </div>
-                <div className="ml-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="min-bid-increment">
                       Min Bid Increment (%)
