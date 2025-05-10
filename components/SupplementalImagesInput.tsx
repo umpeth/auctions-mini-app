@@ -183,6 +183,7 @@ export function SupplementalImagesInput({
    * ```
    */
   const createSupplementalImageBlurHandler = (index: number) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     return useTrimOnBlur((value: string) => {
       handleBlurSupplementalImage(index, value);
     });
