@@ -6,13 +6,16 @@ import { Textarea } from "@/components/ui/textarea";
 import React, { useEffect, useState } from "react";
 import { useCreateAuctionWithNewNFT } from "@/hooks/useCreateAuctionWithNewNFT";
 import TransactionButton from "@/components/Transaction";
+import { useTrimOnBlur } from "@/hooks/useTrimOnBlur";
+import { ImageUpload } from "@/components/ImageUpload";
+import * as isIPFS from "is-ipfs";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function CreateAuction() {
   // Form state
   const [auctionHouse, setAuctionHouse] = useState("0xa753377e...");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState(""); // For now, just a URL or base64 string
   const [termsOfService, setTermsOfService] = useState("");
   const [supplementalImages, setSupplementalImages] = useState<string[]>([]);
   const [reservePrice, setReservePrice] = useState("");
@@ -26,7 +29,18 @@ export function CreateAuction() {
   const [minBidIncrement, setMinBidIncrement] = useState("");
   const [premiumRate, setPremiumRate] = useState("");
   const [error, setError] = useState("");
+  const [contractImageCID, setContractImageCID] = useState("");
+  const [cidError, setCidError] = useState<string | null>(null);
+  const [useImageUpload, setUseImageUpload] = useState(false);
 
+  const handleBlurImageCID = useTrimOnBlur((value) => {
+    if (isIPFS.cid(value)) {
+      setContractImageCID(value);
+      setCidError(null);
+    } else {
+      setCidError("Invalid IPFS CID");
+    }
+  });
   // Result state
   const [result, setResult] = useState<{
     hash: string;
@@ -86,7 +100,7 @@ export function CreateAuction() {
         metadata: {
           name,
           description,
-          image,
+          image: contractImageCID ? `ipfs://${contractImageCID}` : "",
           termsOfService,
           supplementalImages,
         },
@@ -151,24 +165,47 @@ export function CreateAuction() {
                     onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
+                <div className="mt-1 flex items-center gap-2">
+                  <Checkbox
+                    id="useImageUpload"
+                    checked={useImageUpload}
+                    onCheckedChange={(checked) => {
+                      setUseImageUpload(checked === true);
+                      setCidError(null);
+                    }}
+                  />
+                  <Label htmlFor="useImageUpload">Use image upload</Label>
+                </div>
                 <div>
-                  <Label>Item Image</Label>
-                  <div className="border-2 border-dashed border-gray-300 p-8 text-center rounded">
-                    <div className="text-gray-500">
-                      Upload image or drop file here
-                    </div>
+                  <Label htmlFor="contractImageCID">Image CID</Label>
+                  {useImageUpload ? (
+                    <ImageUpload
+                      onUploadComplete={(hashes) => {
+                        setContractImageCID(hashes[0]);
+                        if (isIPFS.cid(hashes[0])) {
+                          setCidError(null);
+                        } else {
+                          setCidError("Invalid IPFS CID");
+                        }
+                      }}
+                      multiple={false}
+                    />
+                  ) : (
                     <Input
                       type="text"
-                      placeholder="Image URL"
-                      value={image}
-                      onChange={(e) => setImage(e.target.value)}
-                      className="mt-2"
+                      id="contractImageCID"
+                      value={contractImageCID}
+                      onChange={(e) => setContractImageCID(e.target.value)}
+                      onBlur={handleBlurImageCID}
+                      placeholder="e.g., QmX...abc"
+                      className={cidError ? "border-red-500" : ""}
                     />
-                    <Button className="mt-2" variant="secondary" type="button">
-                      Browse Files
-                    </Button>
-                  </div>
+                  )}
+                  {cidError && (
+                    <p className="mt-2 text-sm text-red-600">{cidError}</p>
+                  )}
                 </div>
+
                 <div>
                   <Label>Terms of Service</Label>
                   <Input
