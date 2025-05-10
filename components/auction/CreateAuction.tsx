@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,6 +11,7 @@ import * as isIPFS from "is-ipfs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RequiredIndicator } from "@/components/ui/requiredIndicator";
 import { isAddress } from "viem";
+import { SupplementalImagesInput } from "@/components/SupplementalImagesInput";
 
 export function CreateAuction() {
   // Form state
@@ -19,7 +19,9 @@ export function CreateAuction() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [termsOfService, setTermsOfService] = useState("");
-  const [supplementalImages, setSupplementalImages] = useState<string[]>([]);
+  const [supplementalImagesCIDs, setSupplementalImagesCIDs] = useState<
+    string[]
+  >([]);
   const [reservePrice, setReservePrice] = useState("");
   const [paymentToken, setPaymentToken] = useState("ETH");
   const [startTime, setStartTime] = useState("");
@@ -124,7 +126,7 @@ export function CreateAuction() {
           description,
           image: contractImageCID ? `ipfs://${contractImageCID}` : "",
           termsOfService,
-          supplementalImages,
+          supplementalImages: supplementalImagesCIDs,
         },
         startTime: startTime
           ? BigInt(new Date(startTime).getTime() / 1000)
@@ -251,31 +253,14 @@ export function CreateAuction() {
                     onBlur={handleBlurTermsOfService}
                   />
                 </div>
-                <div>
-                  <Label>Supplemental Images (Optional)</Label>
-                  <div className="border-2 border-dashed border-gray-300 p-4 text-center rounded">
-                    <div className="text-gray-500 text-sm">
-                      Upload additional images (max 5)
-                    </div>
-                    <Input
-                      type="text"
-                      placeholder="Comma separated image URLs"
-                      value={supplementalImages.join(",")}
-                      onChange={(e) =>
-                        setSupplementalImages(
-                          e.target.value
-                            .split(",")
-                            .map((s) => s.trim())
-                            .filter(Boolean),
-                        )
-                      }
-                      className="mt-2"
-                    />
-                    <Button className="mt-2" variant="secondary" type="button">
-                      Add Images
-                    </Button>
-                  </div>
-                </div>
+                <SupplementalImagesInput
+                  supplementalImagesCIDs={supplementalImagesCIDs}
+                  onSupplementalImagesCIDsChange={(value) =>
+                    setSupplementalImagesCIDs(value)
+                  }
+                  label="Supplemental Images"
+                  // description="Additional images that provide more context or detail about the item you are selling."
+                />
               </div>
             </div>
             <div className="mb-6">
