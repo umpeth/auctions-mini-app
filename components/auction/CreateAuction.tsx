@@ -10,6 +10,7 @@ import { useTrimOnBlur } from "@/hooks/useTrimOnBlur";
 import { ImageUpload } from "@/components/ImageUpload";
 import * as isIPFS from "is-ipfs";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RequiredIndicator } from "@/components/ui/requiredIndicator";
 
 export function CreateAuction() {
   // Form state
@@ -149,20 +150,29 @@ export function CreateAuction() {
               <div className="font-bold mb-4">Step 2: NFT Details</div>
               <div className="space-y-4">
                 <div>
-                  <Label>Item Name</Label>
+                  <Label htmlFor="item-name">
+                    Item Name
+                    <RequiredIndicator />
+                  </Label>
                   <Input
+                    id="item-name"
                     type="text"
                     placeholder="Rare Collectible #42"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    required
                   />
                 </div>
                 <div>
-                  <Label>Description</Label>
+                  <Label htmlFor="description">
+                    Description <RequiredIndicator />
+                  </Label>
                   <Textarea
+                    id="description"
                     placeholder="Description of the item being auctioned..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="mt-1 flex items-center gap-2">
@@ -207,8 +217,9 @@ export function CreateAuction() {
                 </div>
 
                 <div>
-                  <Label>Terms of Service</Label>
+                  <Label htmlFor="terms-of-service">Terms of Service</Label>
                   <Input
+                    id="terms-of-service"
                     type="text"
                     placeholder="Item terms & conditions"
                     value={termsOfService}
@@ -246,7 +257,10 @@ export function CreateAuction() {
               <div className="font-bold mb-4">Step 3: Auction Settings</div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label>Reserve Price</Label>
+                  <Label htmlFor="reserve-price">
+                    Reserve Price
+                    <RequiredIndicator />
+                  </Label>
                   <div className="flex">
                     <Input
                       type="number"
@@ -254,6 +268,7 @@ export function CreateAuction() {
                       className="rounded-l"
                       value={reservePrice}
                       onChange={(e) => setReservePrice(e.target.value)}
+                      required
                     />
                     <select
                       className="p-2 border-t border-r border-b rounded-r bg-gray-50 w-24"
@@ -267,25 +282,36 @@ export function CreateAuction() {
                   </div>
                 </div>
                 <div>
-                  <Label>Start Time</Label>
+                  <Label htmlFor="start-time">
+                    Start Time
+                    <RequiredIndicator />
+                  </Label>
                   <Input
+                    id="start-time"
                     type="datetime-local"
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
+                    required
                   />
                 </div>
                 <div>
-                  <Label>Duration (hours)</Label>
+                  <Label htmlFor="duration">
+                    Duration (hours)
+                    <RequiredIndicator />
+                  </Label>
                   <Input
+                    id="duration"
                     type="number"
                     placeholder="48"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
+                    required
                   />
                 </div>
                 <div>
-                  <Label>Affiliate Fee (%)</Label>
+                  <Label htmlFor="affiliate-fee">Affiliate Fee (%)</Label>
                   <Input
+                    id="affiliate-fee"
                     type="number"
                     placeholder="5"
                     value={affiliateFee}
@@ -293,21 +319,31 @@ export function CreateAuction() {
                   />
                 </div>
                 <div>
-                  <Label>Arbiter Address</Label>
+                  <Label htmlFor="arbiter-address">
+                    Arbiter Address
+                    <RequiredIndicator />
+                  </Label>
                   <Input
+                    id="arbiter-address"
                     type="text"
                     placeholder="0x..."
                     value={arbiterAddress}
                     onChange={(e) => setArbiterAddress(e.target.value)}
+                    required
                   />
                 </div>
                 <div>
-                  <Label>Time Extension (minutes)</Label>
+                  <Label htmlFor="time-extension">
+                    Time Extension (minutes)
+                    <RequiredIndicator />
+                  </Label>
                   <Input
+                    id="time-extension"
                     type="number"
                     placeholder="5"
                     value={timeExtension}
                     onChange={(e) => setTimeExtension(e.target.value)}
+                    required
                   />
                   <div className="text-xs text-muted-foreground mt-1">
                     Extends auction if bid placed in final minutes
@@ -327,24 +363,33 @@ export function CreateAuction() {
                 </div>
                 <div className="ml-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label>Min Bid Increment (%)</Label>
+                    <Label htmlFor="min-bid-increment">
+                      Min Bid Increment (%)
+                      <RequiredIndicator />
+                    </Label>
                     <Input
                       type="number"
                       placeholder="0.5"
                       value={minBidIncrement}
                       onChange={(e) => setMinBidIncrement(e.target.value)}
+                      required
                     />
                     <div className="text-xs text-muted-foreground mt-1">
                       Minimum % increase for new bids
                     </div>
                   </div>
                   <div>
-                    <Label>Premium Rate (%)</Label>
+                    <Label htmlFor="premium-rate">
+                      Premium Rate (%)
+                      <RequiredIndicator />
+                    </Label>
                     <Input
+                      id="premium-rate"
                       type="number"
                       placeholder="100"
                       value={premiumRate}
                       onChange={(e) => setPremiumRate(e.target.value)}
+                      required
                     />
                     <div className="text-xs text-muted-foreground mt-1">
                       % of bid increment paid to outbid user
