@@ -11,6 +11,7 @@ import { ImageUpload } from "@/components/ImageUpload";
 import * as isIPFS from "is-ipfs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RequiredIndicator } from "@/components/ui/requiredIndicator";
+import { isAddress } from "viem";
 
 export function CreateAuction() {
   // Form state
@@ -42,6 +43,26 @@ export function CreateAuction() {
       setCidError("Invalid IPFS CID");
     }
   });
+
+  const handleBlurAuctionHouse = useTrimOnBlur((value) => {
+    if (isAddress(value)) {
+      setAuctionHouse(value);
+    } else {
+      setError("Invalid auction house address");
+    }
+  });
+
+  const handleBlurName = useTrimOnBlur(setName);
+  const handleBlurDescription = useTrimOnBlur(setDescription);
+  const handleBlurTermsOfService = useTrimOnBlur(setTermsOfService);
+  const handleBlurReservePrice = useTrimOnBlur(setReservePrice);
+  const handleBlurDuration = useTrimOnBlur(setDuration);
+  const handleBlurAffiliateFee = useTrimOnBlur(setAffiliateFee);
+  const handleBlurArbiterAddress = useTrimOnBlur(setArbiterAddress);
+  const handleBlurTimeExtension = useTrimOnBlur(setTimeExtension);
+  const handleBlurMinBidIncrement = useTrimOnBlur(setMinBidIncrement);
+  const handleBlurPremiumRate = useTrimOnBlur(setPremiumRate);
+
   // Result state
   const [result, setResult] = useState<{
     hash: string;
@@ -144,6 +165,7 @@ export function CreateAuction() {
                 placeholder="0x..."
                 value={auctionHouse}
                 onChange={(e) => setAuctionHouse(e.target.value)}
+                onBlur={handleBlurAuctionHouse}
               />
             </div>
             <div className="border-b pb-4 mb-4">
@@ -160,6 +182,7 @@ export function CreateAuction() {
                     placeholder="Rare Collectible #42"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    onBlur={handleBlurName}
                     required
                   />
                 </div>
@@ -172,6 +195,7 @@ export function CreateAuction() {
                     placeholder="Description of the item being auctioned..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    onBlur={handleBlurDescription}
                     required
                   />
                 </div>
@@ -224,6 +248,7 @@ export function CreateAuction() {
                     placeholder="Item terms & conditions"
                     value={termsOfService}
                     onChange={(e) => setTermsOfService(e.target.value)}
+                    onBlur={handleBlurTermsOfService}
                   />
                 </div>
                 <div>
@@ -263,11 +288,13 @@ export function CreateAuction() {
                   </Label>
                   <div className="flex">
                     <Input
+                      id="reserve-price"
                       type="number"
                       placeholder="0.5"
                       className="rounded-l"
                       value={reservePrice}
                       onChange={(e) => setReservePrice(e.target.value)}
+                      onBlur={handleBlurReservePrice}
                       required
                     />
                     <select
@@ -305,6 +332,7 @@ export function CreateAuction() {
                     placeholder="48"
                     value={duration}
                     onChange={(e) => setDuration(e.target.value)}
+                    onBlur={handleBlurDuration}
                     required
                   />
                 </div>
@@ -316,6 +344,7 @@ export function CreateAuction() {
                     placeholder="5"
                     value={affiliateFee}
                     onChange={(e) => setAffiliateFee(e.target.value)}
+                    onBlur={handleBlurAffiliateFee}
                   />
                 </div>
                 <div>
@@ -329,6 +358,7 @@ export function CreateAuction() {
                     placeholder="0x..."
                     value={arbiterAddress}
                     onChange={(e) => setArbiterAddress(e.target.value)}
+                    onBlur={handleBlurArbiterAddress}
                     required
                   />
                 </div>
@@ -343,6 +373,7 @@ export function CreateAuction() {
                     placeholder="5"
                     value={timeExtension}
                     onChange={(e) => setTimeExtension(e.target.value)}
+                    onBlur={handleBlurTimeExtension}
                     required
                   />
                   <div className="text-xs text-muted-foreground mt-1">
@@ -372,6 +403,7 @@ export function CreateAuction() {
                       placeholder="0.5"
                       value={minBidIncrement}
                       onChange={(e) => setMinBidIncrement(e.target.value)}
+                      onBlur={handleBlurMinBidIncrement}
                       required
                     />
                     <div className="text-xs text-muted-foreground mt-1">
@@ -389,6 +421,7 @@ export function CreateAuction() {
                       placeholder="100"
                       value={premiumRate}
                       onChange={(e) => setPremiumRate(e.target.value)}
+                      onBlur={handleBlurPremiumRate}
                       required
                     />
                     <div className="text-xs text-muted-foreground mt-1">
