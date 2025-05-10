@@ -22,9 +22,11 @@ export function HeroSection() {
                 Check Out Auctions
               </Button>
             </Link>
-            <Button variant="outline" size="lg">
-              Create Auction
-            </Button>
+            <Link href="/auctions/new">
+              <Button variant="outline" size="lg">
+                Create Auction
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
