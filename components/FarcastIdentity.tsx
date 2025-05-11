@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Skeleton } from "./ui/skeleton";
 import { useViewProfile, useMiniKit } from "@coinbase/onchainkit/minikit";
+import { Address } from "@coinbase/onchainkit/identity";
 
 interface FarcasterUser {
   object: "user";
@@ -73,7 +74,7 @@ export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
             `Rate limit exceeded. Please try again in ${retryAfter} seconds`,
           );
         }
-        if (data[address].length > 0) {
+        if (data[address]?.length > 0) {
           setUser(data[address][0]);
         } else {
           console.log("setting mystery account");
@@ -149,16 +150,21 @@ export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
               {user.username.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <div className="space-y-1">
-            <h3
-              className={`text-lg font-bold ${
-                isMysteryAccount
-                  ? "text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400"
-                  : ""
-              }`}
-            >
-              {user.display_name}
-            </h3>
+          <div className="space-y-1 flex-1">
+            <div className="flex items-center justify-between">
+              <h3
+                className={`text-lg font-bold ${
+                  isMysteryAccount
+                    ? "text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400"
+                    : ""
+                }`}
+              >
+                {user.display_name}
+              </h3>
+              <div className="text-sm text-muted-foreground">
+                <Address address={address as `0x${string}`} />
+              </div>
+            </div>
             <p className="text-sm text-muted-foreground">@{user.username}</p>
           </div>
         </CardTitle>
