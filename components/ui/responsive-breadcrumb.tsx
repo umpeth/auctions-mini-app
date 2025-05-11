@@ -32,7 +32,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const ITEMS_TO_DISPLAY = 2;
+const ITEMS_TO_DISPLAY = 3;
 
 export interface BreadcrumbItem {
   label: string;
