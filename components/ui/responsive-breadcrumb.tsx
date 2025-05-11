@@ -43,26 +43,38 @@ export function ResponsiveBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
+  // Calculate which items to show directly and which to put in dropdown
+  const showDirectly = items.length <= ITEMS_TO_DISPLAY;
+  const firstItem = items[0];
+  const lastItems = showDirectly
+    ? []
+    : items.slice(-Math.max(1, ITEMS_TO_DISPLAY - 1));
+  const middleItems = showDirectly
+    ? []
+    : items.slice(1, -Math.max(1, ITEMS_TO_DISPLAY - 1));
+
   return (
     <Breadcrumb className="mb-4">
       <BreadcrumbList>
+        {/* Always show first item */}
         <BreadcrumbItem>
-          {items[0].href === "/" ? (
+          {firstItem.href === "/" ? (
             <BreadcrumbLink
-              href={items[0].href}
+              href={firstItem.href}
               className="flex items-center gap-2"
             >
               <Home className="h-4 w-4" />
-              {/* {items[0].label} */}
             </BreadcrumbLink>
           ) : (
-            <BreadcrumbLink href={items[0].href}>
-              {items[0].label}
+            <BreadcrumbLink href={firstItem.href}>
+              {firstItem.label}
             </BreadcrumbLink>
           )}
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        {items.length > ITEMS_TO_DISPLAY ? (
+
+        {/* Show middle items in dropdown if needed */}
+        {!showDirectly && middleItems.length > 0 && (
           <>
             <BreadcrumbItem>
               {isDesktop ? (
@@ -74,15 +86,13 @@ export function ResponsiveBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
                     <BreadcrumbEllipsis className="h-4 w-4" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
-                    {items
-                      .slice(1, -(ITEMS_TO_DISPLAY - 1))
-                      .map((item, index) => (
-                        <DropdownMenuItem key={index}>
-                          <Link href={item.href ? item.href : "#"}>
-                            {item.label}
-                          </Link>
-                        </DropdownMenuItem>
-                      ))}
+                    {middleItems.map((item, index) => (
+                      <DropdownMenuItem key={index}>
+                        <Link href={item.href ? item.href : "#"}>
+                          {item.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
@@ -98,17 +108,15 @@ export function ResponsiveBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
                       </DrawerDescription>
                     </DrawerHeader>
                     <div className="grid gap-1 px-4">
-                      {items
-                        .slice(1, -(ITEMS_TO_DISPLAY - 1))
-                        .map((item, index) => (
-                          <Link
-                            key={index}
-                            href={item.href ? item.href : "#"}
-                            className="py-1 text-sm"
-                          >
-                            {item.label}
-                          </Link>
-                        ))}
+                      {middleItems.map((item, index) => (
+                        <Link
+                          key={index}
+                          href={item.href ? item.href : "#"}
+                          className="py-1 text-sm"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
                     </div>
                     <DrawerFooter className="pt-4">
                       <DrawerClose asChild>
@@ -121,8 +129,10 @@ export function ResponsiveBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
           </>
-        ) : null}
-        {items.slice(-ITEMS_TO_DISPLAY + 1).map((item, index) => (
+        )}
+
+        {/* Show either all items (if <= ITEMS_TO_DISPLAY) or just the last items */}
+        {(showDirectly ? items.slice(1) : lastItems).map((item, index) => (
           <BreadcrumbItem key={index}>
             {item.href ? (
               <>
