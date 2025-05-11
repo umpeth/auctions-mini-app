@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { Home } from "lucide-react";
 
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
@@ -46,7 +47,19 @@ export function ResponsiveBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
     <Breadcrumb className="mb-4">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href={items[0].href}>{items[0].label}</BreadcrumbLink>
+          {items[0].href === "/" ? (
+            <BreadcrumbLink
+              href={items[0].href}
+              className="flex items-center gap-2"
+            >
+              <Home className="h-4 w-4" />
+              {/* {items[0].label} */}
+            </BreadcrumbLink>
+          ) : (
+            <BreadcrumbLink href={items[0].href}>
+              {items[0].label}
+            </BreadcrumbLink>
+          )}
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         {items.length > ITEMS_TO_DISPLAY ? (
