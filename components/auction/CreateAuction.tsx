@@ -13,9 +13,13 @@ import { RequiredIndicator } from "@/components/ui/requiredIndicator";
 import { isAddress } from "viem";
 import { SupplementalImagesInput } from "@/components/SupplementalImagesInput";
 
-export function CreateAuction() {
+interface CreateAuctionProps {
+  auctionHouseAddress: string;
+}
+
+export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
   // Form state
-  const [auctionHouse, setAuctionHouse] = useState("0xa753377e...");
+  const [auctionHouse, setAuctionHouse] = useState(auctionHouseAddress);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [termsOfService, setTermsOfService] = useState("");
@@ -111,7 +115,7 @@ export function CreateAuction() {
   };
 
   // Use the entered auctionHouse as the address directly
-  const auctionHouseAddress = auctionHouse;
+  // const auctionHouseAddress = auctionHouse;
 
   // Handle form submit
   const handleSubmit = async (e?: React.FormEvent) => {
@@ -154,7 +158,10 @@ export function CreateAuction() {
     <div className="max-w-4xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle>Create New Auction</CardTitle>
+          <CardTitle>
+            Create New Auction{" "}
+            {auctionHouseAddress ? `in ${auctionHouseAddress}` : ""}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div>

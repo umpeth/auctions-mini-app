@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CreateAuction } from "@/components/auction/CreateAuction";
+import { AuctionHouseSelector } from "@/components/auction/AuctionHouseSelector";
 import SimpleLayout from "@/components/SimpleLayout";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 
@@ -16,7 +16,9 @@ export default function CreateAuctionPage() {
     <SimpleLayout title="Create New Auction">
       <div className="container py-8">
         <ResponsiveBreadcrumb items={breadcrumbItems} />
-        <CreateAuction />
+        <div className="max-w-2xl mx-auto">
+          <AuctionHouseSelector />
+        </div>
       </div>
     </SimpleLayout>
   );

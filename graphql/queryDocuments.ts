@@ -210,6 +210,9 @@ export const GetAuctionHousesByOwnerDocument: TypedDocumentNode<
   query GetAuctionHousesByOwner($ownerAddress: Bytes!) {
     auctionHouses(where: { owner: $ownerAddress }) {
       name
+      auctionHouseAddress
+      description
+      image
       auctions {
         id
         auctionId

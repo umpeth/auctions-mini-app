@@ -6747,6 +6747,9 @@ export type GetAuctionHousesByOwnerQuery = {
   auctionHouses: Array<{
     __typename?: "AuctionHouse";
     name: string;
+    auctionHouseAddress: any;
+    description: string;
+    image: string;
     auctions: Array<{
       __typename?: "Auction";
       id: string;
