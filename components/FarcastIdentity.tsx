@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Skeleton } from "./ui/skeleton";
-import { useViewProfile } from "@coinbase/onchainkit/minikit";
+import { useViewProfile, useMiniKit } from "@coinbase/onchainkit/minikit";
 
 interface FarcasterUser {
   object: "user";
@@ -26,8 +26,13 @@ export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
   const [error, setError] = useState<string | null>(null);
 
   const viewProfile = useViewProfile();
-
+  const { context } = useMiniKit();
   const handleProfileClick = () => {
+    if (!context?.client) {
+      // TODO: open profile in new tab ?
+      return;
+    }
+
     if (user && !user.mystery_account) {
       viewProfile(user.fid);
     }
@@ -132,7 +137,7 @@ export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
       } ${!isMysteryAccount ? "cursor-pointer hover:bg-accent/50 transition-colors" : ""}`}
       onClick={handleProfileClick}
     >
-      <CardHeader>
+      <CardHeader className="p-3">
         <CardTitle className="flex items-center gap-4">
           <Avatar
             className={
@@ -158,8 +163,8 @@ export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="flex gap-4 mt-4">
+      <CardContent className="p-3 pt-0">
+        <div className="flex gap-4">
           <div>
             <span
               className={`font-bold ${
