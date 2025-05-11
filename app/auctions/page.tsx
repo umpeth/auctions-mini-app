@@ -7,6 +7,8 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { PlusIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Auctions" }];
 
@@ -37,6 +39,12 @@ export default function AuctionsPage() {
                 </CardDescription>
               </CardHeader>
             </Card>
+          </Link>
+          <Link href="/auctions/new" className="block">
+            <Button variant="outline">
+              <PlusIcon className="w-4 h-4 mr-2" />
+              Create New Auction
+            </Button>
           </Link>
         </div>
       </div>
