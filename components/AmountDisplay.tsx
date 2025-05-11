@@ -78,7 +78,6 @@ export const AmountDisplay: React.FC<AmountDisplayProps> = ({
   const getFullAmount = () => {
     if (invalid || fullAmountStr === "" || isNaN(amountNum))
       return "Invalid amount";
-    console.log(fullAmountStr);
     const [whole, fraction] = fullAmountStr.split(".");
     const formattedWhole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return fraction ? `${formattedWhole}.${fraction}` : formattedWhole;
