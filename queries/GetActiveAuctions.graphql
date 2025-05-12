@@ -1,5 +1,7 @@
 query getActiveAuctions($currentTimeEpoch: BigInt) {
-  auctions(where: { status: ACTIVE, endTime_gt: $currentTimeEpoch }) {
+  auctions(
+    where: { status_in: [ACTIVE, CREATED], endTime_gt: $currentTimeEpoch }
+  ) {
     id
     auctionId
     tokenId
@@ -13,6 +15,7 @@ query getActiveAuctions($currentTimeEpoch: BigInt) {
     auctionOwner
     isPremiumAuction
     premiumBps
+    minBidIncrementBps
     tokenReference {
       metadata {
         name

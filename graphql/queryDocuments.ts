@@ -135,7 +135,9 @@ export const GetActiveAuctionsDocument: TypedDocumentNode<
   GetActiveAuctionsQueryVariables
 > = parse(gql`
   query getActiveAuctions($currentTimeEpoch: BigInt) {
-    auctions(where: { status: ACTIVE, endTime_gt: $currentTimeEpoch }) {
+    auctions(
+      where: { status_in: [ACTIVE, CREATED], endTime_gt: $currentTimeEpoch }
+    ) {
       id
       auctionId
       tokenId
