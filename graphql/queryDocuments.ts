@@ -43,6 +43,7 @@ export const GetAuctionsByAuctionHouseAddressDocument: TypedDocumentNode<
             name
             description
             image
+            supplementalImages
           }
         }
         bids(orderBy: timestamp, orderDirection: desc) {
@@ -80,6 +81,7 @@ export const GetAuctionsByStatusDocument: TypedDocumentNode<
           name
           description
           image
+          supplementalImages
         }
       }
       bids(orderBy: timestamp, orderDirection: desc) {
@@ -119,6 +121,7 @@ export const GetAuctionByAuctionIdDocument: TypedDocumentNode<
           name
           description
           image
+          supplementalImages
         }
       }
       bids(orderBy: timestamp, orderDirection: desc) {
@@ -157,6 +160,7 @@ export const GetActiveAuctionsDocument: TypedDocumentNode<
           name
           description
           image
+          supplementalImages
         }
       }
       bids(orderBy: timestamp, orderDirection: desc) {
@@ -194,6 +198,7 @@ export const GetEndedAuctionsDocument: TypedDocumentNode<
           name
           description
           image
+          supplementalImages
         }
       }
       bids(orderBy: timestamp, orderDirection: desc) {
@@ -234,6 +239,7 @@ export const GetAuctionHousesByOwnerDocument: TypedDocumentNode<
             name
             description
             image
+            supplementalImages
           }
         }
         bids(orderBy: timestamp, orderDirection: desc) {

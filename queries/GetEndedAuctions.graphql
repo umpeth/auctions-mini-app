@@ -20,6 +20,7 @@ query getEndedAuctions($currentTimeEpoch: BigInt!) {
         name
         description
         image
+        supplementalImages
       }
     }
     bids(orderBy: timestamp, orderDirection: desc) {

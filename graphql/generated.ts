@@ -6720,6 +6720,7 @@ export type GetActiveAuctionsQuery = {
     auctionOwner: any;
     isPremiumAuction: boolean;
     premiumBps: number;
+    minBidIncrementBps: number;
     tokenReference?: {
       __typename?: "AuctionItemERC721Token";
       metadata?: {
@@ -6727,6 +6728,7 @@ export type GetActiveAuctionsQuery = {
         name?: string | null;
         description?: string | null;
         image?: string | null;
+        supplementalImages?: Array<string> | null;
       } | null;
     } | null;
     bids: Array<{
@@ -6772,6 +6774,7 @@ export type GetAuctionHousesByOwnerQuery = {
           name?: string | null;
           description?: string | null;
           image?: string | null;
+          supplementalImages?: Array<string> | null;
         } | null;
       } | null;
       bids: Array<{
@@ -6816,6 +6819,7 @@ export type GetAuctionsByAuctionHouseAddressQuery = {
           name?: string | null;
           description?: string | null;
           image?: string | null;
+          supplementalImages?: Array<string> | null;
         } | null;
       } | null;
       bids: Array<{
@@ -6857,6 +6861,7 @@ export type GetAuctionsByStatusQuery = {
         name?: string | null;
         description?: string | null;
         image?: string | null;
+        supplementalImages?: Array<string> | null;
       } | null;
     } | null;
     bids: Array<{
@@ -6896,6 +6901,7 @@ export type GetEndedAuctionsQuery = {
         name?: string | null;
         description?: string | null;
         image?: string | null;
+        supplementalImages?: Array<string> | null;
       } | null;
     } | null;
     bids: Array<{
@@ -6937,6 +6943,7 @@ export type GetAuctionByAuctionIdQuery = {
         name?: string | null;
         description?: string | null;
         image?: string | null;
+        supplementalImages?: Array<string> | null;
       } | null;
     } | null;
     bids: Array<{

@@ -23,6 +23,7 @@ query GetAuctionHousesByOwner($ownerAddress: Bytes!) {
           name
           description
           image
+          supplementalImages
         }
       }
       bids(orderBy: timestamp, orderDirection: desc) {

@@ -21,6 +21,7 @@ query getActiveAuctions($currentTimeEpoch: BigInt) {
         name
         description
         image
+        supplementalImages
       }
     }
     bids(orderBy: timestamp, orderDirection: desc) {
