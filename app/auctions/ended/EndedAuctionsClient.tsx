@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 const breadcrumbItems = [
   { label: "Home", href: "/" },
   { label: "Auctions", href: "/auctions" },
-  { label: "Active Auctions" },
+  { label: "Ended Auctions" },
 ];
 
 export default function EndedAuctionsClient() {

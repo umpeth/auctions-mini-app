@@ -1,7 +1,7 @@
 "use client";
 import { notFound } from "next/navigation";
 import { formatEther } from "viem";
-import { formatDistanceToNow, format } from "date-fns";
+import { format } from "date-fns";
 import { GetAuctionByAuctionIdDocument } from "@/graphql/queryDocuments";
 import {
   Card,
@@ -26,6 +26,7 @@ import { PremiumAuctionIcon } from "@/components/auction/PremiumAuctionIcon";
 import { useAccount } from "wagmi";
 import { ConnectWallet } from "@coinbase/onchainkit/wallet";
 import { FarcasterIdentity } from "@/components/FarcastIdentity";
+import { Countdown } from "@/components/ui/Countdown";
 
 interface PageProps {
   params: {
@@ -187,9 +188,11 @@ export default function AuctionPage({ params }: PageProps) {
               <CardHeader>
                 <CardTitle>Auction Details</CardTitle>
                 <CardDescription>
-                  {isEnded
-                    ? "Auction has ended"
-                    : "Time remaining: " + formatDistanceToNow(timeUntilEnd)}
+                  {isEnded ? (
+                    "Auction has ended"
+                  ) : (
+                    <Countdown deadline={Number(auction.endTime)} />
+                  )}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">

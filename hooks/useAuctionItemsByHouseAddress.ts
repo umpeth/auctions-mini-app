@@ -7,7 +7,7 @@ import {
 import { calculateMinNextBid } from "@/lib/utils";
 import { AuctionItem } from "@/types";
 
-export function useAuctionItems(auctionHouseAddress: string) {
+export function useAuctionItemsByHouseAddress(auctionHouseAddress: string) {
   const [auctions, setAuctions] = useState<AuctionItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,6 +70,7 @@ export function useAuctionItems(auctionHouseAddress: string) {
             winner,
             startTime: BigInt(startTimeStr),
             endTime: BigInt(endTimeStr),
+            isEnded: auction.endTime < new Date().getTime() / 1000,
             auctionOwner: auction.auctionOwner?.toString() ?? "",
             isPremiumAuction: auction.isPremiumAuction,
             premiumRate: BigInt(auction.premiumBps),

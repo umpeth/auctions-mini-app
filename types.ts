@@ -11,6 +11,7 @@ export interface AuctionItem {
   startTime: bigint;
   endTime: bigint;
   auctionOwner: string;
+  isEnded: boolean;
   isPremiumAuction: boolean;
   premiumRate: bigint;
   metadata?: {

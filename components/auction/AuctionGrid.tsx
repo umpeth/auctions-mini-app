@@ -8,10 +8,10 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { GetAuctionsByStatusQuery } from "@/graphql/generated";
-import { formatDistanceToNow } from "date-fns";
 import NFTImage from "@/components/NFTImage";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { PremiumAuctionIcon } from "@/components/auction/PremiumAuctionIcon";
+import { Countdown } from "@/components/ui/Countdown";
 
 interface AuctionGridProps {
   auctions: GetAuctionsByStatusQuery["auctions"];
@@ -75,9 +75,11 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
                 </p>
                 <p>
                   <span className="font-medium">Ends: </span>
-                  {formatDistanceToNow(
-                    new Date(parseInt(auction.endTime) * 1000),
-                    { addSuffix: true },
+
+                  {Number(auction.endTime) < new Date().getTime() / 1000 ? (
+                    <span>Ended</span>
+                  ) : (
+                    <Countdown deadline={Number(auction.endTime)} />
                   )}
                 </p>
               </div>

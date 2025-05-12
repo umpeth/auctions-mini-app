@@ -12,11 +12,10 @@ import { GetActiveAuctionsDocument } from "@/graphql/queryDocuments";
 import Link from "next/link";
 import { Auction } from "@/graphql/generated";
 import { PremiumAuctionIcon } from "@/components/auction/PremiumAuctionIcon";
-import { formatDuration } from "date-fns";
-import { intervalToDuration } from "date-fns";
 import { formatEther } from "viem";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Countdown } from "@/components/ui/Countdown";
 
 export function AuctionCarousel() {
   const [auctions, setAuctions] = React.useState([]);
@@ -154,13 +153,7 @@ export function AuctionCarousel() {
                       Time Remaining:
                     </div>
                     <div className="text-sm text-gray-600">
-                      {formatDuration(
-                        intervalToDuration({
-                          start: new Date().getTime(),
-                          end: Number(auction.endTime) * 1000,
-                        }),
-                        { format: ["days", "hours", "minutes"] },
-                      )}
+                      <Countdown deadline={Number(auction.endTime)} />
                     </div>
                   </div>
                 </CardFooter>

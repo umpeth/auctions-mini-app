@@ -3,11 +3,11 @@ import { Address } from "@coinbase/onchainkit/identity";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import React from "react";
-import { useAuctionItems } from "@/hooks/useAuctionItems";
+import { useAuctionItemsByHouseAddress } from "@/hooks/useAuctionItemsByHouseAddress";
 import { formatEther, formatUnits } from "viem";
-import { formatDuration, intervalToDuration } from "date-fns";
 import NFTImage from "@/components/NFTImage";
 import { AmountDisplay } from "@/components/AmountDisplay";
+import { Countdown } from "@/components/ui/Countdown";
 
 interface AuctionDetailsProps {
   setCurrentScreen: (screen: string) => void;
@@ -25,7 +25,8 @@ export function AuctionDetails({
   auctionHouseAddress,
   onPlaceBid,
 }: AuctionDetailsProps) {
-  const { auctions, loading, error } = useAuctionItems(auctionHouseAddress);
+  const { auctions, loading, error } =
+    useAuctionItemsByHouseAddress(auctionHouseAddress);
   const auction = auctions[1]; // TODO: make this selectable
 
   if (loading) {
@@ -178,14 +179,11 @@ export function AuctionDetails({
                   <div>
                     <div className="text-gray-600 text-sm">Time Remaining</div>
                     <div className="font-medium">
-                      {auction.endTime
-                        ? formatDuration(
-                            intervalToDuration({
-                              start: new Date().getTime(),
-                              end: Number(auction.endTime) * 1000,
-                            }),
-                          )
-                        : "Ended"}
+                      {auction.isEnded ? (
+                        <Countdown deadline={Number(auction.endTime)} />
+                      ) : (
+                        "Ended"
+                      )}
                     </div>
                   </div>
                   <div>
