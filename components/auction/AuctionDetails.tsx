@@ -8,6 +8,7 @@ import { formatEther, formatUnits } from "viem";
 import NFTImage from "@/components/NFTImage";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { Countdown } from "@/components/ui/Countdown";
+import { CustomIdentity } from "@/components/CustomIdentity";
 
 interface AuctionDetailsProps {
   setCurrentScreen: (screen: string) => void;
@@ -129,7 +130,9 @@ export function AuctionDetails({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Owner:</span>
-                  <Address address={auction.auctionOwner as `0x${string}`} />
+                  <CustomIdentity
+                    address={auction.auctionOwner as `0x${string}`}
+                  />
                 </div>
               </div>
             </div>
@@ -190,7 +193,7 @@ export function AuctionDetails({
                     <div className="text-gray-600 text-sm">Current Winner</div>
                     <div className="text-sm font-mono break-all hover:break-normal">
                       {auction.currentBidder ? (
-                        <Address
+                        <CustomIdentity
                           address={auction.currentBidder as `0x${string}`}
                         />
                       ) : (
@@ -254,7 +257,9 @@ export function AuctionDetails({
                       <tr key={`${bid.bidder}-${index}`}>
                         <td className="px-4 py-2 text-sm">{bid.time}</td>
                         <td className="px-4 py-2 text-sm font-mono">
-                          <Address address={bid.bidder as `0x${string}`} />
+                          <CustomIdentity
+                            address={bid.bidder as `0x${string}`}
+                          />
                         </td>
                         <td className="px-4 py-2 text-sm">
                           {formatUnits(bid.amount, 18)} ETH
