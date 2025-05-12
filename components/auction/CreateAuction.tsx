@@ -40,6 +40,7 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
   const [contractImageCID, setContractImageCID] = useState("");
   const [cidError, setCidError] = useState<string | null>(null);
   const [useImageUpload, setUseImageUpload] = useState(false);
+  const [startTimeError, setStartTimeError] = useState<string | null>(null);
 
   const handleBlurImageCID = useTrimOnBlur((value) => {
     if (isIPFS.cid(value)) {
@@ -68,6 +69,24 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
   const handleBlurTimeExtension = useTrimOnBlur(setTimeExtension);
   const handleBlurMinBidIncrement = useTrimOnBlur(setMinBidIncrement);
   const handleBlurPremiumRate = useTrimOnBlur(setPremiumRate);
+
+  const validateStartTime = (value: string) => {
+    if (!value) return null;
+    const selectedDate = new Date(value);
+    const now = new Date();
+    return selectedDate < now ? "Start time cannot be in the past" : null;
+  };
+
+  const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setStartTime(value);
+    setStartTimeError(validateStartTime(value));
+  };
+
+  const handleStartTimeBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setStartTimeError(validateStartTime(value));
+  };
 
   // Result state
   const [result, setResult] = useState<{
@@ -122,6 +141,14 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
     if (e) e.preventDefault();
     setResult(null);
     setError("");
+
+    // Validate start time before submitting
+    const startTimeValidationError = validateStartTime(startTime);
+    if (startTimeValidationError) {
+      setError(startTimeValidationError);
+      return;
+    }
+
     try {
       await createAuctionWithNewNFT({
         auctionHouseAddress: auctionHouseAddress as `0x${string}`,
@@ -309,9 +336,16 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                     id="start-time"
                     type="datetime-local"
                     value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
+                    onChange={handleStartTimeChange}
+                    onBlur={handleStartTimeBlur}
                     required
+                    className={startTimeError ? "border-red-500" : ""}
                   />
+                  {startTimeError && (
+                    <div className="text-xs text-red-600 mt-1">
+                      {startTimeError}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <Label htmlFor="duration">
