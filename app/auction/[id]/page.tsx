@@ -18,7 +18,6 @@ import { PlaceBid } from "@/components/auction/PlaceBid";
 import { calculateMinNextBid } from "@/lib/utils";
 import NFTImage from "@/components/NFTImage";
 import SimpleLayout from "@/components/SimpleLayout";
-import { Address } from "@coinbase/onchainkit/identity";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { AuctionItem } from "@/types";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
@@ -27,6 +26,7 @@ import { useAccount } from "wagmi";
 import { ConnectWallet } from "@coinbase/onchainkit/wallet";
 import { FarcasterIdentity } from "@/components/FarcastIdentity";
 import { Countdown } from "@/components/ui/Countdown";
+import { CustomIdentity } from "@/components/CustomIdentity";
 
 interface PageProps {
   params: {
@@ -283,7 +283,9 @@ export default function AuctionPage({ params }: PageProps) {
                         >
                           <div>
                             <p className="font-mono text-sm">
-                              <Address address={bid.bidder as `0x${string}`} />
+                              <CustomIdentity
+                                address={bid.bidder as `0x${string}`}
+                              />
                             </p>
                             <p className="text-sm text-gray-500">
                               {format(
