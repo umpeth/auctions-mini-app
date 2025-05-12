@@ -6,8 +6,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { GetActiveAuctionsDocument } from "@/graphql/queryDocuments";
@@ -68,10 +66,10 @@ export function AuctionCarousel() {
   if (isLoading) {
     return (
       <div className="w-full space-y-4">
-        <div className="flex gap-4">
+        <div className="flex  gap-0 sm:gap-2">
           {[1, 2, 3].map((i) => (
             <Card key={i} className="w-full">
-              <CardContent className="p-6">
+              <CardContent className="p-3 sm:p-6">
                 <div className="space-y-4">
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-8 w-1/2" />
@@ -110,8 +108,8 @@ export function AuctionCarousel() {
         {auctions.map((auction: Auction) => (
           <CarouselItem key={auction.id} className="md:basis-1/2 lg:basis-1/3">
             <Link href={`/auction/${auction.id}`}>
-              <Card className="h-full overflow-hidden transition-all duration-200 hover:shadow-lg">
-                <CardContent className="flex flex-col gap-4 p-6">
+              <Card className="h-full overflow-hidden transition-all duration-200 hover:shadow-lg hover:border-gray-300 border-2 border-gray-200">
+                <CardContent className="flex flex-col gap-0 sm:gap-2 p-3 sm:p-6">
                   <div className="flex items-start justify-between">
                     <h3 className="text-lg font-semibold text-gray-900">
                       {auction.tokenReference?.metadata?.name}
@@ -150,7 +148,7 @@ export function AuctionCarousel() {
                     )}
                   </div>
                 </CardContent>
-                <CardFooter className="border-t bg-gray-50 px-6 py-4">
+                <CardFooter className="border-t bg-gray-50 px-3 sm:px-6 py-3 sm:py-4">
                   <div className="flex items-center gap-2">
                     <div className="text-sm font-medium text-gray-900">
                       Time Remaining:
@@ -171,8 +169,6 @@ export function AuctionCarousel() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="hidden md:flex" />
-      <CarouselNext className="hidden md:flex" />
     </Carousel>
   );
 }
