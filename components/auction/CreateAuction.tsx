@@ -409,7 +409,7 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                     <Input
                       id="premium-rate"
                       type="number"
-                      placeholder="100"
+                      placeholder="99"
                       value={premiumRate}
                       onChange={(e) => setPremiumRate(e.target.value)}
                       onBlur={handleBlurPremiumRate}
