@@ -77,7 +77,6 @@ export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
         if (data[address]?.length > 0) {
           setUser(data[address][0]);
         } else {
-          console.log("setting mystery account");
           setUser(mysteryAccount as FarcasterUser);
         }
       } catch (err) {

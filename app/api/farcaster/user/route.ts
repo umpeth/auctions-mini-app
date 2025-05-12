@@ -78,7 +78,7 @@ export async function GET(request: Request) {
         return NextResponse.json({ users: [] });
       }
       const error = await response.text();
-      console.log(error);
+      console.error(error);
       return NextResponse.json(
         { error: "Failed to fetch Farcaster user" },
         { status: response.status },
@@ -86,16 +86,6 @@ export async function GET(request: Request) {
     }
 
     const data = await response.json();
-    console.log({ data });
-
-    // Ensure we have the expected structure
-    // const responseData = {
-    //   users: Array.isArray(data.users)
-    //     ? data.users
-    //     : data.result?.users
-    //       ? data.result.users
-    //       : [],
-    // };
 
     const responseData = data;
     // Cache successful responses
@@ -106,7 +96,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(responseData);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { error: "Failed to fetch user data" },
       { status: 500 },

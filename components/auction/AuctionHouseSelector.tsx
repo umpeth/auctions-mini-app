@@ -34,10 +34,7 @@ export function AuctionHouseSelector() {
         }
 
         const data = await response.json();
-        console.log({ data });
-
         setAuctionHouses(data.auctionHouses as AuctionHouse[]);
-        console.log(data);
       } catch (error) {
         console.error("Error fetching auctions:", error);
         setError(error as Error);
