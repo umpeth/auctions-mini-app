@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { usePlaceBid } from "@/hooks/usePlaceBid";
 import { parseEther } from "viem";
 import TransactionButton from "@/components/Transaction";
@@ -27,9 +27,9 @@ export function PlaceBid({
   const [bidAmount, setBidAmount] = useState(minNextBid);
   const [showCustomBid, setShowCustomBid] = useState(false);
   const [error, setError] = useState("");
-  const [isBidSuccessModalOpen, setIsBidSuccessModalOpen] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { handleWarpcastShare } = useFrameActions();
-
+  const [isBidConfirmed, setIsBidConfirmed] = useState(false);
   const affiliateAddress = "0x0000000000000000000000000000000000000000";
 
   const {
@@ -39,11 +39,16 @@ export function PlaceBid({
     error: placeBidError,
     isLoading,
   } = usePlaceBid({
-    onSuccess: (bidHash) => {
-      console.log("Bid placed successfully:", bidHash);
-      setIsBidSuccessModalOpen(true);
+    onSuccess: () => {
+      setIsBidConfirmed(true);
     },
   });
+
+  useEffect(() => {
+    if (isBidConfirmed) {
+      setShowSuccessModal(true);
+    }
+  }, [isBidConfirmed]);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -130,8 +135,8 @@ export function PlaceBid({
         )}
       </div>
       <BidSuccessModal
-        isOpen={isBidSuccessModalOpen}
-        onOpenChange={setIsBidSuccessModalOpen}
+        isOpen={showSuccessModal}
+        onOpenChange={setShowSuccessModal}
         itemName={auctionItem.metadata?.name || ""}
         itemId={auctionItem.tokenId}
         imageUrl={auctionItem.metadata?.image || ""}
