@@ -71,11 +71,11 @@ export function ResponsiveBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
             </BreadcrumbLink>
           )}
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
 
         {/* Show middle items in dropdown if needed */}
         {!showDirectly && middleItems.length > 0 && (
           <>
+            <BreadcrumbSeparator />
             <BreadcrumbItem>
               {isDesktop ? (
                 <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -127,29 +127,28 @@ export function ResponsiveBreadcrumb({ items }: { items: BreadcrumbItem[] }) {
                 </Drawer>
               )}
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
           </>
         )}
 
         {/* Show either all items (if <= ITEMS_TO_DISPLAY) or just the last items */}
         {(showDirectly ? items.slice(1) : lastItems).map((item, index) => (
-          <BreadcrumbItem key={index}>
-            {item.href ? (
-              <>
+          <React.Fragment key={index}>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              {item.href ? (
                 <BreadcrumbLink
                   asChild
                   className="max-w-40 truncate md:max-w-none"
                 >
                   <Link href={item.href}>{item.label}</Link>
                 </BreadcrumbLink>
-                <BreadcrumbSeparator />
-              </>
-            ) : (
-              <BreadcrumbPage className="max-w-40 truncate md:max-w-none">
-                {item.label}
-              </BreadcrumbPage>
-            )}
-          </BreadcrumbItem>
+              ) : (
+                <BreadcrumbPage className="max-w-40 truncate md:max-w-none">
+                  {item.label}
+                </BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+          </React.Fragment>
         ))}
       </BreadcrumbList>
     </Breadcrumb>
