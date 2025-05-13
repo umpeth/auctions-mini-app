@@ -185,10 +185,7 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
     <div className="max-w-4xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle>
-            Create New Auction{" "}
-            {auctionHouseAddress ? `in ${auctionHouseAddress}` : ""}
-          </CardTitle>
+          <CardTitle>Create New Auction</CardTitle>
         </CardHeader>
         <CardContent>
           <div>
