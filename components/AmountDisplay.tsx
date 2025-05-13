@@ -7,7 +7,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { useIsTouch } from "@/hooks/useIsTouch";
+import { InfoIcon } from "lucide-react";
 
 /**
  * AmountDisplay Component
@@ -36,6 +43,7 @@ export const AmountDisplay: React.FC<AmountDisplayProps> = ({
   size = "md",
   decimals = 18,
 }) => {
+  const isTouch = useIsTouch();
   const amountStr = amount != null ? amount.toString() : "NaN";
 
   let invalid = false;
@@ -87,7 +95,7 @@ export const AmountDisplay: React.FC<AmountDisplayProps> = ({
   const getSizeClasses = () => {
     switch (size) {
       case "sm":
-        return "text-sm ";
+        return "text-sm";
       case "lg":
         return "text-lg";
       default:
@@ -98,15 +106,29 @@ export const AmountDisplay: React.FC<AmountDisplayProps> = ({
   const displayContent = (
     <div
       className={cn(
-        "inline-flex items-center rounded-md",
+        "inline-flex items-center gap-1 rounded-md group",
         getSizeClasses(),
+        showFull && "cursor-help hover:opacity-80 transition-opacity",
         className,
       )}
+      role={showFull ? "button" : undefined}
+      aria-label={
+        showFull ? `View full amount: ${getFullAmount()} ${symbol}` : undefined
+      }
     >
       <span className="font-mono whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
         {getFormattedAmount()}
       </span>
-      <span className="ml-1 font-mono text-gray-600">{symbol}</span>
+      <span className="font-mono text-gray-600">{symbol}</span>
+      {showFull && (
+        <InfoIcon
+          className={cn(
+            "w-3 h-3 text-gray-400 transition-opacity",
+            isTouch ? "opacity-100" : "opacity-0 group-hover:opacity-100",
+          )}
+          aria-hidden="true"
+        />
+      )}
     </div>
   );
 
@@ -114,14 +136,21 @@ export const AmountDisplay: React.FC<AmountDisplayProps> = ({
     return displayContent;
   }
 
-  return (
+  const content = (
+    <span className="font-mono">
+      {getFullAmount()} {symbol}
+    </span>
+  );
+
+  return isTouch ? (
+    <Popover>
+      <PopoverTrigger asChild>{displayContent}</PopoverTrigger>
+      <PopoverContent className="p-3 text-sm">{content}</PopoverContent>
+    </Popover>
+  ) : (
     <Tooltip>
       <TooltipTrigger asChild>{displayContent}</TooltipTrigger>
-      <TooltipContent>
-        <span className="font-mono">
-          {getFullAmount()} {symbol}
-        </span>
-      </TooltipContent>
+      <TooltipContent>{content}</TooltipContent>
     </Tooltip>
   );
 };
