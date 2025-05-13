@@ -106,7 +106,7 @@ export const AmountDisplay: React.FC<AmountDisplayProps> = ({
       <span className="font-mono whitespace-nowrap overflow-hidden text-ellipsis max-w-full">
         {getFormattedAmount()}
       </span>
-      <span className="ml-1 font-medium text-gray-600">{symbol}</span>
+      <span className="ml-1 font-mono text-gray-600">{symbol}</span>
     </div>
   );
 

@@ -33,12 +33,14 @@ export const CustomIdentity = ({ address }: { address: `0x${string}` }) => {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <span className="font-medium">{name || formatAddress(address)}</span>
+    <div className="inline-flex items-center space-x-1 rounded-md min-w-0 max-w-full">
+      <span className="font-mono  min-w-0 flex-1">
+        <span className="truncate block">{name || formatAddress(address)}</span>
+      </span>
       <Button
         variant="ghost"
         size="icon"
-        className="h-6 w-6 hover:bg-gray-100"
+        className="h-5 w-5 p-0 hover:bg-gray-100"
         onClick={handleCopy}
         title="Copy address"
       >
