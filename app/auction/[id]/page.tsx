@@ -16,6 +16,7 @@ import { Auction } from "@/graphql/generated";
 import SimpleLayout from "@/components/SimpleLayout";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 import { AuctionDetails } from "@/components/auction/AuctionDetails";
+import { AuctionDetailsSkeleton } from "@/components/auction/AuctionDetailsSkeleton";
 
 interface PageProps {
   params: {
@@ -101,9 +102,21 @@ export default function AuctionPage({ params }: PageProps) {
 
   if (!auction) {
     return (
-      <div className="container mx-auto px-2 sm:px-4 py-8 flex items-center justify-center">
-        <p className="text-lg">Loading auction details...</p>
-      </div>
+      <SimpleLayout title="Auction Details">
+        <div className="container mx-auto px-2 sm:px-4">
+          <ResponsiveBreadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Auctions", href: "/auctions" },
+              { label: "Active", href: "/auctions/active" },
+              {
+                label: "Auction loading...",
+              },
+            ]}
+          />
+          <AuctionDetailsSkeleton />
+        </div>
+      </SimpleLayout>
     );
   }
 
