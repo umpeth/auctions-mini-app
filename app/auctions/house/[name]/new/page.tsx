@@ -18,7 +18,7 @@ export default function CreateAuctionUnderHousePage() {
   ];
 
   return (
-    <SimpleLayout title={`Create New Auction in ${decodedName}`}>
+    <SimpleLayout title="Create New Auction">
       <div className="container py-8">
         <ResponsiveBreadcrumb items={breadcrumbItems} />
         <div className="max-w-2xl mx-auto">
