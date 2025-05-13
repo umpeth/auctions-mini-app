@@ -325,6 +325,7 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                   <Input
                     id="duration"
                     type="number"
+                    min={1}
                     placeholder="48"
                     value={durationHours}
                     onChange={(e) => setDurationHours(e.target.value)}
@@ -337,6 +338,7 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                   <Input
                     id="affiliate-fee"
                     type="number"
+                    min={0}
                     placeholder="5"
                     value={affiliateFeePct}
                     onChange={(e) => setAffiliateFeePct(e.target.value)}
@@ -366,6 +368,7 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                   <Input
                     id="time-extension"
                     type="number"
+                    min={1}
                     placeholder="5"
                     value={timeExtensionMinutes}
                     onChange={(e) => setTimeExtensionMinutes(e.target.value)}
@@ -398,6 +401,7 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                     <Input
                       id="min-bid-increment"
                       type="number"
+                      min={0.5}
                       placeholder="0.5"
                       value={minBidIncrementPct}
                       onChange={(e) => setMinBidIncrementPct(e.target.value)}
@@ -416,6 +420,8 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                     <Input
                       id="premium-rate"
                       type="number"
+                      min={0}
+                      max={100}
                       placeholder="99"
                       value={premiumRatePct}
                       onChange={(e) => setPremiumRatePct(e.target.value)}
