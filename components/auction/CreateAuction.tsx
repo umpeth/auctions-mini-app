@@ -10,7 +10,7 @@ import { ImageUpload } from "@/components/ImageUpload";
 import * as isIPFS from "is-ipfs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RequiredIndicator } from "@/components/ui/requiredIndicator";
-import { isAddress } from "viem";
+import { isAddress, parseEther } from "viem";
 import { SupplementalImagesInput } from "@/components/SupplementalImagesInput";
 
 interface CreateAuctionProps {
@@ -26,8 +26,7 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
   const [supplementalImagesCIDs, setSupplementalImagesCIDs] = useState<
     string[]
   >([]);
-  const [reservePrice, setReservePrice] = useState("");
-  const [paymentToken, setPaymentToken] = useState("ETH");
+  const [reservePriceEth, setReservePriceEth] = useState("");
   const [startTime, setStartTime] = useState("");
   const [durationHours, setDurationHours] = useState("");
   const [affiliateFeePct, setAffiliateFeePct] = useState("");
@@ -62,7 +61,7 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
   const handleBlurName = useTrimOnBlur(setName);
   const handleBlurDescription = useTrimOnBlur(setDescription);
   const handleBlurTermsOfService = useTrimOnBlur(setTermsOfService);
-  const handleBlurReservePrice = useTrimOnBlur(setReservePrice);
+  const handleBlurReservePriceEth = useTrimOnBlur(setReservePriceEth);
   const handleBlurDurationHours = useTrimOnBlur(setDurationHours);
   const handleBlurAffiliateFeePct = useTrimOnBlur(setAffiliateFeePct);
   const handleBlurArbiterAddress = useTrimOnBlur(setArbiterAddress);
@@ -119,20 +118,6 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
     }
   }, [isError, createAuctionWithNewNFTError]);
 
-  // Helper: map paymentToken label to address
-  const paymentTokenAddress = (label: string) => {
-    if (label === "ETH") return "0x0000000000000000000000000000000000000000";
-    if (label === "USDC") return "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
-    if (label === "DAI") return "0x6B175474E89094C44Da98b954EedeAC495271d0F";
-    return "0x0000000000000000000000000000000000000000";
-  };
-
-  // Helper: get decimals for payment token
-  const paymentTokenDecimals = (label: string) => {
-    if (label === "USDC") return 6;
-    return 18; // ETH and DAI
-  };
-
   // Use the entered auctionHouse as the address directly
   // const auctionHouseAddress = auctionHouse;
 
@@ -162,15 +147,11 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
         startTime: startTime
           ? BigInt(new Date(startTime).getTime() / 1000)
           : BigInt(Math.floor(Date.now() / 1000)),
-        reservePrice: BigInt(
-          Math.round(
-            Number(reservePrice) * 10 ** paymentTokenDecimals(paymentToken),
-          ),
-        ),
+        reservePriceWei: parseEther(reservePriceEth),
         durationSeconds: BigInt(Number(durationHours) * 3600),
         affiliateFeeBps: Number(affiliateFeePct) * 100,
         arbiterAddress: arbiterAddress as `0x${string}`,
-        paymentToken: paymentTokenAddress(paymentToken) as `0x${string}`,
+        paymentToken: "0x0000000000000000000000000000000000000000",
         isPremium,
         premiumRateBps: Number(premiumRatePct) * 100,
         minBidIncrementBps: Math.round(Number(minBidIncrementPct) * 100),
@@ -299,29 +280,21 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="reserve-price">
-                    Reserve Price
+                    Minimum First Bid (ETH)
                     <RequiredIndicator />
                   </Label>
                   <div className="flex">
                     <Input
                       id="reserve-price"
                       type="number"
-                      placeholder="0.5"
-                      className="rounded-l"
-                      value={reservePrice}
-                      onChange={(e) => setReservePrice(e.target.value)}
-                      onBlur={handleBlurReservePrice}
+                      min={0.000000000000000001}
+                      placeholder="0.0001"
+                      className="rounded"
+                      value={reservePriceEth}
+                      onChange={(e) => setReservePriceEth(e.target.value)}
+                      onBlur={handleBlurReservePriceEth}
                       required
                     />
-                    <select
-                      className="p-2 border-t border-r border-b rounded-r bg-gray-50 w-24"
-                      value={paymentToken}
-                      onChange={(e) => setPaymentToken(e.target.value)}
-                    >
-                      <option>ETH</option>
-                      <option>USDC</option>
-                      <option>DAI</option>
-                    </select>
                   </div>
                 </div>
                 <div>

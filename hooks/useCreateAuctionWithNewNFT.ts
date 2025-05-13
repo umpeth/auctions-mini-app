@@ -77,7 +77,7 @@ export function useCreateAuctionWithNewNFT({
     auctionHouseAddress,
     metadata,
     startTime,
-    reservePrice,
+    reservePriceWei,
     durationSeconds,
     affiliateFeeBps,
     arbiterAddress,
@@ -90,7 +90,7 @@ export function useCreateAuctionWithNewNFT({
     auctionHouseAddress: Address;
     metadata: NFTMetadata;
     startTime: bigint;
-    reservePrice: bigint;
+    reservePriceWei: bigint;
     durationSeconds: bigint;
     affiliateFeeBps: number;
     arbiterAddress: Address;
@@ -109,7 +109,7 @@ export function useCreateAuctionWithNewNFT({
             supplementalImages: metadata.supplementalImages ?? [],
           },
           startTime,
-          reservePrice,
+          reservePriceWei,
           durationSeconds,
           affiliateFeeBps,
           arbiterAddress,
