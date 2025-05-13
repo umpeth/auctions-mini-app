@@ -2,7 +2,7 @@ import { getName } from "@coinbase/onchainkit/identity";
 import { useEffect, useState } from "react";
 import { base } from "wagmi/chains";
 import { Button } from "@/components/ui/button";
-import { ClipboardIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 
 export const CustomIdentity = ({ address }: { address: `0x${string}` }) => {
@@ -40,14 +40,14 @@ export const CustomIdentity = ({ address }: { address: `0x${string}` }) => {
       <Button
         variant="ghost"
         size="icon"
-        className="h-5 w-5 p-0 hover:bg-gray-100"
+        className="h-4 w-4 p-0 hover:bg-gray-100"
         onClick={handleCopy}
         title="Copy address"
       >
         {copied ? (
-          <CheckIcon className="h-4 w-4 text-green-500" />
+          <Check className="h-4 w-4 text-green-500" />
         ) : (
-          <ClipboardIcon className="h-4 w-4 text-gray-500" />
+          <Copy className="h-4 w-4 text-gray-500" />
         )}
       </Button>
     </div>
