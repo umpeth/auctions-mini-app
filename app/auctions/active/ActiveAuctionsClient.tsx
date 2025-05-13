@@ -4,7 +4,7 @@ import { GetActiveAuctionsDocument } from "@/graphql/queryDocuments";
 import SimpleLayout from "@/components/SimpleLayout";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 import { useEffect, useState } from "react";
-
+import { AuctionGridSkeleton } from "@/components/auction/AuctionGridSkeleton";
 const breadcrumbItems = [
   { label: "Home", href: "/" },
   { label: "Auctions", href: "/auctions" },
@@ -55,7 +55,7 @@ export default function ActiveAuctionsClient() {
         {error ? (
           <p className="text-red-500 text-center">Error: {error.message}</p>
         ) : isLoading ? (
-          <p className="text-gray-500 text-center">Loading auctions...</p>
+          <AuctionGridSkeleton />
         ) : auctions.length === 0 ? (
           <p className="text-gray-500 text-center">No active auctions found</p>
         ) : (
