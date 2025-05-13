@@ -29,6 +29,7 @@ query getAuctionByAuctionID($auctionID: ID!) {
       bidder
       amount
       timestamp
+      transactionHash
     }
   }
 }

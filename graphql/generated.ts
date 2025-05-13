@@ -6736,6 +6736,7 @@ export type GetActiveAuctionsQuery = {
       bidder: any;
       amount: any;
       timestamp: any;
+      transactionHash: any;
     }>;
   }>;
 };
@@ -6782,6 +6783,7 @@ export type GetAuctionHousesByOwnerQuery = {
         bidder: any;
         amount: any;
         timestamp: any;
+        transactionHash: any;
       }>;
     }>;
   }>;
@@ -6827,6 +6829,7 @@ export type GetAuctionsByAuctionHouseAddressQuery = {
         bidder: any;
         amount: any;
         timestamp: any;
+        transactionHash: any;
       }>;
     }>;
   } | null;
@@ -6869,6 +6872,7 @@ export type GetAuctionsByStatusQuery = {
       bidder: any;
       amount: any;
       timestamp: any;
+      transactionHash: any;
     }>;
   }>;
 };
@@ -6909,6 +6913,7 @@ export type GetEndedAuctionsQuery = {
       bidder: any;
       amount: any;
       timestamp: any;
+      transactionHash: any;
     }>;
   }>;
 };
@@ -6951,6 +6956,7 @@ export type GetAuctionByAuctionIdQuery = {
       bidder: any;
       amount: any;
       timestamp: any;
+      transactionHash: any;
     }>;
   } | null;
 };

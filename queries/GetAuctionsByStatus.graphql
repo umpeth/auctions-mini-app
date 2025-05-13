@@ -26,6 +26,7 @@ query getAuctionsByStatus($status: AuctionStatus) {
       bidder
       amount
       timestamp
+      transactionHash
     }
   }
 }

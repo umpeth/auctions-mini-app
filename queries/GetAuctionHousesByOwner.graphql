@@ -30,6 +30,7 @@ query GetAuctionHousesByOwner($ownerAddress: Bytes!) {
         bidder
         amount
         timestamp
+        transactionHash
       }
     }
   }

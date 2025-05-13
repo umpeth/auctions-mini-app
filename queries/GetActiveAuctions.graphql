@@ -28,6 +28,7 @@ query getActiveAuctions($currentTimeEpoch: BigInt) {
       bidder
       amount
       timestamp
+      transactionHash
     }
   }
 }

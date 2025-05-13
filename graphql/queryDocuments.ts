@@ -50,6 +50,7 @@ export const GetAuctionsByAuctionHouseAddressDocument: TypedDocumentNode<
           bidder
           amount
           timestamp
+          transactionHash
         }
       }
     }
@@ -88,6 +89,7 @@ export const GetAuctionsByStatusDocument: TypedDocumentNode<
         bidder
         amount
         timestamp
+        transactionHash
       }
     }
   }
@@ -128,6 +130,7 @@ export const GetAuctionByAuctionIdDocument: TypedDocumentNode<
         bidder
         amount
         timestamp
+        transactionHash
       }
     }
   }
@@ -167,6 +170,7 @@ export const GetActiveAuctionsDocument: TypedDocumentNode<
         bidder
         amount
         timestamp
+        transactionHash
       }
     }
   }
@@ -205,6 +209,7 @@ export const GetEndedAuctionsDocument: TypedDocumentNode<
         bidder
         amount
         timestamp
+        transactionHash
       }
     }
   }
@@ -246,6 +251,7 @@ export const GetAuctionHousesByOwnerDocument: TypedDocumentNode<
           bidder
           amount
           timestamp
+          transactionHash
         }
       }
     }

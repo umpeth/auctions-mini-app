@@ -28,6 +28,7 @@ query GetAuctionsByAuctionHouseAddress($auctionHouseAddress: ID!) {
         bidder
         amount
         timestamp
+        transactionHash
       }
     }
   }
