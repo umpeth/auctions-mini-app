@@ -64,21 +64,23 @@ export function AuctionCarousel() {
 
   if (isLoading) {
     return (
-      <div className="w-full space-y-4">
-        <div className="flex  gap-0 sm:gap-2">
+      <Carousel>
+        <CarouselContent>
           {[1, 2, 3].map((i) => (
-            <Card key={i} className="w-full">
-              <CardContent className="p-3 sm:p-6">
-                <div className="space-y-4">
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-8 w-1/2" />
-                  <Skeleton className="h-4 w-1/4" />
-                </div>
-              </CardContent>
-            </Card>
+            <CarouselItem key={i} className="md:basis-1/2 lg:basis-1/3">
+              <Card>
+                <CardContent className="p-3 sm:p-6">
+                  <div className="space-y-4">
+                    <Skeleton className="h-8 w-3/4" />
+                    <Skeleton className="h-8 w-1/2" />
+                    <Skeleton className="h-12 w-full" />
+                  </div>
+                </CardContent>
+              </Card>
+            </CarouselItem>
           ))}
-        </div>
-      </div>
+        </CarouselContent>
+      </Carousel>
     );
   }
 
