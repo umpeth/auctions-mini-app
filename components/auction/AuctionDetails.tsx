@@ -21,7 +21,8 @@ import { FarcasterIdentity } from "@/components/FarcastIdentity";
 import { Countdown } from "@/components/ui/Countdown";
 import { ConnectWallet } from "@coinbase/onchainkit/wallet";
 import { useAccount } from "wagmi";
-import { BidHistory } from "./BidHistory";
+import { BidHistory } from "@/components/auction/BidHistory";
+import { Clock } from "lucide-react";
 
 interface AuctionDetailsProps {
   auction: Auction;
@@ -146,9 +147,20 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
               <CardTitle>Auction Details</CardTitle>
               <CardDescription>
                 {isEnded ? (
-                  "Auction has ended"
+                  <div className="flex items-center space-x-2 text-lg font-bold">
+                    <Clock className="h-5 w-5 text-muted-foreground" />
+                    <span>Auction has ended</span>
+                  </div>
                 ) : (
-                  <Countdown deadline={Number(auction.endTime)} />
+                  <div>
+                    <div className="flex items-center space-x-2 text-lg font-bold">
+                      <span>Auction ends in</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-2xl font-bold">
+                      <Clock className="h-5 w-5 text-muted-foreground" />
+                      <Countdown deadline={Number(auction.endTime)} />
+                    </div>
+                  </div>
                 )}
               </CardDescription>
             </CardHeader>
