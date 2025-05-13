@@ -17,12 +17,11 @@ import * as isIPFS from "is-ipfs";
 import { useTrimOnBlur } from "@/hooks/useTrimOnBlur";
 
 export function CreateAuctionHouse() {
-  // Form state
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [tokenName, setTokenName] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState("");
-  const [customDeadline, setCustomDeadline] = useState("");
+  const [customDeadlineDays, setCustomDeadlineDays] = useState("");
   const [auctionHouseAddress, setAuctionHouseAddress] = useState("");
   const [error, setError] = useState("");
   const [contractImageCID, setContractImageCID] = useState("");
@@ -32,19 +31,29 @@ export function CreateAuctionHouse() {
   const { address, isConnected } = useAccount();
 
   const handleBlurImageCID = useTrimOnBlur((value) => {
-    if (isIPFS.cid(value)) {
-      setContractImageCID(value);
-      setCidError(null);
+    if (value) {
+      if (isIPFS.cid(value)) {
+        setContractImageCID(value);
+        setCidError(null);
+      } else {
+        setCidError("Invalid IPFS CID");
+      }
     } else {
-      setCidError("Invalid IPFS CID");
+      setCidError(null);
     }
   });
   const handleBlurName = useTrimOnBlur(setName);
   const handleBlurDescription = useTrimOnBlur(setDescription);
   const handleBlurTokenName = useTrimOnBlur(setTokenName);
   const handleBlurTokenSymbol = useTrimOnBlur(setTokenSymbol);
-  const handleBlurCustomDeadline = useTrimOnBlur(setCustomDeadline);
-
+  const handleBlurCustomDeadlineDays = useTrimOnBlur((value) => {
+    if (Number(value) < 1) {
+      setError("Settlement deadline must be at least 1 day.");
+    } else {
+      setError("");
+    }
+    setCustomDeadlineDays(value);
+  });
   const {
     createAuctionHouse,
     isError,
@@ -67,24 +76,24 @@ export function CreateAuctionHouse() {
   // Form submit handler
   const handleSubmit = async () => {
     // Check for required fields
-    if (
-      !name ||
-      !description ||
-      !tokenName ||
-      !tokenSymbol ||
-      !customDeadline ||
-      !contractImageCID
-    ) {
-      setError("All fields are required.");
+    if (!name || !description || !tokenName || !tokenSymbol) {
+      setError("Please fill out all required fields.");
       return;
     }
+    if (customDeadlineDays) {
+      if (Number(customDeadlineDays) < 1) {
+        setError("Settlement deadline must be at least 1 day.");
+        return;
+      }
+    }
+
     setError("");
     await createAuctionHouse({
       name,
       image: contractImageCID ? `ipfs://${contractImageCID}` : "",
       description,
       symbol: tokenSymbol,
-      customDeadline: Number(customDeadline),
+      customDeadlineDays: Number(customDeadlineDays),
       auctionItemFactoryAddress: auctionItemERC721FactoryAddress,
       escrowFactoryAddress: affiliateEscrowFactoryAddress,
     });
@@ -215,20 +224,21 @@ export function CreateAuctionHouse() {
               </div>
               <div>
                 <Label htmlFor="customDeadline">
-                  Settlement Deadline (days) <RequiredIndicator />
+                  Settlement Deadline (days)
                 </Label>
                 <Input
                   id="customDeadline"
                   type="number"
                   placeholder="21"
-                  min={0}
-                  value={customDeadline}
-                  onChange={(e) => setCustomDeadline(e.target.value)}
-                  onBlur={handleBlurCustomDeadline}
+                  min={1}
+                  value={customDeadlineDays}
+                  onChange={(e) => setCustomDeadlineDays(e.target.value)}
+                  onBlur={handleBlurCustomDeadlineDays}
                   required
                 />
                 <div className="text-xs text-muted-foreground mt-1">
-                  Time allowed for dispute resolution after auction ends
+                  Time allowed for dispute resolution after auction ends.
+                  Defaults to 21 days if not set.
                 </div>
               </div>
               <div className="pt-4">

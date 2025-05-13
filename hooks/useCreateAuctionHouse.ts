@@ -71,9 +71,9 @@ export function useCreateAuctionHouse({
     name,
     image,
     description,
-    contractURI = "https://example.com/contract-metadata",
-    symbol = "AUCTN",
-    customDeadline = 0,
+    contractURI = "", // TODO: do we even need this? (keep it simple for users)
+    symbol = "AUCTN", // TODO: do we even need this?
+    customDeadlineDays = 0,
     auctionItemFactoryAddress,
     escrowFactoryAddress,
   }: {
@@ -82,7 +82,7 @@ export function useCreateAuctionHouse({
     description: string;
     contractURI?: string;
     symbol?: string;
-    customDeadline?: number;
+    customDeadlineDays?: number;
     auctionItemFactoryAddress: Address;
     escrowFactoryAddress: Address;
   }) => {
@@ -96,7 +96,7 @@ export function useCreateAuctionHouse({
           description,
           contractURI,
           symbol,
-          BigInt(customDeadline),
+          BigInt(customDeadlineDays),
           auctionItemFactoryAddress,
           escrowFactoryAddress,
         ],
