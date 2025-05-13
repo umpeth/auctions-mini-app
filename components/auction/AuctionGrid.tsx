@@ -53,7 +53,7 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
                     />
                   </div>
                 )}
-                <p>
+                <div>
                   <span className="font-medium">Current Bid: </span>
                   <AmountDisplay
                     amount={formatEther(
@@ -63,8 +63,8 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
                     size="sm"
                     decimals={18}
                   />
-                </p>
-                <p>
+                </div>
+                <div>
                   <span className="font-medium">Reserve Price: </span>
                   <AmountDisplay
                     amount={formatEther(BigInt(auction.reservePrice))}
@@ -72,8 +72,8 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
                     size="sm"
                     decimals={18}
                   />
-                </p>
-                <p>
+                </div>
+                <div>
                   <span className="font-medium">Ends: </span>
 
                   {Number(auction.endTime) < new Date().getTime() / 1000 ? (
@@ -81,7 +81,7 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
                   ) : (
                     <Countdown deadline={Number(auction.endTime)} />
                   )}
-                </p>
+                </div>
               </div>
             </CardContent>
             <CardFooter>

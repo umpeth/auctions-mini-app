@@ -238,11 +238,11 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
                         className="flex justify-between items-center"
                       >
                         <div>
-                          <p className="font-mono text-sm">
+                          <span className="font-mono text-sm">
                             <CustomIdentity
                               address={bid.bidder as `0x${string}`}
                             />
-                          </p>
+                          </span>
                           <p className="text-sm text-gray-500">
                             {format(
                               new Date(parseInt(bid.timestamp) * 1000),
