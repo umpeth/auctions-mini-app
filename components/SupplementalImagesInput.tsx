@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import * as isIPFS from "is-ipfs";
 import { ImageUpload } from "@/components/ImageUpload";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/solid";
@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useTrimOnBlur } from "@/hooks/useTrimOnBlur";
 
 /**
  * Props for the SupplementalImagesInput component
@@ -72,6 +71,20 @@ export function SupplementalImagesInput({
   const [useSupplementalImageUpload, setUseSupplementalImageUpload] =
     useState(false);
 
+  const handleTrimmedBlur = useCallback(
+    (index: number, value: string) => {
+      const newErrors = [...supplementalImageErrors];
+      const trimmedValue = value.trim();
+      if (isIPFS.cid(trimmedValue)) {
+        newErrors[index] = null;
+      } else {
+        newErrors[index] = "Invalid IPFS CID";
+      }
+      setSupplementalImageErrors(newErrors);
+    },
+    [supplementalImageErrors],
+  );
+
   /**
    * Adds a new empty supplemental image field to the list.
    * Initializes with an empty string and null error state.
@@ -122,28 +135,6 @@ export function SupplementalImagesInput({
   };
 
   /**
-   * Validates a supplemental image CID on blur event.
-   * Sets error state if the CID is invalid.
-   *
-   * @param {number} index - The index of the image to validate
-   * @param {string} value - The CID value to validate
-   *
-   * @example
-   * ```tsx
-   * handleBlurSupplementalImage(0, "Qm..."); // Validates first image CID
-   * ```
-   */
-  const handleBlurSupplementalImage = (index: number, value: string) => {
-    const newErrors = [...supplementalImageErrors];
-    if (isIPFS.cid(value)) {
-      newErrors[index] = null;
-    } else {
-      newErrors[index] = "Invalid IPFS CID";
-    }
-    setSupplementalImageErrors(newErrors);
-  };
-
-  /**
    * Handles successful upload of supplemental images from the ImageUpload component.
    * Validates each uploaded CID and updates both images and error states.
    *
@@ -172,21 +163,15 @@ export function SupplementalImagesInput({
 
   /**
    * Creates a blur event handler for a specific supplemental image index.
-   * Uses the useTrimOnBlur hook to trim whitespace and validate the CID.
+   * Uses the handleTrimmedBlur callback to trim whitespace and validate the CID.
    *
    * @param {number} index - The index to create the handler for
-   * @returns {(value: string) => void} A blur event handler for the specified index
-   *
-   * @example
-   * ```tsx
-   * const blurHandler = createSupplementalImageBlurHandler(0);
-   * ```
+   * @returns {(event: React.FocusEvent<HTMLInputElement>) => void} A blur event handler for the specified index
    */
   const createSupplementalImageBlurHandler = (index: number) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useTrimOnBlur((value: string) => {
-      handleBlurSupplementalImage(index, value);
-    });
+    return (e: React.FocusEvent<HTMLInputElement>) => {
+      handleTrimmedBlur(index, e.target.value);
+    };
   };
 
   return (
