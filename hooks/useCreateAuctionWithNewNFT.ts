@@ -78,27 +78,27 @@ export function useCreateAuctionWithNewNFT({
     metadata,
     startTime,
     reservePrice,
-    duration,
-    affiliateFee,
+    durationSeconds,
+    affiliateFeeBps,
     arbiterAddress,
     paymentToken = "0x0000000000000000000000000000000000000000",
-    premium = false,
-    premiumRate = 0,
-    minBidIncrement = 500,
-    timeExtension = 900,
+    isPremium = false,
+    premiumRateBps = 0,
+    minBidIncrementBps = 500,
+    timeExtensionSeconds = 900,
   }: {
     auctionHouseAddress: Address;
     metadata: NFTMetadata;
     startTime: bigint;
     reservePrice: bigint;
-    duration: bigint;
-    affiliateFee: number;
+    durationSeconds: bigint;
+    affiliateFeeBps: number;
     arbiterAddress: Address;
     paymentToken?: Address;
-    premium?: boolean;
-    premiumRate?: number;
-    minBidIncrement?: number;
-    timeExtension?: number;
+    isPremium?: boolean;
+    premiumRateBps?: number;
+    minBidIncrementBps?: number;
+    timeExtensionSeconds?: number;
   }) => {
     try {
       await createAuctionWriteContract({
@@ -110,15 +110,15 @@ export function useCreateAuctionWithNewNFT({
           },
           startTime,
           reservePrice,
-          duration,
-          affiliateFee,
+          durationSeconds,
+          affiliateFeeBps,
           arbiterAddress,
           affiliateEscrowFactoryAddress,
           paymentToken,
-          premium,
-          premiumRate,
-          minBidIncrement,
-          BigInt(timeExtension),
+          isPremium,
+          premiumRateBps,
+          minBidIncrementBps,
+          BigInt(timeExtensionSeconds),
         ],
       });
     } catch (err) {

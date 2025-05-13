@@ -29,13 +29,13 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
   const [reservePrice, setReservePrice] = useState("");
   const [paymentToken, setPaymentToken] = useState("ETH");
   const [startTime, setStartTime] = useState("");
-  const [duration, setDuration] = useState("");
-  const [affiliateFee, setAffiliateFee] = useState("");
+  const [durationHours, setDurationHours] = useState("");
+  const [affiliateFeePct, setAffiliateFeePct] = useState("");
   const [arbiterAddress, setArbiterAddress] = useState("");
-  const [timeExtension, setTimeExtension] = useState("");
-  const [premium, setPremium] = useState(true);
-  const [minBidIncrement, setMinBidIncrement] = useState("");
-  const [premiumRate, setPremiumRate] = useState("");
+  const [timeExtensionMinutes, setTimeExtensionMinutes] = useState("");
+  const [isPremium, setIsPremium] = useState(true);
+  const [minBidIncrementPct, setMinBidIncrementPct] = useState("");
+  const [premiumRatePct, setPremiumRatePct] = useState("");
   const [error, setError] = useState("");
   const [contractImageCID, setContractImageCID] = useState("");
   const [cidError, setCidError] = useState<string | null>(null);
@@ -63,12 +63,12 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
   const handleBlurDescription = useTrimOnBlur(setDescription);
   const handleBlurTermsOfService = useTrimOnBlur(setTermsOfService);
   const handleBlurReservePrice = useTrimOnBlur(setReservePrice);
-  const handleBlurDuration = useTrimOnBlur(setDuration);
-  const handleBlurAffiliateFee = useTrimOnBlur(setAffiliateFee);
+  const handleBlurDurationHours = useTrimOnBlur(setDurationHours);
+  const handleBlurAffiliateFeePct = useTrimOnBlur(setAffiliateFeePct);
   const handleBlurArbiterAddress = useTrimOnBlur(setArbiterAddress);
-  const handleBlurTimeExtension = useTrimOnBlur(setTimeExtension);
-  const handleBlurMinBidIncrement = useTrimOnBlur(setMinBidIncrement);
-  const handleBlurPremiumRate = useTrimOnBlur(setPremiumRate);
+  const handleBlurTimeExtension = useTrimOnBlur(setTimeExtensionMinutes);
+  const handleBlurMinBidIncrementPct = useTrimOnBlur(setMinBidIncrementPct);
+  const handleBlurPremiumRatePct = useTrimOnBlur(setPremiumRatePct);
 
   const validateStartTime = (value: string) => {
     if (!value) return null;
@@ -167,14 +167,14 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
             Number(reservePrice) * 10 ** paymentTokenDecimals(paymentToken),
           ),
         ),
-        duration: BigInt(Number(duration) * 3600),
-        affiliateFee: Number(affiliateFee),
+        durationSeconds: BigInt(Number(durationHours) * 3600),
+        affiliateFeeBps: Number(affiliateFeePct) * 100,
         arbiterAddress: arbiterAddress as `0x${string}`,
         paymentToken: paymentTokenAddress(paymentToken) as `0x${string}`,
-        premium,
-        premiumRate: Number(premiumRate),
-        minBidIncrement: Math.round(Number(minBidIncrement) * 100),
-        timeExtension: Number(timeExtension) * 60,
+        isPremium,
+        premiumRateBps: Number(premiumRatePct) * 100,
+        minBidIncrementBps: Math.round(Number(minBidIncrementPct) * 100),
+        timeExtensionSeconds: Number(timeExtensionMinutes) * 60,
       });
     } catch {
       // error handled by hook
@@ -353,9 +353,9 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                     id="duration"
                     type="number"
                     placeholder="48"
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                    onBlur={handleBlurDuration}
+                    value={durationHours}
+                    onChange={(e) => setDurationHours(e.target.value)}
+                    onBlur={handleBlurDurationHours}
                     required
                   />
                 </div>
@@ -365,9 +365,9 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                     id="affiliate-fee"
                     type="number"
                     placeholder="5"
-                    value={affiliateFee}
-                    onChange={(e) => setAffiliateFee(e.target.value)}
-                    onBlur={handleBlurAffiliateFee}
+                    value={affiliateFeePct}
+                    onChange={(e) => setAffiliateFeePct(e.target.value)}
+                    onBlur={handleBlurAffiliateFeePct}
                   />
                 </div>
                 <div>
@@ -394,8 +394,8 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                     id="time-extension"
                     type="number"
                     placeholder="5"
-                    value={timeExtension}
-                    onChange={(e) => setTimeExtension(e.target.value)}
+                    value={timeExtensionMinutes}
+                    onChange={(e) => setTimeExtensionMinutes(e.target.value)}
                     onBlur={handleBlurTimeExtension}
                     required
                   />
@@ -409,8 +409,10 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                   <Checkbox
                     id="premium"
                     className="mr-2"
-                    checked={premium}
-                    onCheckedChange={(checked) => setPremium(checked === true)}
+                    checked={isPremium}
+                    onCheckedChange={(checked) =>
+                      setIsPremium(checked === true)
+                    }
                   />
                   <Label htmlFor="premium">Enable Premium Auction</Label>
                 </div>
@@ -421,11 +423,12 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                       <RequiredIndicator />
                     </Label>
                     <Input
+                      id="min-bid-increment"
                       type="number"
                       placeholder="0.5"
-                      value={minBidIncrement}
-                      onChange={(e) => setMinBidIncrement(e.target.value)}
-                      onBlur={handleBlurMinBidIncrement}
+                      value={minBidIncrementPct}
+                      onChange={(e) => setMinBidIncrementPct(e.target.value)}
+                      onBlur={handleBlurMinBidIncrementPct}
                       required
                     />
                     <div className="text-xs text-muted-foreground mt-1">
@@ -441,9 +444,9 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                       id="premium-rate"
                       type="number"
                       placeholder="99"
-                      value={premiumRate}
-                      onChange={(e) => setPremiumRate(e.target.value)}
-                      onBlur={handleBlurPremiumRate}
+                      value={premiumRatePct}
+                      onChange={(e) => setPremiumRatePct(e.target.value)}
+                      onBlur={handleBlurPremiumRatePct}
                       required
                     />
                     <div className="text-xs text-muted-foreground mt-1">
