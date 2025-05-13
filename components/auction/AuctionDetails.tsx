@@ -1,66 +1,46 @@
 "use client";
-import { Address } from "@coinbase/onchainkit/identity";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { format } from "date-fns";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import React from "react";
-import { useAuctionItemsByHouseAddress } from "@/hooks/useAuctionItemsByHouseAddress";
-import { formatEther, formatUnits } from "viem";
+import React, { useState } from "react";
+import { formatEther } from "viem";
+import { Auction } from "@/graphql/generated";
 import NFTImage from "@/components/NFTImage";
+import { PlaceBid } from "@/components/auction/PlaceBid";
+import { calculateMinNextBid } from "@/lib/utils";
 import { AmountDisplay } from "@/components/AmountDisplay";
+import { PremiumAuctionIcon } from "@/components/auction/PremiumAuctionIcon";
+import { AuctionItem } from "@/types";
+
+import { FarcasterIdentity } from "@/components/FarcastIdentity";
 import { Countdown } from "@/components/ui/Countdown";
 import { CustomIdentity } from "@/components/CustomIdentity";
+import { ConnectWallet } from "@coinbase/onchainkit/wallet";
+import { useAccount } from "wagmi";
 
 interface AuctionDetailsProps {
-  setCurrentScreen: (screen: string) => void;
-  auctionHouseAddress: string;
-  onPlaceBid: (auctionData: {
-    auctionHouseAddress: `0x${string}`;
-    auctionId: bigint;
-    currentBid: string;
-    minNextBid: string;
-  }) => void;
+  auction: Auction;
 }
 
-export function AuctionDetails({
-  setCurrentScreen,
-  auctionHouseAddress,
-  onPlaceBid,
-}: AuctionDetailsProps) {
-  const { auctions, loading, error } =
-    useAuctionItemsByHouseAddress(auctionHouseAddress);
-  const auction = auctions[1]; // TODO: make this selectable
-
-  if (loading) {
-    return (
-      <div className="max-w-4xl mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle>Auction Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-10 text-gray-500">
-              Loading auction details...
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="max-w-4xl mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle>Auction Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-10 text-red-500">{error}</div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+export function AuctionDetails({ auction }: AuctionDetailsProps) {
+  const { isConnected } = useAccount();
+  const [selectedImage, setSelectedImage] = useState<string>(
+    auction?.tokenReference?.metadata?.image || "",
+  );
+  const minNextBidEth = formatEther(
+    calculateMinNextBid(
+      BigInt(auction?.highestBidAmount || "0"),
+      BigInt(auction?.reservePrice || "0"),
+      BigInt(auction?.minBidIncrementBps || "0"),
+    ),
+  );
 
   if (!auction) {
     return (
@@ -79,214 +59,212 @@ export function AuctionDetails({
     );
   }
 
-  const handlePlaceBid = () => {
-    onPlaceBid({
-      auctionHouseAddress: auctionHouseAddress as `0x${string}`,
-      auctionId: BigInt(auction.id),
-      currentBid:
-        auction.highestBid !== BigInt(0)
-          ? formatUnits(auction.highestBid, 18)
-          : "0",
-      minNextBid:
-        auction.minNextBid !== BigInt(0)
-          ? formatUnits(auction.minNextBid, 18)
-          : "0",
-    });
-    setCurrentScreen("placeBid");
-  };
+  const timeUntilEnd = new Date(parseInt(auction.endTime) * 1000);
+  const isEnded = timeUntilEnd < new Date();
+  const currentBidEth = formatEther(BigInt(auction.highestBidAmount || "0"));
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle>Auction Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-1">
-              <div className="bg-gray-100 p-2 rounded-lg h-64 flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <div className="text-6xl mb-2">
-                    {auction.metadata?.image ? (
-                      <NFTImage
-                        src={auction.metadata.image}
-                        alt={auction.metadata.name || "Item Image"}
-                      />
-                    ) : (
-                      "🖼️"
-                    )}
-                  </div>
-                  <div>{auction.metadata?.name || "Item Image"}</div>
-                </div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Left Column - Image */}
+        <div>
+          {auction.tokenReference?.metadata?.image ? (
+            <div className="aspect-square w-full overflow-hidden rounded-xl">
+              <NFTImage
+                src={selectedImage}
+                alt={
+                  auction.tokenReference.metadata.name ||
+                  `Token #${auction.tokenId}`
+                }
+              />
+            </div>
+          ) : (
+            <div className="aspect-square w-full bg-gray-100 rounded-xl flex items-center justify-center">
+              <p className="text-gray-500">No image available</p>
+            </div>
+          )}
+
+          {(auction?.tokenReference?.metadata?.supplementalImages ?? [])
+            .length > 0 && (
+            <div className="mt-4 grid grid-cols-4 gap-2">
+              <div
+                className={`aspect-square cursor-pointer overflow-hidden rounded-lg ${
+                  selectedImage === auction?.tokenReference?.metadata?.image
+                    ? "ring-2 ring-indigo-500"
+                    : ""
+                }`}
+                onClick={() =>
+                  setSelectedImage(
+                    auction?.tokenReference?.metadata?.image || "",
+                  )
+                }
+              >
+                <NFTImage
+                  src={auction?.tokenReference?.metadata?.image || ""}
+                  alt="Main image"
+                  disableModal={true}
+                />
               </div>
-              <div className="mt-4 space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">NFT Contract:</span>
-                  <Address address={auction.tokenContract as `0x${string}`} />
+              {(
+                auction?.tokenReference?.metadata?.supplementalImages ?? []
+              ).map((image, index) => (
+                <div
+                  key={index}
+                  className={`aspect-square cursor-pointer overflow-hidden rounded-lg ${
+                    selectedImage === image ? "ring-2 ring-indigo-500" : ""
+                  }`}
+                  onClick={() => setSelectedImage(image)}
+                >
+                  <NFTImage
+                    src={image}
+                    alt={`Supplemental image ${index + 1}`}
+                    disableModal={true}
+                  />
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Token ID:</span>
-                  <span className="font-mono">{auction.tokenId}</span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Right Column - Auction Details */}
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-4xl font-bold mb-2 flex items-center gap-2">
+              {auction.tokenReference?.metadata?.name ||
+                `Collectible #${auction.tokenId}`}
+              {auction.isPremiumAuction && (
+                <PremiumAuctionIcon
+                  minBidIncrementBps={auction.minBidIncrementBps}
+                  premiumBps={auction.premiumBps}
+                />
+              )}
+            </h1>
+            <p className="text-gray-600">
+              {auction.tokenReference?.metadata?.description}
+            </p>
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Auction Details</CardTitle>
+              <CardDescription>
+                {isEnded ? (
+                  "Auction has ended"
+                ) : (
+                  <Countdown deadline={Number(auction.endTime)} />
+                )}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="break-words">
+                  <p className="text-sm text-gray-500">Current Bid</p>
+                  <AmountDisplay
+                    amount={currentBidEth}
+                    symbol="ETH"
+                    size="lg"
+                    decimals={18}
+                  />
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Owner:</span>
-                  <CustomIdentity
-                    address={auction.auctionOwner as `0x${string}`}
+                <div className="break-words">
+                  <p className="text-sm text-gray-500">Reserve Price</p>
+                  <AmountDisplay
+                    amount={formatEther(BigInt(auction.reservePrice))}
+                    symbol="ETH"
+                    size="lg"
+                    decimals={18}
                   />
                 </div>
               </div>
-            </div>
-            <div className="md:col-span-2">
-              <h3 className="text-xl font-bold">
-                {auction.metadata?.name || `Collectible #${auction.tokenId}`}
-              </h3>
-              <div className="text-gray-700 mt-2">
-                {auction.metadata?.description || "No description available."}
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Auction Owner</p>
+                <FarcasterIdentity
+                  address={auction.auctionOwner as `0x${string}`}
+                />
               </div>
-              <div className="mt-6 border-t pt-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-gray-600 text-sm">Current Bid</div>
-                    <div className="text-2xl font-bold">
-                      {auction.highestBid !== BigInt(0)
-                        ? `${formatUnits(auction.highestBid, 18)} ETH`
-                        : "-"}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-gray-600 text-sm">
-                      Minimum Next Bid
-                    </div>
-                    <div className="text-xl font-bold text-green-600">
-                      {auction.minNextBid !== BigInt(0) ? (
+              {auction.currentBidder && (
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Highest Bidder</p>
+                  <FarcasterIdentity
+                    address={auction.currentBidder as `0x${string}`}
+                  />
+                </div>
+              )}
+
+              {!isEnded && (
+                <div className="pt-4">
+                  {isConnected ? (
+                    <PlaceBid
+                      auctionItem={auction as unknown as AuctionItem}
+                      auctionHouseAddress={
+                        auction.auctionHouse
+                          ?.auctionHouseAddress as `0x${string}`
+                      }
+                      auctionId={BigInt(auction.auctionId)}
+                      currentBid={currentBidEth}
+                      minNextBid={minNextBidEth}
+                    />
+                  ) : (
+                    <ConnectWallet>
+                      <Button className="w-full" size="lg">
+                        Connect Wallet to Place Bid
+                      </Button>
+                    </ConnectWallet>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          {/* Bid History */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Bid History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {auction.bids?.length === 0 ? (
+                <p className="text-gray-500 text-center py-4">No bids yet</p>
+              ) : (
+                <div className="space-y-4">
+                  {auction.bids?.map(
+                    (
+                      bid: {
+                        bidder: string;
+                        timestamp: string;
+                        amount: string;
+                      },
+                      index: number,
+                    ) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center"
+                      >
+                        <div>
+                          <p className="font-mono text-sm">
+                            <CustomIdentity
+                              address={bid.bidder as `0x${string}`}
+                            />
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            {format(
+                              new Date(parseInt(bid.timestamp) * 1000),
+                              "PPp",
+                            )}
+                          </p>
+                        </div>
                         <AmountDisplay
-                          amount={formatEther(auction.minNextBid)}
+                          amount={formatEther(BigInt(bid.amount))}
                           symbol="ETH"
                           size="lg"
                           decimals={18}
                         />
-                      ) : (
-                        "-"
-                      )}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      (+0.5% increment)
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-gray-600 text-sm">Auction Status</div>
-                    <div className="text-green-600 font-medium">
-                      {auction.status}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-gray-600 text-sm">Time Remaining</div>
-                    <div className="font-medium">
-                      {auction.isEnded ? (
-                        <Countdown deadline={Number(auction.endTime)} />
-                      ) : (
-                        "Ended"
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-gray-600 text-sm">Current Winner</div>
-                    <div className="text-sm font-mono break-all hover:break-normal">
-                      {auction.currentBidder ? (
-                        <CustomIdentity
-                          address={auction.currentBidder as `0x${string}`}
-                        />
-                      ) : (
-                        "-"
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-gray-600 text-sm">Reserve Price</div>
-                    <div className="text-sm font-mono break-all hover:break-normal">
-                      {auction.reservePrice !== BigInt(0)
-                        ? `${formatUnits(auction.reservePrice, 18)} ETH`
-                        : "-"}
-                    </div>
-                  </div>
-                  <div>
-                    <div className="text-gray-600 text-sm">Bid Count</div>
-                    <div>-</div>
-                  </div>
-                  <div>
-                    <div className="text-gray-600 text-sm">Premium Type</div>
-                    <div>
-                      {auction.isPremiumAuction
-                        ? `${Number(auction.premiumRate) / 100}% of increment`
-                        : "-"}
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6 flex justify-between">
-                  <Button variant="outline">View Bid History</Button>
-                  <Button variant="default" onClick={handlePlaceBid}>
-                    Place Bid
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="mt-6 pt-6 border-t">
-            <h4 className="font-bold mb-3">Bid History</h4>
-            <div className="overflow-x-auto">
-              <table className="min-w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Time
-                    </th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Bidder
-                    </th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Amount
-                    </th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Premium Paid
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {auction.bids && auction.bids.length > 0 ? (
-                    auction.bids.map((bid, index) => (
-                      <tr key={`${bid.bidder}-${index}`}>
-                        <td className="px-4 py-2 text-sm">{bid.time}</td>
-                        <td className="px-4 py-2 text-sm font-mono">
-                          <CustomIdentity
-                            address={bid.bidder as `0x${string}`}
-                          />
-                        </td>
-                        <td className="px-4 py-2 text-sm">
-                          {formatUnits(bid.amount, 18)} ETH
-                        </td>
-                        <td className="px-4 py-2 text-sm">
-                          {bid.premiumPaid
-                            ? `${formatUnits(bid.premiumPaid.amount, 18)} ETH to ${bid.premiumPaid.recipient}`
-                            : "-"}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan={4}
-                        className="px-4 py-2 text-sm text-center text-gray-500"
-                      >
-                        No bids yet
-                      </td>
-                    </tr>
+                      </div>
+                    ),
                   )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
