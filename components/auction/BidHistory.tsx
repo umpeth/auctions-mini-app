@@ -54,9 +54,9 @@ export function BidHistory({ bids }: BidHistoryProps) {
                       href={`https://basescan.org/tx/${bid.transactionHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs sm:text-sm text-gray-500 hover:text-gray-900 transition-colors duration-200 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-md whitespace-nowrap"
+                      className="flex items-center gap-1  bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm hover:text-gray-900 transition-colors  px-2 py-1 rounded-md whitespace-nowrap"
                     >
-                      <span>View Tx</span>
+                      View Tx
                       <ExternalLinkIcon className="w-3.5 h-3.5" />
                     </a>
                   </div>
