@@ -18,6 +18,10 @@ export const transformIPFSUrl = (url: string): string => {
   if (match && isIPFS.cid(match[1])) {
     return `${dedicatedPinataGateway}/ipfs/${match[1]}`;
   }
+  // TODO: need to properly transform supplemental image CID before writing to the contract
+  if (isIPFS.cid(url)) {
+    return `${dedicatedPinataGateway}/ipfs/${url}`;
+  }
 
   return url;
 };

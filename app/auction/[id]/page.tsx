@@ -42,7 +42,9 @@ export default function AuctionPage({ params }: PageProps) {
   const [auction, setAuction] =
     useState<GetAuctionByAuctionIdQuery["auction"]>(null);
   const { isConnected } = useAccount();
-
+  const [selectedImage, setSelectedImage] = useState<string>(
+    auction?.tokenReference?.metadata?.image || "",
+  );
   const minNextBidEth = formatEther(
     calculateMinNextBid(
       BigInt(auction?.highestBidAmount || "0"),
@@ -152,7 +154,7 @@ export default function AuctionPage({ params }: PageProps) {
             {auction.tokenReference?.metadata?.image ? (
               <div className="aspect-square w-full overflow-hidden rounded-xl">
                 <NFTImage
-                  src={auction.tokenReference.metadata.image}
+                  src={selectedImage}
                   alt={
                     auction.tokenReference.metadata.name ||
                     `Token #${auction.tokenId}`
@@ -162,6 +164,46 @@ export default function AuctionPage({ params }: PageProps) {
             ) : (
               <div className="aspect-square w-full bg-gray-100 rounded-xl flex items-center justify-center">
                 <p className="text-gray-500">No image available</p>
+              </div>
+            )}
+            {(auction?.tokenReference?.metadata?.supplementalImages ?? [])
+              .length > 0 && (
+              <div className="mt-4 grid grid-cols-4 gap-2">
+                <div
+                  className={`aspect-square cursor-pointer overflow-hidden rounded-lg ${
+                    selectedImage === auction?.tokenReference?.metadata?.image
+                      ? "ring-2 ring-indigo-500"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setSelectedImage(
+                      auction?.tokenReference?.metadata?.image || "",
+                    )
+                  }
+                >
+                  <NFTImage
+                    src={auction?.tokenReference?.metadata?.image || ""}
+                    alt="Main image"
+                    disableModal={true}
+                  />
+                </div>
+                {(
+                  auction?.tokenReference?.metadata?.supplementalImages ?? []
+                ).map((image, index) => (
+                  <div
+                    key={index}
+                    className={`aspect-square cursor-pointer overflow-hidden rounded-lg ${
+                      selectedImage === image ? "ring-2 ring-indigo-500" : ""
+                    }`}
+                    onClick={() => setSelectedImage(image)}
+                  >
+                    <NFTImage
+                      src={image}
+                      alt={`Supplemental image ${index + 1}`}
+                      disableModal={true}
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </div>
