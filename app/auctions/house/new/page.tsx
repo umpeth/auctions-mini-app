@@ -14,7 +14,7 @@ const breadcrumbItems = [
 export default function CreateAuctionHousePage() {
   return (
     <SimpleLayout title="Create Auction House">
-      <div className="container py-8">
+      <div className="container mx-auto px-2 sm:px-4">
         <ResponsiveBreadcrumb items={breadcrumbItems} />
         <CreateAuctionHouse />
       </div>

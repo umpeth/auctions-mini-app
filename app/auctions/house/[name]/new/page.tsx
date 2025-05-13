@@ -19,7 +19,7 @@ export default function CreateAuctionUnderHousePage() {
 
   return (
     <SimpleLayout title="Create New Auction">
-      <div className="container py-8">
+      <div className="container mx-auto px-2 sm:px-4">
         <ResponsiveBreadcrumb items={breadcrumbItems} />
         <div className="max-w-2xl mx-auto">
           <CreateAuction auctionHouseAddress={decodedName} />

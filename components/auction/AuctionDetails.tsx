@@ -62,7 +62,7 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
   const currentBidEth = formatEther(BigInt(auction.highestBidAmount || "0"));
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-2 sm:px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Column - Image */}
         <div>

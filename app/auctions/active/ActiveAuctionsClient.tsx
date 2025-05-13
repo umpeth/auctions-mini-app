@@ -50,7 +50,7 @@ export default function ActiveAuctionsClient() {
 
   return (
     <SimpleLayout title="Active Auctions">
-      <div className="space-y-4 p-4">
+      <div className="space-y-4 p-2 sm:p-4">
         <ResponsiveBreadcrumb items={breadcrumbItems} />
         {error ? (
           <p className="text-red-500 text-center">Error: {error.message}</p>

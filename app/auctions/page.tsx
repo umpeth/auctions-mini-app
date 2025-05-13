@@ -15,7 +15,7 @@ const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Auctions" }];
 export default function AuctionsPage() {
   return (
     <SimpleLayout title="Auctions">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 sm:px-4">
         <ResponsiveBreadcrumb items={breadcrumbItems} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

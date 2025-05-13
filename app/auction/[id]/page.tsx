@@ -85,7 +85,7 @@ export default function AuctionPage({ params }: PageProps) {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 sm:px-4 py-8">
         <Card>
           <CardHeader>
             <CardTitle>Error</CardTitle>
@@ -101,7 +101,7 @@ export default function AuctionPage({ params }: PageProps) {
 
   if (!auction) {
     return (
-      <div className="container mx-auto px-4 py-8 flex items-center justify-center">
+      <div className="container mx-auto px-2 sm:px-4 py-8 flex items-center justify-center">
         <p className="text-lg">Loading auction details...</p>
       </div>
     );
@@ -119,7 +119,7 @@ export default function AuctionPage({ params }: PageProps) {
 
   return (
     <SimpleLayout title="Auction Details">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-2 sm:px-4">
         <ResponsiveBreadcrumb items={breadcrumbItems} />
         <AuctionDetails auction={auction} />
       </div>
