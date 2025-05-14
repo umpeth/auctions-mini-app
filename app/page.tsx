@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const frame = {
     version: "next",
-    imageUrl: `${appUrl}/opengraph-image`,
+    // imageUrl: `${appUrl}/opengraph-image`, //TODO: Add opengraph image
     button: {
       title: frameMetadata.tagline,
       action: {
@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
         name: frameMetadata.appName,
         url: appUrl,
         splashImageUrl: `${appUrl}/splash.png`,
-        splashBackgroundColor: "#f7f7f7",
+        splashBackgroundColor: frameMetadata.splashBackgroundColor,
       },
     },
   };
