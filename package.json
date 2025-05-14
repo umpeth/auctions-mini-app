@@ -10,7 +10,7 @@
     "prepare": "husky",
     "format": "prettier --check --ignore-unknown $(git ls-files -m --others --exclude-standard)",
     "format:fix": "prettier --write --ignore-unknown $(git ls-files -m --others --exclude-standard)",
-    "generate-graphql": "graphql-codegen --config codegen.yml && prettier --write graphql/generated.ts",
+    "generate-graphql": "graphql-codegen --config codegen.yml && prettier --write src/graphql/generated.ts",
     "wagmi": "wagmi generate && pnpm format:fix",
     "test": "vitest run"
   },

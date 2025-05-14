@@ -9,7 +9,6 @@ import { PlaceBid } from "@/components/auction/PlaceBid";
 import { calculateMinNextBid } from "@/lib/utils";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { PremiumAuctionIcon } from "@/components/auction/PremiumAuctionIcon";
-import { AuctionItem } from "@/types";
 import { FarcasterIdentity } from "@/components/FarcastIdentity";
 import { Countdown } from "@/components/ui/Countdown";
 import { ConnectWallet } from "@coinbase/onchainkit/wallet";
@@ -185,7 +184,7 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
                 <div className="pt-4">
                   {isConnected ? (
                     <PlaceBid
-                      auctionItem={auction as unknown as AuctionItem}
+                      auctionItem={auction}
                       auctionHouseAddress={
                         auction.auctionHouse
                           ?.auctionHouseAddress as `0x${string}`

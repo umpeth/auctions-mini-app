@@ -7,10 +7,10 @@ import TransactionButton from "@/components/Transaction";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import BidSuccessModal from "@/components/BidSuccessModal";
 import { useFrameActions } from "@/hooks/UseFrameAction";
-import { AuctionItem } from "@/types";
+import { Auction } from "@/graphql/generated";
 
 interface PlaceBidProps {
-  auctionItem: AuctionItem;
+  auctionItem: Auction;
   auctionHouseAddress: `0x${string}`;
   auctionId: bigint;
   currentBid: string;
@@ -70,7 +70,12 @@ export function PlaceBid({
   };
 
   const getShareUrl = () => {
-    const baseUrl = window.location.origin + "/auction/" + auctionId;
+    const baseUrl =
+      window.location.origin +
+      "/auction/" +
+      auctionHouseAddress +
+      "-" +
+      auctionId;
     return baseUrl;
   };
 
@@ -139,9 +144,9 @@ export function PlaceBid({
       <BidSuccessModal
         isOpen={showSuccessModal}
         onOpenChange={setShowSuccessModal}
-        itemName={auctionItem.metadata?.name || ""}
+        itemName={auctionItem.tokenReference?.metadata?.name || ""}
         itemId={auctionItem.tokenId}
-        imageUrl={auctionItem.metadata?.image || ""}
+        imageUrl={auctionItem.tokenReference?.metadata?.image || ""}
         shareUrl={getShareUrl()}
         onWarpcastShare={handleWarpcastShare}
       />

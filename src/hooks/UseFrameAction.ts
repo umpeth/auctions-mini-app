@@ -16,7 +16,7 @@ export function useFrameActions() {
    */
   const handleWarpcastShare = useCallback(
     async (text: string, url?: string, image?: string) => {
-      if (!isFrameReady || !context) {
+      if (!context) {
         return false;
       }
 
@@ -47,7 +47,7 @@ export function useFrameActions() {
         return false;
       }
     },
-    [isFrameReady, context],
+    [context],
   );
 
   /**
