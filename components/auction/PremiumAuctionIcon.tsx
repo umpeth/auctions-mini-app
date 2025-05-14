@@ -99,7 +99,9 @@ export function PremiumAuctionIcon({
           </span>
         </span>
       </TooltipTrigger>
-      <TooltipContent className="max-w-sm space-y-2">{content}</TooltipContent>
+      <TooltipContent className="max-w-sm space-y-2 bg-white text-black shadow-md">
+        {content}
+      </TooltipContent>
     </Tooltip>
   );
 }
