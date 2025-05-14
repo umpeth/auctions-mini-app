@@ -19,4 +19,7 @@ export const frameMetadata = {
   imageUrl: `${appUrl}/icon.png`,
   splashImageUrl: `${appUrl}/icon.png`,
   splashBackgroundColor: "#ffffff",
+  appName: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
+  appDescription: "Bid and Earn with our Premium Auctions. Onchain with Base.",
+  tagline: "Every bid is a win",
 };
