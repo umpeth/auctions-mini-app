@@ -137,7 +137,7 @@ export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
       } ${!isMysteryAccount ? "cursor-pointer hover:bg-accent/50 transition-colors" : ""}`}
       onClick={handleProfileClick}
     >
-      <CardHeader className="p-3">
+      <CardHeader className="p-2 sm:p-3">
         <CardTitle className="flex items-center gap-4">
           <Avatar
             className={
@@ -168,7 +168,7 @@ export function FarcasterIdentity({ address }: FarcasterIdentityProps) {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-3 pt-0">
+      <CardContent className="p-2 sm:p-3 pt-0">
         <div className="flex gap-4">
           <div>
             <span
