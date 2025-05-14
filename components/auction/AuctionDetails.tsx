@@ -145,26 +145,24 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
           <Card>
             <CardHeader>
               <CardTitle>Auction Details</CardTitle>
-              <CardDescription>
-                {isEnded ? (
-                  <div className="flex items-center space-x-2 text-lg font-bold">
-                    <Clock className="h-5 w-5 text-muted-foreground" />
-                    <span>Auction has ended</span>
-                  </div>
-                ) : (
-                  <div>
-                    <div className="flex items-center space-x-2 text-lg font-bold">
-                      <span>Auction ends in</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-2xl font-bold">
-                      <Clock className="h-5 w-5 text-muted-foreground" />
-                      <Countdown deadline={Number(auction.endTime)} />
-                    </div>
-                  </div>
-                )}
-              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {isEnded ? (
+                <div className="flex items-center space-x-2 text-lg font-bold">
+                  <Clock className="h-5 w-5 text-muted-foreground" />
+                  <span>Auction has ended</span>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex items-center space-x-2 text-lg font-bold">
+                    <span>Auction ends in</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-2xl font-bold">
+                    <Clock className="h-5 w-5 text-muted-foreground" />
+                    <Countdown deadline={Number(auction.endTime)} />
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div className="break-words">
                   <p className="text-sm text-gray-500">Current Bid</p>
@@ -199,7 +197,6 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
                   />
                 </div>
               )}
-
               {!isEnded && (
                 <div className="pt-4">
                   {isConnected ? (
@@ -214,11 +211,10 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
                       minNextBid={minNextBidEth}
                     />
                   ) : (
-                    <ConnectWallet>
-                      <Button className="w-full" size="lg">
-                        Connect Wallet to Place Bid
-                      </Button>
-                    </ConnectWallet>
+                    <ConnectWallet
+                      disconnectedLabel="Connect Wallet to Place Bid"
+                      className="w-full"
+                    />
                   )}
                 </div>
               )}
