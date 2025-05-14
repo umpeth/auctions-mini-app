@@ -13,7 +13,7 @@ export async function GET() {
       subtitle: "Bid and Earn",
       description: frameMetadata.appDescription,
       screenshotUrls: [],
-      primaryCategory: "Shopping",
+      primaryCategory: "shopping",
       tags: ["auction", "bid", "earn", "win", "cashback"],
       heroImageUrl: frameMetadata.imageUrl,
       tagline: frameMetadata.tagline,
