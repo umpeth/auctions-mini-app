@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useState } from "react";
 import { formatEther } from "viem";
 import { Auction } from "@/graphql/generated";
@@ -163,20 +156,11 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
                   </div>
                 </div>
               )}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="break-words">
                   <p className="text-sm text-gray-500">Current Bid</p>
                   <AmountDisplay
                     amount={currentBidEth}
-                    symbol="ETH"
-                    size="lg"
-                    decimals={18}
-                  />
-                </div>
-                <div className="break-words">
-                  <p className="text-sm text-gray-500">Reserve Price</p>
-                  <AmountDisplay
-                    amount={formatEther(BigInt(auction.reservePrice))}
                     symbol="ETH"
                     size="lg"
                     decimals={18}

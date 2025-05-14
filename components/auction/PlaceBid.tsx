@@ -85,7 +85,7 @@ export function PlaceBid({
         </div>
         <div>
           <div className="text-sm text-gray-500">Minimum Next Bid</div>
-          <div className="font-medium text-green-600">
+          <div className="font-medium">
             <AmountDisplay amount={minNextBid} symbol="ETH" decimals={18} />
           </div>
         </div>
@@ -125,7 +125,9 @@ export function PlaceBid({
             disabled={isLoading}
             hash={hash}
           >
-            {isLoading ? "Placing Bid..." : `Place Bid for ${bidAmount} ETH`}
+            <span className="text-sm whitespace-pre-line break-words line-clamp-2">
+              {isLoading ? "Placing Bid..." : `Place Bid for ${bidAmount} ETH`}
+            </span>
           </TransactionButton>
         </div>
 
