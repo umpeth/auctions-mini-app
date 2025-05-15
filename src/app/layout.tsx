@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 import { appUrl, frameMetadata } from "@/lib/consts";
 import { getSession } from "@/auth";
 import { Header } from "@/components/ui/header";
+import { Footer } from "@/components/ui/footer";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -50,6 +51,7 @@ export default async function RootLayout({
         <Providers session={session}>
           <Header />
           <main className="flex-1">{children}</main>
+          <Footer />
         </Providers>
         <Toaster />
       </body>
