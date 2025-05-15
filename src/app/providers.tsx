@@ -12,8 +12,6 @@ export function Providers(props: {
   children: ReactNode;
   session: Session | null;
 }) {
-  console.log(props.session);
-
   return (
     <SessionProvider session={props.session}>
       <MiniKitProvider

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { signIn, signOut, getCsrfToken } from "next-auth/react";
 
@@ -12,24 +12,9 @@ import FarcasterIcon from "@/components/icons/farcaster";
 export function SignInButton() {
   const [signingIn, setSigningIn] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
-  const [signInResult, setSignInResult] = useState<SignInCore.SignInResult>();
-  const [signInFailure, setSignInFailure] = useState<string>();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   // TODO: add error handling?
-
-  useEffect(() => {
-    // TODO: only for debugging
-    if (signInResult) {
-      console.log("signInResult", signInResult);
-    }
-    if (signInFailure) {
-      console.log("signInFailure", signInFailure);
-    }
-    if (session) {
-      console.log("session", session);
-    }
-  }, [session, signInResult, signInFailure]);
 
   const getNonce = useCallback(async () => {
     const nonce = await getCsrfToken();
@@ -40,10 +25,8 @@ export function SignInButton() {
   const handleSignIn = useCallback(async () => {
     try {
       setSigningIn(true);
-      setSignInFailure(undefined);
       const nonce = await getNonce();
       const result = await sdk.actions.signIn({ nonce });
-      setSignInResult(result);
 
       await signIn("credentials", {
         message: result.message,
@@ -52,11 +35,9 @@ export function SignInButton() {
       });
     } catch (e) {
       if (e instanceof SignInCore.RejectedByUser) {
-        setSignInFailure("Rejected by user");
         return;
       }
       console.error(e);
-      setSignInFailure("Unknown error");
     } finally {
       setSigningIn(false);
     }
@@ -66,7 +47,6 @@ export function SignInButton() {
     try {
       setSigningOut(true);
       await signOut({ redirect: false });
-      setSignInResult(undefined);
     } finally {
       setSigningOut(false);
     }
