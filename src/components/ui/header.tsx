@@ -14,14 +14,30 @@ import {
   EthBalance,
 } from "@coinbase/onchainkit/identity";
 import { SignInButton } from "@/components/auth/SignInButton";
+import { Navigation } from "@/components/navigation";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import Link from "next/link";
+import Image from "next/image";
 
 export function Header() {
+  const isTabletOrLarger = useMediaQuery("(min-width: 768px)");
+
   return (
-    <header className="w-full border-b bg-background/95">
-      <div className="container flex h-14 items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Wallet className="z-10">
-            <ConnectWallet>
+    <header>
+      <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+        <div className="flex items-center gap-x-12">
+          <Link href="/">
+            <Image src="/icon.png" alt="logo" width={32} height={32} />
+          </Link>
+          {isTabletOrLarger && (
+            <div className="hidden lg:flex lg:gap-x-12">
+              <Navigation />
+            </div>
+          )}
+        </div>
+        <div className="flex gap-x-2">
+          <Wallet className="z-10 inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium">
+            <ConnectWallet className="min-h-[36px] min-w-[120px] w-full px-4 py-2 bg-primary text-primary-foreground shadow hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50 rounded-md">
               <Name className="text-inherit" />
             </ConnectWallet>
             <WalletDropdown>
@@ -37,7 +53,7 @@ export function Header() {
 
           <SignInButton />
         </div>
-      </div>
+      </nav>
     </header>
   );
 }
