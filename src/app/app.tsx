@@ -26,6 +26,7 @@ import { FeaturesGrid } from "@/components/landing/FeaturesGrid";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import SimpleLayout from "@/components/SimpleLayout";
 import { AuctionCarousel } from "@/components/auction/AuctionCarousel";
+import { SignInButton } from "@/components/auth/SignInButton";
 
 export default function App() {
   const { setFrameReady, isFrameReady, context } = useMiniKit();
@@ -101,6 +102,8 @@ export default function App() {
                       <WalletDropdownDisconnect />
                     </WalletDropdown>
                   </Wallet>
+
+                  <SignInButton />
                 </div>
               </div>
               <div>{saveFrameButton}</div>

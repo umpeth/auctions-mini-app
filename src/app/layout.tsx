@@ -5,6 +5,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Toaster } from "sonner";
 import { appUrl, frameMetadata } from "@/lib/consts";
+import { getSession } from "@/auth";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -35,15 +36,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+
   return (
     <html lang="en">
       <body className="bg-background">
-        <Providers>{children}</Providers>
+        <Providers session={session}>{children}</Providers>
         <Toaster />
       </body>
     </html>
