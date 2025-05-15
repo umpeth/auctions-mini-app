@@ -28,4 +28,15 @@ try {
   redisClient = null;
 }
 
+export async function trackBid(
+  auctionHouseAddress: string,
+  auctionId: string,
+  fid: string,
+  amount: number,
+) {
+  if (!redis) return null;
+  const key = `auction:${auctionHouseAddress}-${auctionId}:bids`;
+  return await redis.zadd(key, { score: amount, member: fid });
+}
+
 export const redis = redisClient;

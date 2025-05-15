@@ -53,8 +53,31 @@ export function PlaceBid({
     error: placeBidError,
     isLoading,
   } = usePlaceBid({
-    onSuccess: () => {
+    onSuccess: async () => {
       setIsBidConfirmed(true);
+
+      if (session?.user?.fid) {
+        try {
+          const response = await fetch("/api/bid", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              auctionId: auctionId.toString(),
+              fid: session.user.fid.toString(),
+              amount: parseFloat(bidAmount),
+              auctionHouseAddress: auctionHouseAddress.toString(),
+            }),
+          });
+
+          if (!response.ok) {
+            console.error("Failed to track bid:", await response.text());
+          }
+        } catch (err) {
+          console.error("Error tracking bid:", err);
+        }
+      }
     },
   });
 
@@ -69,7 +92,7 @@ export function PlaceBid({
     if (!session && !showFarcasterDialog) {
       setShowFarcasterDialog(true);
     }
-  }, [session, showFarcasterDialog]);
+  }, [session]);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
