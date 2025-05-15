@@ -8,6 +8,17 @@ import { AmountDisplay } from "@/components/AmountDisplay";
 import BidSuccessModal from "@/components/BidSuccessModal";
 import { useFrameActions } from "@/hooks/UseFrameAction";
 import { Auction } from "@/graphql/generated";
+import { useSession } from "next-auth/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { SignInButton } from "@/components/auth/SignInButton";
+import FarcasterIcon from "@/components/icons/farcaster";
 
 interface PlaceBidProps {
   auctionItem: Auction;
@@ -30,6 +41,9 @@ export function PlaceBid({
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { handleWarpcastShare } = useFrameActions();
   const [isBidConfirmed, setIsBidConfirmed] = useState(false);
+  const { data: session } = useSession();
+  const [showFarcasterDialog, setShowFarcasterDialog] = useState(false);
+
   const affiliateAddress = "0x0000000000000000000000000000000000000000";
 
   const {
@@ -49,6 +63,13 @@ export function PlaceBid({
       setShowSuccessModal(true);
     }
   }, [isBidConfirmed]);
+
+  // Show Farcaster dialog when placing first bid without being signed in
+  useEffect(() => {
+    if (!session && !showFarcasterDialog) {
+      setShowFarcasterDialog(true);
+    }
+  }, [session, showFarcasterDialog]);
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -141,6 +162,7 @@ export function PlaceBid({
           <div className="text-red-600 text-sm">{placeBidError}</div>
         )}
       </div>
+
       <BidSuccessModal
         isOpen={showSuccessModal}
         onOpenChange={setShowSuccessModal}
@@ -150,6 +172,31 @@ export function PlaceBid({
         shareUrl={getShareUrl()}
         onWarpcastShare={handleWarpcastShare}
       />
+
+      <Dialog open={showFarcasterDialog} onOpenChange={setShowFarcasterDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FarcasterIcon className="w-5 h-5" />
+              Sign in with Farcaster
+            </DialogTitle>
+            <DialogDescription>
+              Get the most out of your bidding experience by signing in with
+              Farcaster. Signing in will allow us to notify you when you&apos;re
+              outbid and help you reclaim your status as the highest bidder!
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-col gap-2 sm:flex-row sm:justify-between sm:space-x-0">
+            <Button
+              variant="ghost"
+              onClick={() => setShowFarcasterDialog(false)}
+            >
+              Maybe later
+            </Button>
+            <SignInButton />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
