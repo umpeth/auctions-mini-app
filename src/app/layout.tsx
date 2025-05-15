@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 import { Toaster } from "sonner";
 import { appUrl, frameMetadata } from "@/lib/consts";
 import { getSession } from "@/auth";
+import { Header } from "@/components/ui/header";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -45,8 +46,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="bg-background">
-        <Providers session={session}>{children}</Providers>
+      <body className="bg-background min-h-screen flex flex-col">
+        <Providers session={session}>
+          <Header />
+          <main className="flex-1">{children}</main>
+        </Providers>
         <Toaster />
       </body>
     </html>

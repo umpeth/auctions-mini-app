@@ -5,19 +5,6 @@ import {
   useAddFrame,
   useOpenUrl,
 } from "@coinbase/onchainkit/minikit";
-import {
-  Name,
-  Identity,
-  Address,
-  Avatar,
-  EthBalance,
-} from "@coinbase/onchainkit/identity";
-import {
-  ConnectWallet,
-  Wallet,
-  WalletDropdown,
-  WalletDropdownDisconnect,
-} from "@coinbase/onchainkit/wallet";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { Button } from "../components/DemoComponents";
 import { Icon } from "../components/DemoComponents";
@@ -26,7 +13,6 @@ import { FeaturesGrid } from "@/components/landing/FeaturesGrid";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import SimpleLayout from "@/components/SimpleLayout";
 import { AuctionCarousel } from "@/components/auction/AuctionCarousel";
-import { SignInButton } from "@/components/auth/SignInButton";
 
 export default function App() {
   const { setFrameReady, isFrameReady, context } = useMiniKit();
@@ -79,33 +65,9 @@ export default function App() {
         <div className="w-full border-b-2 p-6">
           <AuctionCarousel />
         </div>
-        {/* <div className="flex flex-col min-h-screen font-sans text-[var(--app-foreground)] mini-app-theme from-[var(--app-background)] to-[var(--app-gray)]"> */}
         <div className="w-full">
           <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <div className="flex justify-between items-center h-11">
-              <div>
-                <div className="flex items-center space-x-2">
-                  <Wallet className="z-10">
-                    <ConnectWallet>
-                      <Name className="text-inherit" />
-                    </ConnectWallet>
-                    <WalletDropdown>
-                      <Identity
-                        className="px-4 pt-3 pb-2"
-                        hasCopyAddressOnClick
-                      >
-                        <Avatar />
-                        <Name />
-                        <Address />
-                        <EthBalance />
-                      </Identity>
-                      <WalletDropdownDisconnect />
-                    </WalletDropdown>
-                  </Wallet>
-
-                  <SignInButton />
-                </div>
-              </div>
               <div>{saveFrameButton}</div>
             </div>
           </header>
