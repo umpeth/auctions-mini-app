@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { signIn, signOut, getCsrfToken } from "next-auth/react";
 
@@ -15,6 +15,21 @@ export function SignInButton() {
   const [signInResult, setSignInResult] = useState<SignInCore.SignInResult>();
   const [signInFailure, setSignInFailure] = useState<string>();
   const { data: session, status } = useSession();
+
+  // TODO: add error handling?
+
+  useEffect(() => {
+    // TODO: only for debugging
+    if (signInResult) {
+      console.log("signInResult", signInResult);
+    }
+    if (signInFailure) {
+      console.log("signInFailure", signInFailure);
+    }
+    if (session) {
+      console.log("session", session);
+    }
+  }, [session, signInResult, signInFailure]);
 
   const getNonce = useCallback(async () => {
     const nonce = await getCsrfToken();
@@ -61,35 +76,13 @@ export function SignInButton() {
     <>
       {status !== "authenticated" && (
         <Button onClick={handleSignIn} disabled={signingIn}>
-          <FarcasterIcon className="w-4 h-4 mr-2" /> Sign In with Farcaster
+          <FarcasterIcon className="w-4 h-4 mr-2" /> Sign In
         </Button>
       )}
       {status === "authenticated" && (
         <Button onClick={handleSignOut} disabled={signingOut}>
           <FarcasterIcon className="w-4 h-4 mr-2" /> Sign Out
         </Button>
-      )}
-      {session && (
-        <div className="my-2 p-2 text-xs overflow-x-scroll bg-gray-100 rounded-lg font-mono">
-          <div className="font-semibold text-gray-500 mb-1">Session</div>
-          <div className="whitespace-pre">
-            {JSON.stringify(session, null, 2)}
-          </div>
-        </div>
-      )}
-      {signInFailure && !signingIn && (
-        <div className="my-2 p-2 text-xs overflow-x-scroll bg-gray-100 rounded-lg font-mono">
-          <div className="font-semibold text-gray-500 mb-1">SIWF Result</div>
-          <div className="whitespace-pre">{signInFailure}</div>
-        </div>
-      )}
-      {signInResult && !signingIn && (
-        <div className="my-2 p-2 text-xs overflow-x-scroll bg-gray-100 rounded-lg font-mono">
-          <div className="font-semibold text-gray-500 mb-1">SIWF Result</div>
-          <div className="whitespace-pre">
-            {JSON.stringify(signInResult, null, 2)}
-          </div>
-        </div>
       )}
     </>
   );
