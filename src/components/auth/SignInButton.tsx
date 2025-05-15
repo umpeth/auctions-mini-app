@@ -7,6 +7,7 @@ import { signIn, signOut, getCsrfToken } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
 import sdk, { SignIn as SignInCore } from "@farcaster/frame-sdk";
+import FarcasterIcon from "@/components/icons/farcaster";
 
 export function SignInButton() {
   const [signingIn, setSigningIn] = useState(false);
@@ -60,12 +61,12 @@ export function SignInButton() {
     <>
       {status !== "authenticated" && (
         <Button onClick={handleSignIn} disabled={signingIn}>
-          Sign In with Farcaster
+          <FarcasterIcon className="w-4 h-4 mr-2" /> Sign In with Farcaster
         </Button>
       )}
       {status === "authenticated" && (
         <Button onClick={handleSignOut} disabled={signingOut}>
-          Sign out
+          <FarcasterIcon className="w-4 h-4 mr-2" /> Sign Out
         </Button>
       )}
       {session && (
