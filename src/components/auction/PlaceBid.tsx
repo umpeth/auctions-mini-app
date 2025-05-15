@@ -92,7 +92,7 @@ export function PlaceBid({
     if (!session && !showFarcasterDialog) {
       setShowFarcasterDialog(true);
     }
-  }, [session]);
+  }, [session]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
