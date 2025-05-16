@@ -17,12 +17,12 @@ export interface OverbidResult {
 export async function checkForOverbid(
   auctionHouseAddress: string,
   auctionId: string,
-  bid: { fid: string; bidderAddress: string; timestampInSeconds: number },
+  newBid: { fid: string; bidderAddress: string; timestampInSeconds: number },
 ): Promise<OverbidResult> {
   const auctionIdentifier = `${auctionHouseAddress}-${auctionId}`;
   const baseUrl = process.env.NEXT_PUBLIC_URL || "localhost:3000";
   // TODO analyze how we can improve the timestamp offset
-  const queryTimestamp = bid.timestampInSeconds - 60 * 60; // 1 hour before our bid
+  const queryTimestamp = newBid.timestampInSeconds - 60 * 60; // 1 hour before our bid
 
   const response = await fetch(`${baseUrl}/api/graphql`, {
     method: "POST",
@@ -45,8 +45,8 @@ export async function checkForOverbid(
 
   const relevantOverbid = recentOverbids.find(
     (overbid: PremiumPayment) =>
-      overbid.newBidder.toLowerCase() === bid.bidderAddress.toLowerCase() &&
-      Number(overbid.timestamp) < bid.timestampInSeconds,
+      overbid.newBidder.toLowerCase() === newBid.bidderAddress.toLowerCase() &&
+      Number(overbid.timestamp) < newBid.timestampInSeconds,
   );
 
   if (!relevantOverbid) {
@@ -56,21 +56,23 @@ export async function checkForOverbid(
   const outbidBid = trackedBids?.find(
     (bid) =>
       bid.bidderAddress.toLowerCase() ===
-        relevantOverbid.outbidUser.toLowerCase() && bid.fid !== "anonymous",
+      relevantOverbid.outbidUser.toLowerCase(),
   );
-  console.log("outbidBid", outbidBid);
 
-  // TODO: notify the outbid user
+  if (outbidBid && outbidBid.fid === "anonymous") {
+    return { wasOverbid: true };
+  }
 
   if (outbidBid) {
     const targetUrl = `${baseUrl}/auction/${auctionIdentifier}`;
-    const notificationId = `${truncateAddress(bid.bidderAddress)}-${truncateAddress(outbidBid.bidderAddress)}-${auctionId}-${outbidBid.timestamp}`;
+    const rawNotificationId = `${truncateAddress(newBid.bidderAddress)}-${truncateAddress(outbidBid.bidderAddress)}-${auctionId}-${relevantOverbid.timestamp}`;
+    const notificationId = rawNotificationId.replaceAll(".", "");
 
     await sendNotificationWithRetry(
       notificationId,
       Number(outbidBid.fid),
       "You were outbid",
-      "You were outbid by someone else. Check out the auction to see if you can reclaim your position as the highest bidder.",
+      `You were outbid by ${truncateAddress(newBid.bidderAddress)}. Check out the auction to see if you can reclaim your position as the highest bidder.`,
       targetUrl,
     );
   }
