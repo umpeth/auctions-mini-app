@@ -65,7 +65,7 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
                   />
                 </div>
                 <div>
-                  <span className="font-medium">Reserve Price: </span>
+                  <span className="font-medium">Minimum Bid: </span>
                   <AmountDisplay
                     amount={formatEther(BigInt(auction.reservePrice))}
                     symbol="ETH"

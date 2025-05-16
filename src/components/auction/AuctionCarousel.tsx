@@ -136,9 +136,7 @@ export function AuctionCarousel() {
                       </div>
                     ) : (
                       <div>
-                        <div className="text-sm text-gray-500">
-                          Reserve Price
-                        </div>
+                        <div className="text-sm text-gray-500">Minimum Bid</div>
                         <AmountDisplay
                           amount={formatEther(BigInt(auction.reservePrice))}
                           symbol="ETH"

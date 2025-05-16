@@ -17,7 +17,7 @@ const steps: Step[] = [
   {
     name: "Create Auction",
     description:
-      "Set up your auction with desired parameters like reserve price, duration, and premium settings",
+      "Set up your auction with desired parameters like minimum bid, duration, and premium settings",
     Icon: PlusCircle,
   },
   {
