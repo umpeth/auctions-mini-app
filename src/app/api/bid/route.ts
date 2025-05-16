@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { trackBid } from "@/lib/redis";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
+import { checkForOverbid } from "@/lib/overbid-handling";
 
 export async function POST(request: Request) {
   try {
@@ -39,6 +40,12 @@ export async function POST(request: Request) {
       bidderAddress,
       timestampInSeconds,
     );
+
+    await checkForOverbid(auctionHouseAddress, auctionId, {
+      fid: fid || "anonymous",
+      bidderAddress,
+      timestampInSeconds,
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
