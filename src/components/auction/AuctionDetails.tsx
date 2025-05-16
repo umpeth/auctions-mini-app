@@ -15,6 +15,8 @@ import { ConnectWallet } from "@coinbase/onchainkit/wallet";
 import { useAccount } from "wagmi";
 import { BidHistory } from "@/components/auction/BidHistory";
 import { Clock } from "lucide-react";
+import SocialShare from "@/components/SocialShare";
+import { useFrameActions } from "@/hooks/UseFrameAction";
 
 interface AuctionDetailsProps {
   auction: Auction;
@@ -25,6 +27,8 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
   const [selectedImage, setSelectedImage] = useState<string>(
     auction?.tokenReference?.metadata?.image || "",
   );
+  const { handleWarpcastShare } = useFrameActions();
+
   const minNextBidEth = formatEther(
     calculateMinNextBid(
       BigInt(auction?.highestBidAmount || "0"),
@@ -53,6 +57,16 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
   const timeUntilEnd = new Date(parseInt(auction.endTime) * 1000);
   const isEnded = timeUntilEnd < new Date();
   const currentBidEth = formatEther(BigInt(auction.highestBidAmount || "0"));
+
+  const getShareUrl = () => {
+    const baseUrl =
+      window.location.origin +
+      "/auction/" +
+      auction.auctionHouse?.auctionHouseAddress +
+      "-" +
+      auction.auctionId;
+    return baseUrl;
+  };
 
   return (
     <div className="container mx-auto px-2 sm:px-4 py-8">
@@ -120,16 +134,27 @@ export function AuctionDetails({ auction }: AuctionDetailsProps) {
         {/* Right Column - Auction Details */}
         <div className="space-y-6">
           <div>
-            <h1 className="text-4xl font-bold mb-2 flex items-center gap-2">
-              {auction.tokenReference?.metadata?.name ||
-                `Collectible #${auction.tokenId}`}
-              {auction.isPremiumAuction && (
-                <PremiumAuctionIcon
-                  minBidIncrementBps={auction.minBidIncrementBps}
-                  premiumBps={auction.premiumBps}
-                />
-              )}
-            </h1>
+            <div className="flex items-center justify-between">
+              <h1 className="text-4xl font-bold mb-2 flex items-center gap-2">
+                {auction.tokenReference?.metadata?.name ||
+                  `Collectible #${auction.tokenId}`}
+                {auction.isPremiumAuction && (
+                  <PremiumAuctionIcon
+                    minBidIncrementBps={auction.minBidIncrementBps}
+                    premiumBps={auction.premiumBps}
+                  />
+                )}
+              </h1>
+              <SocialShare
+                text={`Check out this auction for ${auction.tokenReference?.metadata?.name} on UMP.eth! 🎉`}
+                image={auction.tokenReference?.metadata?.image || ""}
+                variant="gradient"
+                highlight={true}
+                size="icon"
+                url={getShareUrl()}
+                onWarpcastShare={handleWarpcastShare}
+              />
+            </div>
             <p className="text-gray-600">
               {auction.tokenReference?.metadata?.description}
             </p>
