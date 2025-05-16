@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import { useAccount, useWaitForTransactionReceipt } from "wagmi";
 import { Address, decodeEventLog } from "viem";
 import {
@@ -36,6 +36,8 @@ export function usePlaceBid({
   const { address: bidderAddress } = useAccount();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  // Track processed bid hashes to prevent duplicate processing
+  const processedBids = useRef<Set<string>>(new Set());
 
   const {
     data: bidHash,
@@ -76,7 +78,12 @@ export function usePlaceBid({
 
   // Handle successful bid
   useEffect(() => {
-    if (bidReceipt && bidReceipt.logs) {
+    if (bidReceipt && bidReceipt.logs && bidHash) {
+      // Skip if we've already processed this bid
+      if (processedBids.current.has(bidHash)) {
+        return;
+      }
+
       for (const log of bidReceipt.logs) {
         try {
           const event = decodeEventLog({
@@ -86,8 +93,12 @@ export function usePlaceBid({
           });
           if (event.eventName === "BidCreated") {
             setIsLoading(false);
-            if (onSuccess && bidHash && bidderAddress)
+
+            // Only call onSuccess if we haven't processed this bid yet
+            if (onSuccess && bidderAddress) {
+              processedBids.current.add(bidHash);
               onSuccess(bidHash, bidderAddress);
+            }
             break;
           }
         } catch (e) {
