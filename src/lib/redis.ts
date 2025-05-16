@@ -44,10 +44,11 @@ export async function trackBid(
   fid: string,
   amount: number,
   bidderAddress: string,
+  timestamp: number,
 ) {
   if (!redis) return null;
   const key = `auction:${auctionHouseAddress}-${auctionId}:bids`;
   // Create a JSON string for the member payload
-  const memberPayload = JSON.stringify({ fid, bidderAddress });
+  const memberPayload = JSON.stringify({ fid, bidderAddress, timestamp });
   return await redis.zadd(key, { score: amount, member: memberPayload });
 }

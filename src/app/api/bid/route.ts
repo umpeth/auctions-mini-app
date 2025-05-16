@@ -35,6 +35,7 @@ export async function POST(request: Request) {
       fid || "anonymous",
       amount,
       bidderAddress,
+      Date.now(),
     );
 
     return NextResponse.json({ success: true });
