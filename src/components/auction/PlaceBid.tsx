@@ -56,27 +56,25 @@ export function PlaceBid({
     onSuccess: async () => {
       setIsBidConfirmed(true);
 
-      if (session?.user?.fid) {
-        try {
-          const response = await fetch("/api/bid", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              auctionId: auctionId.toString(),
-              fid: session.user.fid.toString(),
-              amount: parseFloat(bidAmount),
-              auctionHouseAddress: auctionHouseAddress.toString(),
-            }),
-          });
+      try {
+        const response = await fetch("/api/bid", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            auctionId: auctionId.toString(),
+            fid: session?.user?.fid?.toString() || null,
+            amount: parseFloat(bidAmount),
+            auctionHouseAddress: auctionHouseAddress.toString(),
+          }),
+        });
 
-          if (!response.ok) {
-            console.error("Failed to track bid:", await response.text());
-          }
-        } catch (err) {
-          console.error("Error tracking bid:", err);
+        if (!response.ok) {
+          console.error("Failed to track bid:", await response.text());
         }
+      } catch (err) {
+        console.error("Error tracking bid:", err);
       }
     },
   });
