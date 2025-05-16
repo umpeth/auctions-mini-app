@@ -270,6 +270,7 @@ export const GetNewOverbidEventsDocument: TypedDocumentNode<
         first: 100
         where: { timestamp_gt: $afterTimestamp }
         orderBy: timestamp
+        orderDirection: desc
       ) {
         id
         outbidUser
