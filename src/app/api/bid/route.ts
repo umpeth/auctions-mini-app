@@ -29,13 +29,15 @@ export async function POST(request: Request) {
       );
     }
 
+    const timestampInSeconds = Math.floor(Date.now() / 1000);
+
     await trackBid(
       auctionHouseAddress,
       auctionId,
       fid || "anonymous",
       amount,
       bidderAddress,
-      Date.now(),
+      timestampInSeconds,
     );
 
     return NextResponse.json({ success: true });
