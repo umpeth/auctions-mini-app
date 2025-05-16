@@ -5,6 +5,8 @@ import SimpleLayout from "@/components/SimpleLayout";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 import { useEffect, useState } from "react";
 import { AuctionGridSkeleton } from "@/components/auction/AuctionGridSkeleton";
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
+
 const breadcrumbItems = [
   { label: "Home", href: "/" },
   { label: "Auctions", href: "/auctions" },
@@ -15,6 +17,13 @@ export default function ActiveAuctionsClient() {
   const [auctions, setAuctions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const { setFrameReady, isFrameReady } = useMiniKit();
+
+  useEffect(() => {
+    if (!isFrameReady) {
+      setFrameReady();
+    }
+  }, [setFrameReady, isFrameReady]);
 
   useEffect(() => {
     const fetchAuctions = async () => {

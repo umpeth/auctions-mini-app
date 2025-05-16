@@ -1,4 +1,5 @@
 "use client";
+
 import { notFound } from "next/navigation";
 import { GetAuctionByAuctionIdDocument } from "@/graphql/queryDocuments";
 import {
@@ -10,13 +11,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Auction } from "@/graphql/generated";
 
 import SimpleLayout from "@/components/SimpleLayout";
 import { ResponsiveBreadcrumb } from "@/components/ui/responsive-breadcrumb";
 import { AuctionDetails } from "@/components/auction/AuctionDetails";
 import { AuctionDetailsSkeleton } from "@/components/auction/AuctionDetailsSkeleton";
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
 
 interface PageProps {
   params: {
@@ -30,6 +32,13 @@ const RETRY_DELAY = 1000; // 1 second
 export default function AuctionPage({ params }: PageProps) {
   const [error, setError] = useState<string | null>(null);
   const [auction, setAuction] = useState<Auction | null>(null);
+  const { setFrameReady, isFrameReady } = useMiniKit();
+
+  useEffect(() => {
+    if (!isFrameReady) {
+      setFrameReady();
+    }
+  }, [setFrameReady, isFrameReady]);
 
   const fetchAuctionWithRetry = useCallback(
     async (retryCount = 0) => {
