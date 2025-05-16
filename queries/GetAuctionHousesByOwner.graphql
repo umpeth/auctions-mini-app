@@ -1,0 +1,37 @@
+query GetAuctionHousesByOwner($ownerAddress: Bytes!) {
+  auctionHouses(where: { owner: $ownerAddress }) {
+    name
+    auctionHouseAddress
+    description
+    image
+    auctions {
+      id
+      auctionId
+      tokenId
+      tokenContract
+      status
+      reservePrice
+      highestBidAmount
+      currentBidder
+      endTime
+      startTime
+      auctionOwner
+      isPremiumAuction
+      premiumBps
+      tokenReference {
+        metadata {
+          name
+          description
+          image
+          supplementalImages
+        }
+      }
+      bids(orderBy: timestamp, orderDirection: desc) {
+        bidder
+        amount
+        timestamp
+        transactionHash
+      }
+    }
+  }
+}

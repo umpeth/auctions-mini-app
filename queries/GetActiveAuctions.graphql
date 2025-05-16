@@ -1,0 +1,34 @@
+query getActiveAuctions($currentTimeEpoch: BigInt) {
+  auctions(
+    where: { status_in: [ACTIVE, CREATED], endTime_gt: $currentTimeEpoch }
+  ) {
+    id
+    auctionId
+    tokenId
+    tokenContract
+    status
+    reservePrice
+    highestBidAmount
+    currentBidder
+    endTime
+    startTime
+    auctionOwner
+    isPremiumAuction
+    premiumBps
+    minBidIncrementBps
+    tokenReference {
+      metadata {
+        name
+        description
+        image
+        supplementalImages
+      }
+    }
+    bids(orderBy: timestamp, orderDirection: desc) {
+      bidder
+      amount
+      timestamp
+      transactionHash
+    }
+  }
+}

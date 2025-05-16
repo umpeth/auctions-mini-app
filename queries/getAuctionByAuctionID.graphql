@@ -1,0 +1,35 @@
+query getAuctionByAuctionID($auctionID: ID!) {
+  auction(id: $auctionID) {
+    id
+    auctionId
+    tokenId
+    tokenContract
+    status
+    reservePrice
+    highestBidAmount
+    currentBidder
+    minBidIncrementBps
+    endTime
+    startTime
+    auctionOwner
+    isPremiumAuction
+    premiumBps
+    auctionHouse {
+      auctionHouseAddress
+    }
+    tokenReference {
+      metadata {
+        name
+        description
+        image
+        supplementalImages
+      }
+    }
+    bids(orderBy: timestamp, orderDirection: desc) {
+      bidder
+      amount
+      timestamp
+      transactionHash
+    }
+  }
+}

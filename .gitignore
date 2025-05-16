@@ -63,3 +63,5 @@ next-env.d.ts
 .cache
 
 .pnpm-store
+.cloudflared
+
