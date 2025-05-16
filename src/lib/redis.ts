@@ -28,15 +28,26 @@ try {
   redisClient = null;
 }
 
+export const redis = redisClient;
+
+/**
+ * Track a bid for an auction
+ * @param auctionHouseAddress - The address of the auction house
+ * @param auctionId - The ID of the auction
+ * @param fid - The FID of the bidder
+ * @param amount - The amount of the bid
+ * @param bidderAddress - The address of the bidder
+ */
 export async function trackBid(
   auctionHouseAddress: string,
   auctionId: string,
   fid: string,
   amount: number,
+  bidderAddress: string,
 ) {
   if (!redis) return null;
   const key = `auction:${auctionHouseAddress}-${auctionId}:bids`;
-  return await redis.zadd(key, { score: amount, member: fid });
+  // Create a JSON string for the member payload
+  const memberPayload = JSON.stringify({ fid, bidderAddress });
+  return await redis.zadd(key, { score: amount, member: memberPayload });
 }
-
-export const redis = redisClient;

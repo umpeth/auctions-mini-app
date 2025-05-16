@@ -53,9 +53,8 @@ export function PlaceBid({
     error: placeBidError,
     isLoading,
   } = usePlaceBid({
-    onSuccess: async () => {
+    onSuccess: async (bidHash, bidderAddress) => {
       setIsBidConfirmed(true);
-
       try {
         const response = await fetch("/api/bid", {
           method: "POST",
@@ -67,6 +66,7 @@ export function PlaceBid({
             fid: session?.user?.fid?.toString() || null,
             amount: parseFloat(bidAmount),
             auctionHouseAddress: auctionHouseAddress.toString(),
+            bidderAddress: bidderAddress,
           }),
         });
 

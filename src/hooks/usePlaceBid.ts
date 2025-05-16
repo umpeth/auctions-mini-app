@@ -31,7 +31,7 @@ export interface PlaceBidResult {
 export function usePlaceBid({
   onSuccess,
 }: {
-  onSuccess?: (bidHash: `0x${string}`) => void;
+  onSuccess?: (bidHash: `0x${string}`, bidderAddress: Address) => void;
 } = {}): PlaceBidResult {
   const { address: bidderAddress } = useAccount();
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +86,8 @@ export function usePlaceBid({
           });
           if (event.eventName === "BidCreated") {
             setIsLoading(false);
-            if (onSuccess && bidHash) onSuccess(bidHash);
+            if (onSuccess && bidHash && bidderAddress)
+              onSuccess(bidHash, bidderAddress);
             break;
           }
         } catch (e) {
@@ -95,7 +96,7 @@ export function usePlaceBid({
         }
       }
     }
-  }, [bidReceipt, bidHash, onSuccess]);
+  }, [bidReceipt, bidHash, onSuccess, bidderAddress]);
 
   const placeBid = useCallback(
     async ({

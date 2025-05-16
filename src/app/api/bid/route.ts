@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   try {
     const session = await getServerSession(authOptions);
     const body = await request.json();
-    const { auctionId, amount, fid, auctionHouseAddress } = body;
+    const { auctionId, amount, fid, auctionHouseAddress, bidderAddress } = body;
 
     // Validate FID if provided
     if (fid && session?.user?.fid && session.user.fid.toString() !== fid) {
@@ -29,7 +29,14 @@ export async function POST(request: Request) {
       );
     }
 
-    await trackBid(auctionHouseAddress, auctionId, fid || "anonymous", amount);
+    await trackBid(
+      auctionHouseAddress,
+      auctionId,
+      fid || "anonymous",
+      amount,
+      bidderAddress,
+    );
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error tracking bid:", error);
