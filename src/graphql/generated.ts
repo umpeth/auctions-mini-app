@@ -6918,6 +6918,27 @@ export type GetEndedAuctionsQuery = {
   }>;
 };
 
+export type GetNewOverbidEventsQueryVariables = Exact<{
+  auctionId: Scalars["ID"]["input"];
+  afterTimestamp: Scalars["BigInt"]["input"];
+}>;
+
+export type GetNewOverbidEventsQuery = {
+  __typename?: "Query";
+  auction?: {
+    __typename?: "Auction";
+    premiumPayments: Array<{
+      __typename?: "PremiumPayment";
+      id: string;
+      outbidUser: any;
+      newBidder: any;
+      originalBid: any;
+      premiumAmount: any;
+      timestamp: any;
+    }>;
+  } | null;
+};
+
 export type GetAuctionByAuctionIdQueryVariables = Exact<{
   auctionID: Scalars["ID"]["input"];
 }>;

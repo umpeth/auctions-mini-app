@@ -1,0 +1,16 @@
+query GetNewOverbidEvents($auctionId: ID!, $afterTimestamp: BigInt!) {
+  auction(id: $auctionId) {
+    premiumPayments(
+      first: 100
+      where: { timestamp_gt: $afterTimestamp }
+      orderBy: timestamp
+    ) {
+      id
+      outbidUser
+      newBidder
+      originalBid
+      premiumAmount
+      timestamp
+    }
+  }
+}

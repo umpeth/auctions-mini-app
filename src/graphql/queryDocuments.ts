@@ -14,6 +14,8 @@ import {
   GetEndedAuctionsQueryVariables,
   GetAuctionHousesByOwnerQuery,
   GetAuctionHousesByOwnerQueryVariables,
+  GetNewOverbidEventsQuery,
+  GetNewOverbidEventsQueryVariables,
 } from "./generated";
 
 export const GetAuctionsByAuctionHouseAddressDocument: TypedDocumentNode<
@@ -253,6 +255,28 @@ export const GetAuctionHousesByOwnerDocument: TypedDocumentNode<
           timestamp
           transactionHash
         }
+      }
+    }
+  }
+`);
+
+export const GetNewOverbidEventsDocument: TypedDocumentNode<
+  GetNewOverbidEventsQuery,
+  GetNewOverbidEventsQueryVariables
+> = parse(gql`
+  query GetNewOverbidEvents($auctionId: ID!, $afterTimestamp: BigInt!) {
+    auction(id: $auctionId) {
+      premiumPayments(
+        first: 100
+        where: { timestamp_gt: $afterTimestamp }
+        orderBy: timestamp
+      ) {
+        id
+        outbidUser
+        newBidder
+        originalBid
+        premiumAmount
+        timestamp
       }
     }
   }
