@@ -20,11 +20,13 @@ export async function sendFrameNotification({
   fid,
   title,
   body,
+  targetUrl,
   notificationDetails,
 }: {
   fid: number;
   title: string;
   body: string;
+  targetUrl?: string;
   notificationDetails?: FrameNotificationDetails | null;
 }): Promise<SendFrameNotificationResult> {
   if (!notificationDetails) {
@@ -43,7 +45,7 @@ export async function sendFrameNotification({
       notificationId: crypto.randomUUID(),
       title,
       body,
-      targetUrl: appUrl,
+      targetUrl: targetUrl || appUrl,
       tokens: [notificationDetails.token],
     } satisfies SendNotificationRequest),
   });

@@ -62,10 +62,12 @@ export async function checkForOverbid(
   // TODO: notify the outbid user
 
   if (outbidBid) {
+    const targetUrl = `${baseUrl}/auction/${auctionIdentifier}`;
     await sendNotificationWithRetry(
       Number(outbidBid.fid),
       "You were outbid",
       "You were outbid by someone else. Check out the auction to see if you can reclaim your position as the highest bidder.",
+      targetUrl,
     );
   }
 

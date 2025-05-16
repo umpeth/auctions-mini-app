@@ -15,6 +15,7 @@ interface FailedNotification {
   fid: number;
   title: string;
   body: string;
+  targetUrl?: string;
   retryCount: number;
   nextRetryTime: number;
 }
@@ -45,6 +46,7 @@ export async function sendNotificationWithRetry(
   fid: number,
   title: string,
   body: string,
+  targetUrl?: string,
   retryCount = 0,
 ): Promise<boolean> {
   // Check rate limit first
@@ -59,6 +61,7 @@ export async function sendNotificationWithRetry(
       fid,
       title,
       body,
+      targetUrl,
       retryCount,
       nextRetryTime,
     });
@@ -69,6 +72,7 @@ export async function sendNotificationWithRetry(
     fid,
     title,
     body,
+    targetUrl,
   });
 
   if (result.state === "rate_limit") {
@@ -79,6 +83,7 @@ export async function sendNotificationWithRetry(
         fid,
         title,
         body,
+        targetUrl,
         retryCount: retryCount + 1,
         nextRetryTime,
       });
@@ -145,6 +150,7 @@ async function processFailedNotifications() {
           notification.fid,
           notification.title,
           notification.body,
+          notification.targetUrl,
           notification.retryCount,
         );
 
