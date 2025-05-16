@@ -16,7 +16,7 @@ export const affiliateVerifierAddress =
 export const frameMetadata = {
   version: "next",
   iconUrl: `${appUrl}/icon.png`,
-  imageUrl: `${appUrl}/icon.png`,
+  imageUrl: `${appUrl}/auctioneers.png`,
   splashImageUrl: `${appUrl}/splash.png`,
   splashBackgroundColor: "#caf7f9",
   appName: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
