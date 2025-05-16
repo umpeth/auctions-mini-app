@@ -12,6 +12,8 @@ import NFTImage from "@/components/NFTImage";
 import { AmountDisplay } from "@/components/AmountDisplay";
 import { PremiumAuctionIcon } from "@/components/auction/PremiumAuctionIcon";
 import { Countdown } from "@/components/ui/Countdown";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 interface AuctionGridProps {
   auctions: GetAuctionsByStatusQuery["auctions"];
@@ -84,12 +86,19 @@ export function AuctionGrid({ auctions }: AuctionGridProps) {
                 </div>
               </div>
             </CardContent>
-            <CardFooter>
-              <p className="text-sm text-gray-500">
+            <CardFooter className="flex flex-col gap-2">
+              <p className="text-sm text-gray-500 w-full">
                 {auction.currentBidder
                   ? `Highest Bidder: ${auction.currentBidder.slice(0, 6)}...${auction.currentBidder.slice(-4)}`
                   : "No bids yet"}
               </p>
+              <Button
+                className="w-full group transition-all duration-200 hover:scale-[1.02]"
+                variant="default"
+              >
+                Explore Auction
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
             </CardFooter>
           </Card>
         </Link>
