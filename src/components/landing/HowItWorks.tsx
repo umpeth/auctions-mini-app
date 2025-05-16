@@ -14,28 +14,39 @@ interface Step {
 }
 
 const steps: Step[] = [
+  // {
+  //   name: "Create Auction",
+  //   description:
+  //     "Set up your auction with desired parameters like minimum bid, duration, and premium settings",
+  //   Icon: PlusCircle,
+  // },
+  // {
+  //   name: "Bidding Period",
+  //   description:
+  //     "Users place bids during the auction timeframe with anti-sniping protection",
+  //   Icon: ArrowRight,
+  // },
+  // {
+  //   name: "Auction End",
+  //   description: "NFT transfers to winner, payment goes to secure escrow",
+  //   Icon: CheckCircle,
+  // },
+  // {
+  //   name: "Settlement",
+  //   description:
+  //     "Buyer confirms receipt, seller receives payment, and premiums are distributed",
+  //   Icon: Wallet,
+  // },
   {
-    name: "Create Auction",
+    name: "Place your bid",
     description:
-      "Set up your auction with desired parameters like minimum bid, duration, and premium settings",
-    Icon: PlusCircle,
-  },
-  {
-    name: "Bidding Period",
-    description:
-      "Users place bids during the auction timeframe with anti-sniping protection",
+      "Engage early by bidding on exciting items listed directly by sellers",
     Icon: ArrowRight,
   },
   {
-    name: "Auction End",
-    description: "NFT transfers to winner, payment goes to secure escrow",
+    name: "Get Paid to bid",
+    description: "If you get outbid, you receive your bid back, plus a reward!",
     Icon: CheckCircle,
-  },
-  {
-    name: "Settlement",
-    description:
-      "Buyer confirms receipt, seller receives payment, and premiums are distributed",
-    Icon: Wallet,
   },
 ];
 

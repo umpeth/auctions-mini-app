@@ -10,26 +10,44 @@ interface Feature {
 }
 
 const features: Feature[] = [
+  // {
+  //   name: "Premium Bidding",
+  //   description:
+  //     "Get compensated when outbid with a percentage of the bid increment",
+  //   Icon: Star,
+  // },
+  // {
+  //   name: "Anti-Sniping",
+  //   description:
+  //     "Automatic time extensions when bids are placed near auction end",
+  //   Icon: Shield,
+  // },
+  // {
+  //   name: "Secure Escrow",
+  //   description: "All payments are held in escrow until transaction completes",
+  //   Icon: Wallet2,
+  // },
+  // {
+  //   name: "Multiple Houses",
+  //   description: "Create distinct auction houses for different collections",
+  //   Icon: Layers,
+  // },
   {
-    name: "Premium Bidding",
+    name: "Fair and Transparent",
     description:
-      "Get compensated when outbid with a percentage of the bid increment",
-    Icon: Star,
+      "Auctions run securely via blockchain smart contracts—no hidden fees or surprises",
+    Icon: Layers,
   },
   {
-    name: "Anti-Sniping",
+    name: "Secure and Private",
     description:
-      "Automatic time extensions when bids are placed near auction end",
-    Icon: Shield,
-  },
-  {
-    name: "Secure Escrow",
-    description: "All payments are held in escrow until transaction completes",
+      "Transactions and user information are protected using end-to-end encryption and decentralized escrow",
     Icon: Wallet2,
   },
   {
-    name: "Multiple Houses",
-    description: "Create distinct auction houses for different collections",
+    name: "Simple and Accessible",
+    description:
+      "No sign-ups required; participate seamlessly using your Coinbase or Warpcast wallet",
     Icon: Layers,
   },
 ];
@@ -40,11 +58,9 @@ export function FeaturesGrid() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-[var(--app-foreground)] sm:text-4xl">
-            Key Features
+            Why Participate in {process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME}
+            ?
           </h2>
-          <p className="mt-4 text-lg text-[var(--app-foreground-muted)]">
-            Everything you need to run successful NFT auctions
-          </p>
         </div>
         <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => (
