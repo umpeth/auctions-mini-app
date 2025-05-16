@@ -30,6 +30,12 @@ try {
 
 export const redis = redisClient;
 
+type BidPayload = {
+  fid: string;
+  bidderAddress: string;
+  timestamp: number;
+};
+
 /**
  * Track a bid for an auction
  * @param auctionHouseAddress - The address of the auction house
@@ -49,7 +55,11 @@ export async function trackBid(
   if (!redis) return null;
   const key = `auction:${auctionHouseAddress}-${auctionId}:bids`;
   // Create a JSON string for the member payload
-  const memberPayload = JSON.stringify({ fid, bidderAddress, timestamp });
+  const memberPayload = JSON.stringify({
+    fid,
+    bidderAddress,
+    timestamp,
+  } as BidPayload);
   return await redis.zadd(key, { score: amount, member: memberPayload });
 }
 
@@ -62,13 +72,42 @@ export async function trackBid(
 export async function getBids(auctionHouseAddress: string, auctionId: string) {
   if (!redis) return null;
   const key = `auction:${auctionHouseAddress}-${auctionId}:bids`;
-  const bids = await redis.zrange(key, 0, -1);
-  return bids.map(
-    (bid) =>
-      JSON.parse(bid as string) as {
-        fid: string;
-        bidderAddress: string;
-        timestamp: number;
-      },
-  );
+  const bidsFromRedis = await redis.zrange(key, 0, -1);
+
+  const parsedBids = bidsFromRedis.map((bidEntry): BidPayload | null => {
+    // If it's already an object with the correct structure, use it directly
+    if (
+      typeof bidEntry === "object" &&
+      bidEntry !== null &&
+      "fid" in bidEntry &&
+      "bidderAddress" in bidEntry &&
+      "timestamp" in bidEntry
+    ) {
+      return bidEntry as BidPayload;
+    }
+
+    // For string entries, try to parse them
+    if (typeof bidEntry === "string") {
+      try {
+        const parsed = JSON.parse(bidEntry);
+        if (
+          parsed &&
+          typeof parsed.fid === "string" &&
+          typeof parsed.bidderAddress === "string" &&
+          typeof parsed.timestamp === "number"
+        ) {
+          return parsed as BidPayload;
+        }
+      } catch (error) {
+        console.warn(
+          `Failed to parse bid string: "${bidEntry}". Error: ${error}. Skipping entry.`,
+        );
+      }
+    }
+
+    console.warn("Invalid bid entry format:", bidEntry);
+    return null;
+  });
+
+  return parsedBids.filter((bid): bid is BidPayload => bid !== null);
 }
