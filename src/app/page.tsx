@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const frame = {
     version: "next",
-    // imageUrl: `${appUrl}/opengraph-image`, //TODO: Add opengraph image
+    imageUrl: `${appUrl}/opengraph-image`,
     button: {
       title: frameMetadata.tagline,
       action: {

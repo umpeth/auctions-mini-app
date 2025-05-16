@@ -1,4 +1,4 @@
 {
   "extends": ["next/core-web-vitals", "next/typescript"],
-  "ignorePatterns": ["src/graphql/generated.ts"]
+  "ignorePatterns": ["src/graphql/generated.ts", "**/opengraph-image.tsx"]
 }
