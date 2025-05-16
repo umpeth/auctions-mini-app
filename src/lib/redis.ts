@@ -52,3 +52,23 @@ export async function trackBid(
   const memberPayload = JSON.stringify({ fid, bidderAddress, timestamp });
   return await redis.zadd(key, { score: amount, member: memberPayload });
 }
+
+/**
+ * Get all tracked bids for an auction
+ * @param auctionHouseAddress - The address of the auction house
+ * @param auctionId - The ID of the auction
+ * @returns An array of all tracked bids for the auction
+ */
+export async function getBids(auctionHouseAddress: string, auctionId: string) {
+  if (!redis) return null;
+  const key = `auction:${auctionHouseAddress}-${auctionId}:bids`;
+  const bids = await redis.zrange(key, 0, -1);
+  return bids.map(
+    (bid) =>
+      JSON.parse(bid as string) as {
+        fid: string;
+        bidderAddress: string;
+        timestamp: number;
+      },
+  );
+}
