@@ -62,7 +62,7 @@ export default function App() {
   return (
     <SimpleLayout>
       <div className="container mx-auto px-2 sm:px-4">
-        <div className="w-full border-b-2 p-6">
+        <div className="w-full border-b-2 p-3">
           <AuctionCarousel />
         </div>
         <div className="w-full">

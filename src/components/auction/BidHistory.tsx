@@ -34,33 +34,32 @@ export function BidHistory({ bids }: BidHistoryProps) {
   // Generate page numbers to display
   const getPageNumbers = () => {
     const pageNumbers: (number | string)[] = [];
-    if (totalPages <= 7) {
+    if (totalPages <= 5) {
+      // If 5 or fewer pages, show all
       for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
       }
     } else {
+      // Always show first page
+      pageNumbers.push(1);
+
       if (currentPage <= 3) {
-        pageNumbers.push(1, 2, 3, 4, "...", totalPages);
+        // Near the start
+        pageNumbers.push(2, 3);
+        pageNumbers.push("...");
       } else if (currentPage >= totalPages - 2) {
-        pageNumbers.push(
-          1,
-          "...",
-          totalPages - 3,
-          totalPages - 2,
-          totalPages - 1,
-          totalPages,
-        );
+        // Near the end
+        pageNumbers.push("...");
+        pageNumbers.push(totalPages - 2, totalPages - 1);
       } else {
-        pageNumbers.push(
-          1,
-          "...",
-          currentPage - 1,
-          currentPage,
-          currentPage + 1,
-          "...",
-          totalPages,
-        );
+        // In the middle
+        pageNumbers.push("...");
+        pageNumbers.push(currentPage);
+        pageNumbers.push("...");
       }
+
+      // Always show last page
+      pageNumbers.push(totalPages);
     }
     return pageNumbers;
   };
