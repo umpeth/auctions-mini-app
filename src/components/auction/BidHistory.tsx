@@ -23,7 +23,7 @@ interface BidHistoryProps {
 
 export function BidHistory({ bids }: BidHistoryProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 25;
+  const itemsPerPage = 15;
   const totalPages = Math.ceil(bids.length / itemsPerPage);
 
   // Calculate the bids to display for the current page
