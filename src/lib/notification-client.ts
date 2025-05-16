@@ -17,12 +17,14 @@ type SendFrameNotificationResult =
   | { state: "success" };
 
 export async function sendFrameNotification({
+  notificationId,
   fid,
   title,
   body,
   targetUrl,
   notificationDetails,
 }: {
+  notificationId?: string;
   fid: number;
   title: string;
   body: string;
@@ -42,7 +44,7 @@ export async function sendFrameNotification({
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      notificationId: crypto.randomUUID(),
+      notificationId: notificationId || crypto.randomUUID(),
       title,
       body,
       targetUrl: targetUrl || appUrl,

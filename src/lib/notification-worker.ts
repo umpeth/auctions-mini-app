@@ -12,6 +12,7 @@ const NOTIFICATION_RATE_LIMIT = {
 };
 
 interface FailedNotification {
+  notificationId: string;
   fid: number;
   title: string;
   body: string;
@@ -43,6 +44,7 @@ async function storeFailedNotification(notification: FailedNotification) {
 }
 
 export async function sendNotificationWithRetry(
+  notificationId: string,
   fid: number,
   title: string,
   body: string,
@@ -58,6 +60,7 @@ export async function sendNotificationWithRetry(
   if (!rateLimitResult.success) {
     const nextRetryTime = rateLimitResult.reset;
     await storeFailedNotification({
+      notificationId,
       fid,
       title,
       body,
@@ -69,6 +72,7 @@ export async function sendNotificationWithRetry(
   }
 
   const result = await sendFrameNotification({
+    notificationId,
     fid,
     title,
     body,
@@ -80,6 +84,7 @@ export async function sendNotificationWithRetry(
       const nextRetryTime =
         Date.now() + RETRY_DELAY_MS * Math.pow(2, retryCount);
       await storeFailedNotification({
+        notificationId,
         fid,
         title,
         body,
@@ -147,6 +152,7 @@ async function processFailedNotifications() {
         }
 
         const success = await sendNotificationWithRetry(
+          notification.notificationId,
           notification.fid,
           notification.title,
           notification.body,
