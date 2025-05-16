@@ -1,11 +1,18 @@
-import { PlusCircle, ArrowRight, CheckCircle, Wallet } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle,
+  Wallet,
+  Scale,
+  HandCoins,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type IconType =
-  | typeof PlusCircle
   | typeof ArrowRight
   | typeof CheckCircle
-  | typeof Wallet;
+  | typeof Wallet
+  | typeof Scale
+  | typeof HandCoins;
 
 interface Step {
   name: string;
@@ -14,29 +21,6 @@ interface Step {
 }
 
 const steps: Step[] = [
-  // {
-  //   name: "Create Auction",
-  //   description:
-  //     "Set up your auction with desired parameters like minimum bid, duration, and premium settings",
-  //   Icon: PlusCircle,
-  // },
-  // {
-  //   name: "Bidding Period",
-  //   description:
-  //     "Users place bids during the auction timeframe with anti-sniping protection",
-  //   Icon: ArrowRight,
-  // },
-  // {
-  //   name: "Auction End",
-  //   description: "NFT transfers to winner, payment goes to secure escrow",
-  //   Icon: CheckCircle,
-  // },
-  // {
-  //   name: "Settlement",
-  //   description:
-  //     "Buyer confirms receipt, seller receives payment, and premiums are distributed",
-  //   Icon: Wallet,
-  // },
   {
     name: "Place your bid",
     description:
@@ -46,7 +30,19 @@ const steps: Step[] = [
   {
     name: "Get Paid to bid",
     description: "If you get outbid, you receive your bid back, plus a reward!",
+    Icon: HandCoins,
+  },
+  {
+    name: "Get your stuff",
+    description:
+      "Your purchase is secured by our escrow smart contracts until you confirm receipt",
     Icon: CheckCircle,
+  },
+  {
+    name: "Dispute or Settlement",
+    description:
+      "Need help? A neutral arbiter is available to resolve disputes",
+    Icon: Scale,
   },
 ];
 

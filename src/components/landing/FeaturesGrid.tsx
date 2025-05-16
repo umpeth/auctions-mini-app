@@ -1,7 +1,7 @@
-import { Star, Shield, Wallet2, Layers } from "lucide-react";
+import { Wallet2, Layers, Scale } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type IconType = typeof Star | typeof Shield | typeof Wallet2 | typeof Layers;
+type IconType = typeof Wallet2 | typeof Layers | typeof Scale;
 
 interface Feature {
   name: string;
@@ -10,33 +10,11 @@ interface Feature {
 }
 
 const features: Feature[] = [
-  // {
-  //   name: "Premium Bidding",
-  //   description:
-  //     "Get compensated when outbid with a percentage of the bid increment",
-  //   Icon: Star,
-  // },
-  // {
-  //   name: "Anti-Sniping",
-  //   description:
-  //     "Automatic time extensions when bids are placed near auction end",
-  //   Icon: Shield,
-  // },
-  // {
-  //   name: "Secure Escrow",
-  //   description: "All payments are held in escrow until transaction completes",
-  //   Icon: Wallet2,
-  // },
-  // {
-  //   name: "Multiple Houses",
-  //   description: "Create distinct auction houses for different collections",
-  //   Icon: Layers,
-  // },
   {
     name: "Fair and Transparent",
     description:
       "Auctions run securely via blockchain smart contracts—no hidden fees or surprises",
-    Icon: Layers,
+    Icon: Scale,
   },
   {
     name: "Secure and Private",
@@ -62,7 +40,7 @@ export function FeaturesGrid() {
             ?
           </h2>
         </div>
-        <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (
             <div key={feature.name} className="pt-6">
               <div className="flow-root rounded-lg bg-[var(--app-card-bg)] px-6 pb-8">
