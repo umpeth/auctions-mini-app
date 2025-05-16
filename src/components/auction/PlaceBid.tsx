@@ -196,25 +196,42 @@ export function PlaceBid({
 
       <Dialog open={showFarcasterDialog} onOpenChange={setShowFarcasterDialog}>
         <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FarcasterIcon className="w-5 h-5" />
+          <DialogHeader className="space-y-4">
+            <DialogTitle className="flex items-center gap-3 text-xl">
+              <FarcasterIcon className="w-6 h-6 text-purple-500" />
               Sign in with Farcaster
             </DialogTitle>
-            <DialogDescription>
-              Get the most out of your bidding experience by signing in with
-              Farcaster. Signing in will allow us to notify you when you&apos;re
-              outbid and help you reclaim your status as the highest bidder!
+            <DialogDescription className="text-base leading-relaxed space-y-4">
+              <p className="text-gray-600">
+                Get the most out of your bidding experience by signing in with
+                Farcaster. This allows us to notify you when you&apos;re outbid.
+              </p>
+              <p className="text-lg font-medium text-purple-700">
+                Never miss a chance to reclaim your status as the highest
+                bidder! 🏆
+              </p>
+              <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg space-y-2">
+                <p className="text-amber-700 text-xs">
+                  <span className="font-bold">Note:</span> This feature might
+                  only work while in the Warpcast app. The web app or Coinbase
+                  wallet might not work as expected.
+                </p>
+                <p className="text-amber-700 text-xs">
+                  You can still bid without signing in, but you won&apos;t be
+                  notified if you get outbid.
+                </p>
+              </div>
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex-col gap-2 sm:flex-row sm:justify-between sm:space-x-0">
+          <DialogFooter className="flex-col gap-3 sm:flex-row sm:justify-between sm:space-x-0 mt-3">
+            <SignInButton />
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={() => setShowFarcasterDialog(false)}
+              className="text-gray-500 hover:text-gray-700"
             >
               Maybe later
             </Button>
-            <SignInButton />
           </DialogFooter>
         </DialogContent>
       </Dialog>
