@@ -74,3 +74,11 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.btn-gradient {
+  @apply bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600;
+}
+
+.btn-gradient-outline {
+  @apply hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-blue-500/10;
+}

@@ -121,7 +121,7 @@ export default function TransactionButton({
 
   const baseClassName =
     "w-full rounded-md border px-4 sm:px-8 sm:py-3 text-base font-medium shadow-xs focus:outline-hidden focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
-  const defaultClassName = `${baseClassName} border-transparent bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500`;
+  const defaultClassName = `${baseClassName} border-transparent bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500 btn-gradient`;
   const successClassName = `${baseClassName} border-green-500 bg-green-50 text-white hover:bg-green-100 focus:ring-green-500`;
   const errorClassName = `${baseClassName} border-red-500 bg-red-50 text-red-700 hover:bg-red-100 focus:ring-red-500`;
 

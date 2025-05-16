@@ -32,7 +32,7 @@ export function HeroSection() {
             <Link href="/auctions/active" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full text-base sm:text-lg font-medium bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 border-0"
+                className="w-full text-base sm:text-lg font-medium"
               >
                 <ArrowRightIcon className="h-5 w-5 mr-2" />
                 Check Out Auctions
@@ -42,7 +42,7 @@ export function HeroSection() {
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full text-base sm:text-lg font-medium border-2 hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-blue-500/10"
+                className="w-full text-base sm:text-lg font-medium"
               >
                 Create Auction
               </Button>
