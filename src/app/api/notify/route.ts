@@ -14,11 +14,13 @@ export async function POST(request: Request) {
     });
 
     if (result.state === "error") {
+      console.error("Error sending notification", result.error);
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
+    console.error("Error sending notification", error);
     return NextResponse.json(
       {
         error: error instanceof Error ? error.message : "Unknown error",

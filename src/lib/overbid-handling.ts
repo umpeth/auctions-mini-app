@@ -1,6 +1,7 @@
 import { PremiumPayment } from "@/graphql/generated";
 import { GetNewOverbidEventsDocument } from "@/graphql/queryDocuments";
 import { getBids } from "@/lib/redis";
+import { sendNotificationWithRetry } from "@/lib/notification-worker";
 
 export interface OverbidResult {
   wasOverbid: boolean;
@@ -59,6 +60,14 @@ export async function checkForOverbid(
   console.log("outbidBid", outbidBid);
 
   // TODO: notify the outbid user
+
+  if (outbidBid) {
+    await sendNotificationWithRetry(
+      Number(outbidBid.fid),
+      "You were outbid",
+      "You were outbid by someone else. Check out the auction to see if you can reclaim your position as the highest bidder.",
+    );
+  }
 
   return {
     wasOverbid: true,

@@ -8,6 +8,7 @@ import { appUrl, frameMetadata } from "@/lib/consts";
 import { getSession } from "@/auth";
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
+import { startNotificationWorker } from "@/lib/notification-worker";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -37,6 +38,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
   };
 }
+
+startNotificationWorker();
 
 export default async function RootLayout({
   children,
