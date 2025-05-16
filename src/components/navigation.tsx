@@ -9,6 +9,10 @@ interface NavItem {
   href: string;
 }
 
+interface NavigationProps {
+  className?: string;
+}
+
 const navItems: NavItem[] = [
   {
     title: "Auctions",
@@ -20,7 +24,7 @@ const navItems: NavItem[] = [
   },
 ];
 
-export function Navigation() {
+export function Navigation({ className }: NavigationProps) {
   const pathname = usePathname();
 
   return (
@@ -31,6 +35,7 @@ export function Navigation() {
           href={item.href}
           className={cn(
             "text-sm transition-colors hover:text-foreground/80",
+            className,
             pathname === item.href
               ? "text-foreground"
               : "text-muted-foreground",

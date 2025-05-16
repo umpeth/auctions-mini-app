@@ -30,8 +30,8 @@ export function Header() {
             <Image src="/icon.png" alt="logo" width={32} height={32} />
           </Link>
           {isTabletOrLarger && (
-            <div className="hidden lg:flex lg:gap-x-12">
-              <Navigation />
+            <div className="hidden lg:flex lg:gap-x-16 lg:py-4">
+              <Navigation className="text-lg" />
             </div>
           )}
         </div>
