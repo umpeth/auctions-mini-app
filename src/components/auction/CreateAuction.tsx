@@ -10,7 +10,7 @@ import { ImageUpload } from "@/components/ImageUpload";
 import * as isIPFS from "is-ipfs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RequiredIndicator } from "@/components/ui/requiredIndicator";
-import { isAddress, parseEther } from "viem";
+import { parseEther } from "viem";
 import { SupplementalImagesInput } from "@/components/SupplementalImagesInput";
 
 interface CreateAuctionProps {
@@ -18,8 +18,6 @@ interface CreateAuctionProps {
 }
 
 export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
-  // Form state
-  const [auctionHouse, setAuctionHouse] = useState(auctionHouseAddress);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [termsOfService, setTermsOfService] = useState("");
@@ -40,6 +38,8 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
   const [cidError, setCidError] = useState<string | null>(null);
   const [useImageUpload, setUseImageUpload] = useState(false);
   const [startTimeError, setStartTimeError] = useState<string | null>(null);
+  const [auctionId, setAuctionId] = useState<string>("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleBlurImageCID = useTrimOnBlur((value) => {
     if (isIPFS.cid(value)) {
@@ -47,14 +47,6 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
       setCidError(null);
     } else {
       setCidError("Invalid IPFS CID");
-    }
-  });
-
-  const handleBlurAuctionHouse = useTrimOnBlur((value) => {
-    if (isAddress(value)) {
-      setAuctionHouse(value);
-    } else {
-      setError("Invalid auction house address");
     }
   });
 
@@ -87,13 +79,6 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
     setStartTimeError(validateStartTime(value));
   };
 
-  // Result state
-  const [result, setResult] = useState<{
-    hash: string;
-    auctionId: string;
-    tokenId: string;
-  } | null>(null);
-
   // Hook
   const {
     createAuctionWithNewNFT,
@@ -102,29 +87,23 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
     error: createAuctionWithNewNFTError,
     isLoading,
   } = useCreateAuctionWithNewNFT({
-    onSuccess: (auctionId, tokenId) => {
-      setResult({
-        hash: hash || "",
-        auctionId: auctionId?.toString() || "",
-        tokenId: tokenId?.toString() || "",
-      });
+    onSuccess: (auctionId) => {
+      setAuctionId(auctionId?.toString() || "");
+      setIsSuccess(true);
     },
   });
 
   useEffect(() => {
-    if (isError) {
+    if (isError && createAuctionWithNewNFTError) {
       console.error(createAuctionWithNewNFTError);
-      setError(createAuctionWithNewNFTError?.message || "An error occurred");
+      setError(createAuctionWithNewNFTError.message || "An error occurred");
     }
   }, [isError, createAuctionWithNewNFTError]);
 
-  // Use the entered auctionHouse as the address directly
-  // const auctionHouseAddress = auctionHouse;
-
-  // Handle form submit
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    setResult(null);
+    setAuctionId("");
+    setIsSuccess(false);
     setError("");
 
     // Validate start time before submitting
@@ -177,9 +156,8 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
               <Input
                 type="text"
                 placeholder="0x..."
-                value={auctionHouse}
-                onChange={(e) => setAuctionHouse(e.target.value)}
-                onBlur={handleBlurAuctionHouse}
+                value={auctionHouseAddress}
+                disabled={true}
               />
             </div>
             <div className="border-b pb-4 mb-4">
@@ -447,7 +425,7 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
               {error && <div className="text-red-600 mt-2">{error}</div>}
             </div>
           </div>
-          {result && (
+          {isSuccess && auctionId && (
             <div className="bg-muted p-4 rounded border mt-4">
               <div className="font-bold mb-2">Result:</div>
               <div className="flex items-center text-green-600">
