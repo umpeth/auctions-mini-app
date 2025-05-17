@@ -201,28 +201,28 @@ export function PlaceBid({
               <FarcasterIcon className="w-6 h-6 text-purple-500" />
               Sign in with Farcaster
             </DialogTitle>
-            <DialogDescription className="text-base leading-relaxed space-y-4">
-              <span className="text-gray-600">
+            <div className="space-y-4">
+              <DialogDescription className="text-base leading-relaxed text-gray-600">
                 Get the most out of your bidding experience by signing in with
                 Farcaster. This allows us to notify you when you&apos;re outbid.
-              </span>
-              <span className="text-lg font-medium text-purple-700">
+              </DialogDescription>
+              <p className="text-lg font-medium text-purple-700">
                 Never miss a chance to reclaim your status as the highest
                 bidder! 🏆
-              </span>
+              </p>
 
               <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg space-y-2">
-                <span className="text-amber-700 text-xs">
+                <p className="text-amber-700 text-xs">
                   <span className="font-bold">Note:</span> This feature might
                   only work while in the Warpcast app. The web app or Coinbase
                   wallet might not work as expected.
-                </span>
-                <span className="text-amber-700 text-xs">
+                </p>
+                <p className="text-amber-700 text-xs">
                   You can still bid without signing in, but you won&apos;t be
                   notified if you get outbid.
-                </span>
+                </p>
               </div>
-            </DialogDescription>
+            </div>
           </DialogHeader>
           <DialogFooter className="flex-col gap-3 sm:flex-row sm:justify-between sm:space-x-0 mt-3">
             <SignInButton />
