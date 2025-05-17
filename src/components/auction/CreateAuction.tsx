@@ -27,10 +27,8 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
   const [reservePriceEth, setReservePriceEth] = useState("");
   const [startTime, setStartTime] = useState("");
   const [durationHours, setDurationHours] = useState("");
-  const [affiliateFeePct, setAffiliateFeePct] = useState("");
   const [arbiterAddress, setArbiterAddress] = useState("");
   const [timeExtensionMinutes, setTimeExtensionMinutes] = useState("");
-  const [isPremium, setIsPremium] = useState(true);
   const [minBidIncrementPct, setMinBidIncrementPct] = useState("");
   const [premiumRatePct, setPremiumRatePct] = useState("");
   const [error, setError] = useState("");
@@ -128,10 +126,10 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
           : BigInt(Math.floor(Date.now() / 1000)),
         reservePriceWei: parseEther(reservePriceEth),
         durationSeconds: BigInt(Number(durationHours) * 3600),
-        affiliateFeeBps: Number(affiliateFeePct) * 100,
+        affiliateFeeBps: Number(0),
         arbiterAddress: arbiterAddress as `0x${string}`,
         paymentToken: "0x0000000000000000000000000000000000000000",
-        isPremium,
+        isPremium: true,
         premiumRateBps: Number(premiumRatePct) * 100,
         minBidIncrementBps: Math.round(Number(minBidIncrementPct) * 100),
         timeExtensionSeconds: Number(timeExtensionMinutes) * 60,
@@ -312,18 +310,6 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="affiliate-fee">Affiliate Fee (%)</Label>
-                  <Input
-                    id="affiliate-fee"
-                    type="number"
-                    min={0}
-                    placeholder="5"
-                    value={affiliateFeePct}
-                    onChange={(e) => setAffiliateFeePct(e.target.value)}
-                    onBlur={handleBlurAffiliateFeePct}
-                  />
-                </div>
-                <div>
                   <Label htmlFor="arbiter-address">
                     Arbiter Address
                     <RequiredIndicator />
@@ -359,17 +345,6 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
                 </div>
               </div>
               <div className="mt-4 space-y-3">
-                <div className="flex items-center">
-                  <Checkbox
-                    id="premium"
-                    className="mr-2"
-                    checked={isPremium}
-                    onCheckedChange={(checked) =>
-                      setIsPremium(checked === true)
-                    }
-                  />
-                  <Label htmlFor="premium">Enable Premium Auction</Label>
-                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="min-bid-increment">
