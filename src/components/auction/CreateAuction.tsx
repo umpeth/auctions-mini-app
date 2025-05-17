@@ -12,6 +12,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RequiredIndicator } from "@/components/ui/requiredIndicator";
 import { parseEther } from "viem";
 import { SupplementalImagesInput } from "@/components/SupplementalImagesInput";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 interface CreateAuctionProps {
   auctionHouseAddress: string;
@@ -53,7 +55,6 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
   const handleBlurTermsOfService = useTrimOnBlur(setTermsOfService);
   const handleBlurReservePriceEth = useTrimOnBlur(setReservePriceEth);
   const handleBlurDurationHours = useTrimOnBlur(setDurationHours);
-  const handleBlurAffiliateFeePct = useTrimOnBlur(setAffiliateFeePct);
   const handleBlurArbiterAddress = useTrimOnBlur(setArbiterAddress);
   const handleBlurTimeExtension = useTrimOnBlur(setTimeExtensionMinutes);
   const handleBlurMinBidIncrementPct = useTrimOnBlur(setMinBidIncrementPct);
@@ -404,22 +405,13 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
             <div className="bg-muted p-4 rounded border mt-4">
               <div className="font-bold mb-2">Result:</div>
               <div className="flex items-center text-green-600">
-                <span className="material-icons mr-2">check_circle</span>
+                <CheckCircleIcon className="h-5 w-5 mr-2" />
                 Auction Created Successfully!
               </div>
               <div className="mt-2 text-sm">
-                <div>
-                  <span className="font-medium">Transaction Hash:</span>{" "}
-                  {result.hash}
-                </div>
-                <div>
-                  <span className="font-medium">Auction ID:</span>{" "}
-                  {result.auctionId}
-                </div>
-                <div>
-                  <span className="font-medium">Token ID:</span>{" "}
-                  {result.tokenId}
-                </div>
+                <Link href={`/auction/${auctionHouseAddress}-${auctionId}`}>
+                  View Auction
+                </Link>
               </div>
             </div>
           )}
