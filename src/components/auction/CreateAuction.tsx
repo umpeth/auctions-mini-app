@@ -105,6 +105,20 @@ export function CreateAuction({ auctionHouseAddress }: CreateAuctionProps) {
     setIsSuccess(false);
     setError("");
 
+    // Check for required fields
+    if (
+      !name ||
+      !description ||
+      !reservePriceEth ||
+      !durationHours ||
+      !arbiterAddress ||
+      !timeExtensionMinutes ||
+      !minBidIncrementPct ||
+      !premiumRatePct
+    ) {
+      setError("Please fill out all required fields.");
+      return;
+    }
     // Validate start time before submitting
     const startTimeValidationError = validateStartTime(startTime);
     if (startTimeValidationError) {
